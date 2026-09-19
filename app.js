@@ -23,7 +23,9 @@ function $(id) { return document.getElementById(id); }
 /* ======================================================================
    1. HERO — the demo run
    Geometry: scripts/player/player_polygon.gd (MENU_RADIUS 218, 7 straight
-   chords, round caps, idle spin 12 deg/s, step 360/N over 90 ms).
+   chords, round caps, step 360/N over 90 ms). No idle spin: in a run the
+   ring only moves on a step, same as the game. Autopilot steps it until the
+   visitor taps a side or presses an arrow, then the run is theirs.
    Timing:   scripts/player/ball.gd (fall = 0.54 + 1.8/tempo).
    ====================================================================== */
 (function hero() {
@@ -63,7 +65,7 @@ function $(id) { return document.getElementById(id); }
   function ease(u) { return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
 
   function reset(now) {
-    st = { idle: 0, stepFrom: 0, stepTo: 0, stepT0: -9, steps: [], stepIdx: 0,
+    st = { player: false, stepFrom: 0, stepTo: 0, stepT0: -9, steps: [], stepIdx: 0,
            catches: 0, prevK: -1, k: 0, fall: 2.34, tier: 0, t0: now, phase: 'fall',
            trail: [], flash: -1, flashT: -9, pulseT: -9, deadIdx: -1, deadT: 0,
            ballX: CX, ballY: SPAWN, deathAt: 11 + ((Math.random() * 7) | 0), willDie: false, alpha: 1 };
@@ -83,13 +85,13 @@ function $(id) { return document.getElementById(id); }
     st.tier = tier;
     st.fall = 0.54 + 1.8 / tempo;
     st.t0 = now; st.trail = []; st.phase = 'fall'; st.ballY = SPAWN; st.ballX = CX;
-    // Solve the autopilot: where must the ring be at contact for segment k to be on top?
-    var rotT = st.idle + 12 * st.fall + st.stepTo;
-    var n = Math.round(wrap180(90 - (k - 0.5) * S - rotT) / S);
+    st.steps = []; st.stepIdx = 0;
+    if (st.player) return;
+    // Solve the autopilot: how many steps put segment k on top at contact?
+    var n = Math.round(wrap180(90 - (k - 0.5) * S - st.stepTo) / S);
     st.willDie = (c === st.deathAt);
     if (st.willDie) n += (Math.random() < 0.5 ? 1 : -1);
     var m = Math.abs(n), dir = n < 0 ? -1 : 1;
-    st.steps = []; st.stepIdx = 0;
     for (var j = 0; j < m; j++) {
       // land the last step with ~12% of the fall left, so every catch reads as a near-miss
       st.steps.push({ t: now + 0.88 * st.fall - 0.09 - (m - 1 - j) * 0.14, dir: dir });
@@ -118,7 +120,7 @@ function $(id) { return document.getElementById(id); }
   }
 
   function drawScene(now) {
-    var rot = st.idle + stepOffset(now);
+    var rot = stepOffset(now);
     var t = now;
     // ring breathing (menu idle) + catch pulse
     var s = 1 + (RM.matches ? 0 : 0.022 * Math.sin(2 * Math.PI * t / 2.856));
@@ -220,8 +222,10 @@ function $(id) { return document.getElementById(id); }
     cap.classList.toggle('over', !!over);
   }
 
+  function tally() {
+    return (st.player ? 'Your run · ' : 'Demo run · ') + st.catches + (st.catches === 1 ? ' catch' : ' catches');
+  }
   function update(now) {
-    st.idle += 12 * st.dt;
     if (st.phase === 'fall') {
       while (st.stepIdx < st.steps.length && now >= st.steps[st.stepIdx].t) {
         st.stepFrom = stepOffset(now);
@@ -236,7 +240,7 @@ function $(id) { return document.getElementById(id); }
         if (st.trail.length > 24) st.trail.shift();
       }
       if (p >= 1) {
-        var hit = segAtTop(st.idle + stepOffset(now));
+        var hit = segAtTop(stepOffset(now));
         if (hit === st.k) {
           st.phase = 'catch'; st.catchT = now; st.flash = hit; st.flashT = now; st.pulseT = now;
           st.catches++;
@@ -244,16 +248,17 @@ function $(id) { return document.getElementById(id); }
           st.phase = 'dead'; st.deadT = now; st.deadIdx = hit;
         }
       }
-      setCap('Demo run · ' + st.catches + (st.catches === 1 ? ' catch' : ' catches'), false);
+      setCap(tally(), false);
     } else if (st.phase === 'catch') {
       var u = Math.min(1, (now - st.catchT) / 0.28);
       st.ballY = CONTACT + (CY - CONTACT) * ease(u);
       if (u >= 1) plan(now);
-      setCap('Demo run · ' + st.catches + (st.catches === 1 ? ' catch' : ' catches'), false);
+      setCap(tally(), false);
     } else if (st.phase === 'dead') {
       var e = now - st.deadT;
       st.alpha = e < 1.1 ? 1 : Math.max(0, 1 - (e - 1.1) / 0.6);
       setCap('Run over · ' + st.catches + (st.catches === 1 ? ' catch' : ' catches'), true);
+      // after a visitor's run ends, the demo takes back over on the next reset
       if (e > 2.1) reset(now);
     }
   }
@@ -271,7 +276,7 @@ function $(id) { return document.getElementById(id); }
     // reset() first so a mid-run switch cannot leave a red dead segment or faded alpha;
     // the ball colour is derived from the ring, so the frame is one the game could produce.
     reset(0);
-    st.idle = 0; st.catches = 4; st.tier = 1; st.ballY = 140;
+    st.catches = 4; st.tier = 1; st.ballY = 140;
     st.stepFrom = st.stepTo = 0; st.stepT0 = -9;
     st.k = segAtTop(0);
     drawScene(0);
@@ -282,8 +287,8 @@ function $(id) { return document.getElementById(id); }
   /* The canvas label describes what is on screen, so it has to follow the motion:
      a paused canvas that still claims to be spinning is a lie only screen-reader
      users are told. Kept next to the icon/button-label flip so the three cannot drift. */
-  var LBL_MOVING = 'A seven-sided ring of coloured segments spins while a ball drops onto the matching colour, falling faster each time until it misses.';
-  var LBL_STILL = 'A still frame of the demo run: a seven-sided ring of coloured segments with a ball above the matching colour.';
+  var LBL_MOVING = cv.getAttribute('aria-label');
+  var LBL_STILL = 'Paused demo run: a seven-sided ring of coloured segments with a ball above the matching colour. Press Left or Right arrow, or tap the left or right half, to start a run and turn the ring.';
   function setRunning(on) {
     if (on === running) return;
     running = on;
@@ -298,6 +303,26 @@ function $(id) { return document.getElementById(id); }
     if (on) { prev = 0; reset(performance.now() / 1000); raf = requestAnimationFrame(frame); } else { cancelAnimationFrame(raf); }
   }
   btn.addEventListener('click', function () { userPaused = running; setRunning(!running); });
+
+  /* Visitor input = the game's step controls (player_polygon.gd step_rotate):
+     left = +1 (CCW), right = -1 (CW). The first input ends the autopilot for this run. */
+  function step(dir) {
+    if (!running) { userPaused = false; setRunning(true); }
+    var now = performance.now() / 1000;
+    if (st.phase === 'dead') reset(now);
+    if (!st.player) { st.player = true; st.steps = []; st.stepIdx = 0; }
+    st.stepFrom = stepOffset(now); st.stepTo += dir * S; st.stepT0 = now;
+  }
+  cv.addEventListener('pointerdown', function (e) {
+    if (e.button) return;
+    var r = cv.getBoundingClientRect();
+    step(e.clientX - r.left < r.width / 2 ? 1 : -1);
+  });
+  cv.addEventListener('keydown', function (e) {
+    var dir = e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowRight' ? -1 : 0;
+    if (!dir) return;
+    e.preventDefault(); step(dir);
+  });
 
   var userPaused = false, visible = true;
   function stillMode() {

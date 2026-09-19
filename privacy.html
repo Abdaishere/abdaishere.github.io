@@ -16,7 +16,7 @@ body {
   background: #0f1117; color: #e6e8ee;
   font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-main { max-width: 46rem; margin: 0 auto; }
+main { max-width: 46rem; margin: 0 auto; overflow-wrap: anywhere; }
 h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .35rem; letter-spacing: -.01em; }
 h2 {
   font-size: .82rem; text-transform: uppercase; letter-spacing: .09em;
@@ -41,7 +41,9 @@ footer a { color: #7c8396; }
   .card { background: #fff; border-color: #e3e6ee; }
   h2 { color: #3b4ea8; }
   a { color: #3b4ea8; }
-  footer, .meta { color: #767c8c; }
+  .lede { color: #14161d; }
+  /* #5c6273 is 5.9:1 on #fbfbfd; #767c8c was 4.0:1 and footer a kept the dark-mode grey (3.7:1). */
+  footer, footer a, .meta { color: #5c6273; }
 }
 </style>
 </head>
