@@ -171,6 +171,9 @@ a{ color:var(--accent) }
 }
 .site-nav a:hover{ color:var(--fg) }
 @media (max-width:640px){ .site-nav .opt{ display:none } }
+/* 320 px phones: "Get it" wrapped to two lines and squeezed the wordmark to "PolyBal". */
+.site-nav a{ white-space:nowrap } .site-head .mark{ flex-shrink:0 }
+@media (max-width:359px){ .site-nav a{ padding:0 6px; letter-spacing:.06em } }
 
 /* ---- buttons ---- */
 .btn{
@@ -274,6 +277,8 @@ a{ color:var(--accent) }
 }
 .chase{ margin-left:auto }
 .chase input{ width:150px; font-variant-numeric:tabular-nums }
+/* 320 px: 150 px left the row 6 px short, so this field dropped a line and hung right. */
+@media (max-width:359px){ .chase input{ width:140px } }
 
 /* ---- leaderboard table ---- */
 .lb-scroll{ overflow-x:auto }

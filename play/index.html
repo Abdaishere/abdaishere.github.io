@@ -92,7 +92,21 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
+<script>
+// Godot's web Sample playback fakes loops: on 'ended' it starts a new source (a gap)
+// from the FIRST play()'s offset, so the looping bed drifted and clicked every 19.2 s.
+// The bed is the only looping sound and the only buffer over 10 s: loop it natively.
+window.AudioBufferSourceNode && (() => {
+	const start = AudioBufferSourceNode.prototype.start;
+	AudioBufferSourceNode.prototype.start = function (when = 0, offset = 0, ...rest) {
+		if (this.buffer && this.buffer.duration > 10) {
+			this.loop = true;
+			offset %= this.buffer.duration;
+		}
+		return start.call(this, when, offset, ...rest);
+	};
+})();
+</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +125,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8715940,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8716388,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
