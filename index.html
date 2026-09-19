@@ -421,13 +421,6 @@ tr.ghost .ti{ color:var(--low) }
 .dl-size span{ font:500 14px/1 Nunito,sans-serif; color:var(--mid); margin-left:8px }
 .dl p{ margin:0; font-size:14px; color:var(--mid) }
 .dl code{ font:500 13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:rgba(255,255,255,.06); padding:2px 6px; border-radius:4px; overflow-wrap:anywhere }
-.dl details summary{ cursor:pointer; font:800 12px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); min-height:44px; display:flex; align-items:center }
-/* display:flex drops ::marker, so the disclosure triangle has to be drawn back in
-   or this reads as one more cyan uppercase link. */
-.dl details summary::after{ content:""; width:7px; height:7px; margin:-3px 0 0 9px; flex:none;
-  border-right:2px solid; border-bottom:2px solid; transform:rotate(45deg); transition:transform 140ms ease }
-.dl details[open] summary::after{ margin:3px 0 0 9px; transform:rotate(-135deg) }
-.dl details p{ margin:0 0 8px }
 .dl .btn{ align-self:flex-start; margin-top:auto }
 .chip{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
   font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em }
@@ -495,7 +488,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">Closed testing · 177 countries</p>
+        <p class="eyebrow">Free on Android · early access</p>
         <p class="brandline">Every note you hear, you played.</p>
         <h1>One miss ends the run.</h1>
         <p class="sub sub-long">Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.</p>
@@ -508,7 +501,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
           </a>
           <a class="btn btn-ghost" href="#leaderboard">See who you are chasing</a>
         </div>
-        <p class="cap low" style="margin-top:14px;font-size:12px">Direct downloads for Android, Windows, Linux and macOS below<span data-play>, plus a browser build</span>.</p>
+        <p class="cap low" style="margin-top:14px;font-size:12px">Also on Windows, Mac and Linux<span data-play>, or play in your browser</span>.</p>
       </div>
 
       <div class="stage">
@@ -531,7 +524,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
     <div class="chm sheet"><div class="sheet-in">
       <p class="eyebrow">Live board</p>
       <h2>Somebody is already better than you.</h2>
-      <p class="lede" style="margin-top:10px">Real runs, straight from the game. Zen runs and assisted runs never appear here.</p>
+      <p class="lede" style="margin-top:10px">Real runs, straight from the game.</p>
 
       <div class="filters">
         <!-- Toggle buttons, not tabs: there is no panel to control and no arrow-key
@@ -575,7 +568,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <button class="btn btn-ghost btn-sm" id="lbRetry" type="button" hidden>Retry</button>
         <a class="btn btn-primary btn-sm" id="lbCta" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
       </div>
-      <p class="cap low" style="margin:12px 0 0;font-size:14px">Your best run is stored in this browser only. Nothing is sent anywhere: this page reads the public board and never writes to it.</p>
+      <p class="cap low" style="margin:12px 0 0;font-size:14px">Your best run is saved in this browser only.</p>
     </div></div>
   </div>
 </section>
@@ -586,23 +579,23 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
     <div class="sec-head">
       <p class="eyebrow">Classic</p>
       <h2>How a run ends</h2>
-      <p>Sides are always odd, three to sixty-three. The worst case is exactly (N&nbsp;−&nbsp;1)&nbsp;÷&nbsp;2 taps, which is only exact because the count is odd.</p>
+      <p>Match the colour. Keep up. Don't miss.</p>
     </div>
     <div class="grid g3">
       <article class="chm card rev">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5" fill="currentColor" stroke="none"/></svg>
         <h3>Match the colour</h3>
-        <p>The ball is one of the colours on the ring. Rotate so its own segment is under it. Anything else is a miss, and that part is the same in all four modes.</p>
+        <p>Turn the ring so the ball lands on its own colour.</p>
       </article>
       <article class="chm card rev">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-        <h3>The clock is the difficulty</h3>
-        <p>A seven-sided Classic run gives you 2.34 seconds on the first drop (your first three runs fall slower still and cap at five sides, a deliberate on-ramp), 1.44 once you have twenty catches, and it bottoms out near 1.01. The fall time is solved backwards from a deadline, never tuned by hand. Time ramps the same way; Zen holds one calm 2.66 and never speeds up, and Music locks each drop to a whole number of beats instead.</p>
+        <h3>It keeps getting faster</h3>
+        <p>Every catch makes the next drop a little quicker. Your first runs start gentle.</p>
       </article>
       <article class="chm card rev">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--danger)" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>
         <h3>One miss</h3>
-        <p>Wrong segment, run over, score submitted, in Classic and the Daily. Music, Time and Zen only break your combo and drop a fresh ball. In Classic, one rewarded-ad revive is offered per run once a run is worth saving, and a bought Combo Shield absorbs one fatal miss while a combo is live. With no combo going it does not fire at all, and it never fires in the Daily. Take either and the run is flagged assisted and never reaches the leaderboard.</p>
+        <p>In Classic and the Daily, one wrong colour ends the run. In the other modes it just resets your combo.</p>
       </article>
     </div>
     <div class="falls" id="falls" aria-hidden="true"></div>
@@ -636,7 +629,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
       <article class="chm card rev">
         <span class="bar" style="background:var(--m-zen)" aria-hidden="true"></span>
         <h3 style="color:var(--m-zen)">Zen</h3>
-        <p>Just flow. Zen runs are never submitted to the board, which is why the filter above has three tabs, not four.</p>
+        <p>Just flow. No clock, no leaderboard.</p>
       </article>
     </div>
   </div>
@@ -646,31 +639,31 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
 <section class="section" id="craft">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">Under the hood</p>
-      <h2>Built properly</h2>
+      <p class="eyebrow">The details</p>
+      <h2>Made with care</h2>
     </div>
     <div class="grid g2">
       <article class="chm card rev">
         <span class="bar" style="background:var(--c5)" aria-hidden="true"></span>
-        <h3>Sixty-three colours, none of them a guess</h3>
-        <p>The palette is validated to a minimum pairwise redmean distance of 0.087, and neighbours differ in both hue and lightness. A colour-blind mode adds a shape mark per index, with the mark's ink picked by measured WCAG ratio rather than a luma cut-off.</p>
+        <h3>Sixty-three colours, easy to tell apart</h3>
+        <p>Neighbouring colours always differ in shade as well as hue, and a colour-blind mode adds a shape to every colour.</p>
         <!-- decorative: the paragraph above states the claim; the grid illustrates it -->
         <div class="swatch-grid" id="swatches" aria-hidden="true"></div>
       </article>
       <article class="chm card rev">
         <span class="bar" style="background:var(--m-music)" aria-hidden="true"></span>
-        <h3>No music files ship</h3>
-        <p>Every note is generated live by an additive synth: a stack of oscillators mixed and enveloped into a sample at runtime. Sixteen voice recipes ship as alternative Sound themes, one equipped at a time, and each re-voices the notes, the run layers and the bed without touching the colour-to-note mapping, so no theme can be pay-to-win. Each colour is a degree of the current chord over an eight-bar progression, so every match lands in key, and a combo gates the bass, arp and lead in one at a time on a swung beat grid.</p>
+        <h3>You make the music</h3>
+        <p>Every catch plays a note in key, so each run becomes its own song. Keep a combo going and the bass, arp and lead join in. Sixteen sound themes to choose from.</p>
       </article>
       <article class="chm card rev">
         <span class="bar" style="background:var(--c4)" aria-hidden="true"></span>
-        <h3>Fifteen locales, right-to-left tested</h3>
-        <p>Including Modern Standard and Egyptian Arabic. RTL layout is verified by a test script in the repo, not assumed to work.</p>
+        <h3>Fifteen languages</h3>
+        <p>Including Modern Standard and Egyptian Arabic, with a full right-to-left layout.</p>
       </article>
       <article class="chm card rev">
         <span class="bar" style="background:var(--coin)" aria-hidden="true"></span>
-        <h3>Contrast encoded as ratios</h3>
-        <p>The theme stores contrast ratios, not alpha values, and re-solves every neutral at runtime against whichever ground you have equipped. Surfaces are clamped to CIE L* 4–96, so nothing ever bottoms out into a hole in the art.</p>
+        <h3>Readable on every theme</h3>
+        <p>Text and buttons adjust to whichever background you equip, so everything stays clear.</p>
       </article>
     </div>
     <div class="shots" style="margin-top:12px">
@@ -712,7 +705,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
     <div class="sec-head">
       <p class="eyebrow">Downloads</p>
       <h2>Get it</h2>
-      <p>Six ways in, one platform that does not exist yet. Every caveat is on the card, not in a footnote.</p>
+      <p>Play on your phone, your computer or right here in the browser.</p>
     </div>
     <div class="dl-grid">
 
@@ -720,10 +713,9 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
           <h3>Android · Google Play</h3>
-          <span class="chip chip-rel">Release</span>
+          <span class="chip chip-rel">Recommended</span>
         </div>
-        <p>PolyBall: Color Spin Arcade, v0.9.2 (build 4), package <code>com.polyball.game</code>. In closed testing across 177 countries.</p>
-        <p>Opt in with your Google account, then install from Play as normal. Updates arrive normally. The public store page is not open yet.</p>
+        <p>The best way to play. Join the test with your Google account, then install from Play and get updates automatically.</p>
         <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
       </article>
 
@@ -731,11 +723,12 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
           <h3>Play in browser</h3>
-          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">47 MB <span>WebAssembly, single-threaded</span></p>
-        <p>About 47 MB cold, roughly 15–20 MB gzipped, heavy on mobile data. Audio starts on your first tap. Runs on plain static hosting; no cross-origin isolation needed.</p>
-        <p class="low">Same data behaviour as the app: anonymous PostHog events unless you turn them off in Settings &rsaquo; DATA, and a leaderboard row on a new ranked best. No ads and no purchases in the browser build.</p>
+        <p class="dl-size">47 MB <span>no install</span></p>
+        <p>Starts right here. Sound comes on with your first tap.</p>
+        <!-- Data disclosure, keep: PostHog events (off in Settings > DATA) and a leaderboard
+             row on a new ranked best, same as the app. No ads, no purchases in this build. -->
+        <p class="low">No ads or purchases. Anonymous usage stats, which you can turn off in Settings.</p>
         <a class="btn btn-ghost" href="play/">Play in browser</a>
       </article>
 
@@ -743,29 +736,22 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
           <h3>Android · APK</h3>
-          <span class="chip chip-dbg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:inherit" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>Debug build</span>
+          <span class="chip chip-dbg">Test build</span>
         </div>
-        <p class="dl-size">91.1 MB <span>arm64-v8a · minSdk 24 · targetSdk 36</span></p>
-        <details>
-          <summary>Read this first</summary>
-          <p>This is a debug build: slower, verbose logging, debug asserts on.</p>
-          <p>It is debug-signed, so its signature does not match the Play build. It will not install over the Play closed-testing build and cannot be uploaded to Play.</p>
-          <p>arm64-v8a only. It will not install on armeabi-v7a, x86 or most emulators.</p>
-          <p>Sideloading needs "Install unknown apps" enabled for your browser, plus an explicit Play Protect override.</p>
-          <p><strong>If you can use Play, use Play.</strong></p>
-        </details>
-        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Android-arm64-debug.apk" download aria-label="Download the Android debug APK, 91.1 megabytes">Download APK</a>
+        <!-- Debug-signed arm64-v8a build, minSdk 24 (Android 7.0). Signature differs from Play,
+             so it cannot install over the Play build. -->
+        <p class="dl-size">91.1 MB <span>Android 7+ · 64-bit</span></p>
+        <p>For sideloading. It can't install over the Play version, so use Play if you can.</p>
+        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Android-arm64-debug.apk" download aria-label="Download the Android test APK, 91.1 megabytes">Download APK</a>
       </article>
 
       <article class="chm dl rev">
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
           <h3>Windows</h3>
-          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">112.4 MB <span>x86_64</span></p>
-        <p>A single self-contained .exe with the PCK embedded. No installer, no runtime dependencies.</p>
-        <p>Not code-signed. SmartScreen will show "Windows protected your PC". Choose More info, then Run anyway. Some antivirus engines flag unsigned Godot exports heuristically. No 32-bit or ARM64 build.</p>
+        <p class="dl-size">112.4 MB <span>64-bit</span></p>
+        <p>No installer, just run it. If Windows warns you, choose More info, then Run anyway.</p>
         <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Windows-x86_64.exe" download aria-label="Download for Windows, 112.4 megabytes">Download for Windows</a>
       </article>
 
@@ -773,11 +759,9 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 3.5c0 2-1.5 3-1.5 5.5 0 3-3 4.5-3 7.5 0 2 1.5 3.5 3.5 3.5h8c2 0 3.5-1.5 3.5-3.5 0-3-3-4.5-3-7.5C16.5 6.5 15 5.5 15 3.5a3 3 0 0 0-6 0Z"/><path d="M10 9h.01M14 9h.01"/></svg>
           <h3>Linux</h3>
-          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">78.3 MB <span>x86_64</span></p>
-        <p>Single file, PCK embedded. Exported from Windows, so the execute bit is missing: run <code>chmod +x PolyBall-Linux-x86_64.x86_64</code> first.</p>
-        <p>Needs a glibc distro with X11 or Wayland and OpenGL or Vulkan drivers. No AppImage, no .desktop entry.</p>
+        <p class="dl-size">78.3 MB <span>64-bit</span></p>
+        <p>Make it runnable first: <code>chmod +x PolyBall-Linux-x86_64.x86_64</code></p>
         <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Linux-x86_64.x86_64" download aria-label="Download for Linux, 78.3 megabytes">Download for Linux</a>
       </article>
 
@@ -785,11 +769,11 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
           <h3>macOS</h3>
-          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">63.3 MB <span>universal (x86_64 + arm64)</span></p>
-        <p><code>PolyBall.app</code> inside a zip. Unsigned and unnotarised: no Apple Developer identity exists for this project, so Gatekeeper will refuse it.</p>
-        <p>Run <code>xattr -dr com.apple.quarantine /path/to/PolyBall.app</code>, or right-click the app and choose Open. On Apple Silicon the quarantine removal is usually mandatory.</p>
+        <!-- Unsigned, unnotarised. Fallback if Open Anyway does not appear:
+             xattr -dr com.apple.quarantine /path/to/PolyBall.app -->
+        <p class="dl-size">63.3 MB <span>Intel and Apple silicon</span></p>
+        <p>If macOS blocks it, go to System Settings › Privacy &amp; Security and choose Open Anyway.</p>
         <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-macOS-universal.zip" download aria-label="Download for macOS, 63.3 megabytes">Download for macOS</a>
       </article>
 
@@ -797,13 +781,14 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--low)" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
           <h3>iOS</h3>
-          <span class="chip chip-na">Not available</span>
+          <span class="chip chip-na">Coming later</span>
         </div>
-        <p>Not available yet. An iOS build needs macOS, Xcode and an Apple Developer account. None of the three exist for this project, so there is nothing to hand you rather than something that will not install.</p>
+        <p>Not on iPhone or iPad yet.</p>
       </article>
 
     </div>
-    <p class="cap low" style="margin-top:18px">The APK, Windows, Linux and macOS files are attached to a public GitHub Release on this site's repository, not the game's source repository, which is private. All of them, and the browser build, report version 0.9.2. None is code-signed on any platform: the APK carries a debug signature and the desktop builds carry none.</p>
+    <!-- Binaries are v0.9.2 assets on the public site repo's GitHub Release (the game repo is private). -->
+    <p class="cap low" style="margin-top:18px">All downloads are version 0.9.2.</p>
   </div>
 </section>
 
@@ -811,17 +796,17 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
 <section class="section" id="fair">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow">Monetisation and data</p>
-      <h2>What it costs, plainly</h2>
+      <p class="eyebrow">Ads, purchases and data</p>
+      <h2>What it costs</h2>
     </div>
     <div class="fair">
       <article class="chm card">
         <h3>Free, with ads</h3>
-        <p>Interstitials between runs, never during one, at most one a minute and ten a session. A banner on the results screen. An occasional full-screen ad when you come back after a couple of minutes away, never over a run. Rewarded ads are always yours to choose.</p>
+        <p>Ads show between runs, never during one, plus a banner on the results screen and now and then when you come back to the game. Rewarded ads are always your choice.</p>
       </article>
       <article class="chm card">
         <h3>Nothing sold affects your rank</h3>
-        <p>Money buys Remove Ads, a starter pack, gems or coins. Those buy cosmetics, and coins also buy Combo Shields, so a purchase can extend a run. A shield absorbs one fatal miss while a combo is live, once per run; with no combo going it does not fire, and it never fires in the Daily. Any run a shield or an ad revive touched is marked assisted and never submitted to the leaderboard. Nothing random is ever sold for money: the boxes you pay a wallet price for reveal three items and let you pick one, and the only box that still rolls is paid for with a rewarded ad.</p>
+        <p>You can buy Remove Ads, a starter pack, gems or coins, which buy cosmetics and Combo Shields. A run saved by a shield or an ad revive never counts on the leaderboard. Nothing random is sold for money.</p>
       </article>
       <article class="chm card">
         <h3>The daily run stays free</h3>
@@ -829,11 +814,11 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
       </article>
       <article class="chm card">
         <h3>Your data stays yours</h3>
-        <p>Saves, settings and your local bests stay on your device. Two things leave, on top of the ad and Google Play billing traffic: when a ranked run sets a new best under a generated name, the game sends that score, the mode and side count it was set on, that generated name, your equipped plate, title and title font, and a random install id to the leaderboard. Nothing else, and never a name you typed. Anonymous usage events go to PostHog by default and switch off in Settings &rsaquo; DATA. The detailed gameplay log is off unless you switch it on, and never leaves the phone unless you export it yourself. The <a href="/privacy.html">privacy policy</a> lists all of it, and <a href="/delete.html">deleting your leaderboard row</a> takes one email.</p>
+        <p>Your saves and settings stay on your device. A new best sends your score, generated name, plate and title to the leaderboard. Anonymous usage stats can be turned off in Settings &rsaquo; DATA. The <a href="/privacy.html">privacy policy</a> has the full list, and <a href="/delete.html">deleting your leaderboard row</a> takes one email.</p>
       </article>
       <article class="chm card">
         <h3>The board is anonymous</h3>
-        <p>Leaderboard names are generated by the game, never typed by a player. The game itself uploads a row when you beat your own best; this page only reads that public board and never writes to it.</p>
+        <p>Names on the board are made up by the game, never typed by players.</p>
       </article>
     </div>
   </div>
@@ -855,6 +840,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
   </div>
 </footer>
 
-<script src="app.js" defer></script>
+<!-- ?v= busts the 10-minute Pages cache (and phone heuristic caches) on every app.js change -->
+<script src="app.js?v=0.9.2-3" defer></script>
 </body>
 </html>

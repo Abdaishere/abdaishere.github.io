@@ -23,8 +23,15 @@ function $(id) { return document.getElementById(id); }
 /* ======================================================================
    1. HERO — the demo run
    Geometry: scripts/player/player_polygon.gd (MENU_RADIUS 218, 7 straight
-   chords, round caps, step 360/N over 90 ms). No idle spin: in a run the
-   ring only moves on a step, same as the game. Autopilot steps it until the
+   chords, round caps). Matches the game's in-run ring exactly:
+     - rest pose poly_rotation = -90 (start_game), so for odd N a flat edge
+       sits on top, square under the falling ball;
+     - one step = 360/N over STEP_TIME 90 ms, TRANS_CUBIC EASE_IN_OUT
+       (step_rotate + Motion.RING);
+     - left = +1 = counter-clockwise, right = -1 = clockwise (rotate_left /
+       rotate_right, TouchInput left/right half);
+     - no idle spin and no breathing: start_game() stops both.
+   Autopilot taps like a player, one settled step at a time, until the
    visitor taps a side or presses an arrow, then the run is theirs.
    Timing:   scripts/player/ball.gd (fall = 0.54 + 1.8/tempo).
    ====================================================================== */
@@ -39,6 +46,8 @@ function $(id) { return document.getElementById(id); }
   var VW = 560, VH = 740, CX = 280, CY = 420, R = 218, W = 24, N = 7, S = 360 / N;
   var APO = R * Math.cos(Math.PI / N);              // 196.4
   var CONTACT = CY - APO - W / 2 - 16;              // ball centre y at contact
+  var REST = -90;                                   // player_polygon.gd start_game()
+  var STEP_T = 0.09, TAP_GAP = 0.2;                 // STEP_TIME; autopilot tap spacing (step lands, then holds)
   var SPAWN = 30, BR = 16;                          // VISUAL_RADIUS is pinned at 16
   var CAD = [1.0, 1.2, 1.45, 1.6, 1.75];            // TEMPO_CADENCE
   var LIFT = [1.0, 1.16, 1.22, 1.30];               // FEVER_RING_BY_TIER
@@ -65,14 +74,14 @@ function $(id) { return document.getElementById(id); }
   function ease(u) { return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
 
   function reset(now) {
-    st = { player: false, stepFrom: 0, stepTo: 0, stepT0: -9, steps: [], stepIdx: 0,
+    st = { player: false, stepFrom: REST, stepTo: REST, stepT0: -9, steps: [], stepIdx: 0,
            catches: 0, prevK: -1, k: 0, fall: 2.34, tier: 0, t0: now, phase: 'fall',
            trail: [], flash: -1, flashT: -9, pulseT: -9, deadIdx: -1, deadT: 0,
            ballX: CX, ballY: SPAWN, deathAt: 11 + ((Math.random() * 7) | 0), willDie: false, alpha: 1 };
     plan(now);
   }
   function stepOffset(now) {
-    var u = Math.min(1, Math.max(0, (now - st.stepT0) / 0.09));
+    var u = Math.min(1, Math.max(0, (now - st.stepT0) / STEP_T));
     return st.stepFrom + (st.stepTo - st.stepFrom) * ease(u);
   }
   function plan(now) {
@@ -94,7 +103,7 @@ function $(id) { return document.getElementById(id); }
     var m = Math.abs(n), dir = n < 0 ? -1 : 1;
     for (var j = 0; j < m; j++) {
       // land the last step with ~12% of the fall left, so every catch reads as a near-miss
-      st.steps.push({ t: now + 0.88 * st.fall - 0.09 - (m - 1 - j) * 0.14, dir: dir });
+      st.steps.push({ t: now + 0.88 * st.fall - STEP_T - (m - 1 - j) * TAP_GAP, dir: dir });
     }
   }
   function segAtTop(rot) {
@@ -122,8 +131,8 @@ function $(id) { return document.getElementById(id); }
   function drawScene(now) {
     var rot = stepOffset(now);
     var t = now;
-    // ring breathing (menu idle) + catch pulse
-    var s = 1 + (RM.matches ? 0 : 0.022 * Math.sin(2 * Math.PI * t / 2.856));
+    // catch pulse only: the menu breathing stops when a run starts (start_game)
+    var s = 1;
     var pu = (t - st.pulseT) / 0.34;
     if (pu >= 0 && pu < 1) s += 0.05 * (1 - pu) * (1 - pu);
     var bright = LIFT[Math.min(3, st.tier)];
@@ -277,8 +286,8 @@ function $(id) { return document.getElementById(id); }
     // the ball colour is derived from the ring, so the frame is one the game could produce.
     reset(0);
     st.catches = 4; st.tier = 1; st.ballY = 140;
-    st.stepFrom = st.stepTo = 0; st.stepT0 = -9;
-    st.k = segAtTop(0);
+    st.stepFrom = st.stepTo = REST; st.stepT0 = -9;
+    st.k = segAtTop(REST);
     drawScene(0);
   }
 
