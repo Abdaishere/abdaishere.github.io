@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PolyBall privacy policy</title>
+<link rel="canonical" href="https://abdaishere.github.io/privacy.html">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <style>
 :root { color-scheme: dark light; }
 * { box-sizing: border-box; }
@@ -28,8 +32,9 @@ a { color: #8fa2ff; }
 }
 .card h3 { margin: 0 0 .35rem; font-size: 1rem; }
 .card p { margin: 0; font-size: .95rem; }
-footer { margin-top: 3.5rem; color: #6b7285; font-size: .85rem; }
-footer a { color: #6b7285; }
+/* #7c8396 is 5.0:1 on #0f1117; the old #6b7285 was 3.9:1 and failed AA. */
+footer { margin-top: 3.5rem; color: #7c8396; font-size: .85rem; }
+footer a { color: #7c8396; }
 @media (prefers-color-scheme: light) {
   body { background: #fbfbfd; color: #14161d; }
   p, li { color: #3d4353; }
@@ -43,7 +48,7 @@ footer a { color: #6b7285; }
 <body>
 <main>
 <h1>POLYBALL PRIVACY POLICY</h1>
-<p class="meta">Effective 15 August 2026<br>App: PolyBall (com.polyball.game), published by Abdallah El belkasy (solo developer).<br>Contact: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
+<p class="meta">Effective 15 August 2026<br>App: PolyBall (com.polyball.game), published by Abdallah El Belkasy (solo developer).<br>Contact: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
 <h2>THE SHORT VERSION</h2>
 <p>PolyBall uses the internet for exactly four things: showing ads through Google AdMob, processing optional purchases through Google Play, anonymous usage statistics through PostHog (you can turn these off), and the optional online leaderboard. The game still has no accounts, no sign-in, and collects no personal data of its own - the online features run on a random install identifier and a generated player name, never anything you typed. This policy explains exactly what each system does and how you control it.</p>
 <h2>WHAT CHANGED FROM THE PREVIOUS VERSION</h2>
@@ -53,10 +58,10 @@ footer a { color: #6b7285; }
 <p>2. Local gameplay log (beta_telemetry.jsonl, app-private storage), only if you switch TELEMETRY on: a record of your runs used to balance the game (per-catch and per-miss timing and accuracy, score, combo, mode, difficulty, coin and gem earns and spends inside the game, the app version, the OS name, and your device&#x27;s model name). Each install generates a random install id (16 random bytes) so runs from one device can be grouped. That id is created on your device, is not derived from anything about you or your hardware, and is not linked to your identity. The log is capped at about 8 MB and old runs are trimmed automatically. This log is never uploaded. It leaves the device only through the manual export described below.</p>
 <p>You can turn the recording off at any time: Settings &gt; DATA &gt; TELEMETRY. You can erase all progress data via Settings &gt; DATA &gt; Reset progress.</p>
 <h2>ADS (GOOGLE ADMOB)</h2>
-<p>This version shows ads through Google AdMob, a service of Google LLC. Ads appear in two forms: optional rewarded videos you choose to watch in exchange for in-game bonuses, and occasional full-screen ads between runs. The Remove Ads purchase removes the full-screen ads permanently; any other purchase pauses them for 30 days. Rewarded videos always remain optional.</p>
+<p>This version shows ads through Google AdMob, a service of Google LLC. Ads appear in four forms: optional rewarded videos you choose to watch in exchange for in-game bonuses; full-screen ads between runs, never during one, at most one a minute and ten a session; a banner on the results screen; and a full-screen ad when you return to the app after two minutes or more away, never over a run and at most three a session. The Remove Ads purchase removes the interstitial, banner and app-open ads permanently; any other purchase pauses those three for 30 days. Rewarded videos always remain optional and are never shown to you unasked.</p>
 <p>To serve and measure ads, the Google Mobile Ads SDK (Next-Gen) collects and shares with Google: your device&#x27;s advertising ID, IP address (which implies coarse location), device information (model, OS version), and app interaction data (such as ad views and taps). This happens under Google&#x27;s own privacy policy: https://policies.google.com/privacy How Google uses this data: https://policies.google.com/technologies/partner-sites</p>
 <h2>IN-APP PURCHASES (GOOGLE PLAY)</h2>
-<p>PolyBall offers a small set of optional purchases (gem packs, a starter pack, and Remove Ads), all processed by Google Play&#x27;s billing system. Every purchase is a fixed, listed price: there are no paid random rewards of any kind, and nothing purchasable affects scores. The app never sees or stores your payment details; Google processes the payment under its own terms and privacy policy. On your device the game stores only which products you own and, in the local gameplay log (if you enabled it), the product id, price and currency of a completed purchase. Ownership is re-checked against your Google Play account, which is how purchases survive a reinstall: Settings &gt; DATA &gt; RESTORE PURCHASES re-applies them, and Settings &gt; DATA &gt; REFUNDS opens your Google Play order history. Refunded purchases are revoked the same way.</p>
+<p>PolyBall offers a small set of optional purchases (gem packs, coin packs, a starter pack, and Remove Ads), all processed by Google Play&#x27;s billing system. Every purchase is a fixed, listed price and there are no paid random rewards of any kind. Nothing purchasable affects your rank: coins can buy Combo Shields, which absorb one fatal miss during a run, and any run a shield or an ad revive touched is marked assisted and is never submitted to the leaderboard. The app never sees or stores your payment details; Google processes the payment under its own terms and privacy policy. On your device the game stores only which products you own and, in the local gameplay log (if you enabled it), the product id, price and currency of a completed purchase. Ownership is re-checked against your Google Play account, which is how purchases survive a reinstall: Settings &gt; DATA &gt; RESTORE PURCHASES re-applies them, and Settings &gt; DATA &gt; REFUNDS opens your Google Play order history. Refunded purchases are revoked the same way.</p>
 <h2>CONSENT AND YOUR CHOICES</h2>
 <p>On first launch (and again whenever regulations require), a consent form asks how ads may use your data. In the European Economic Area and the UK this is the Google-certified consent flow required by GDPR. You can change your choice at any time: Settings &gt; DATA &gt; MANAGE AD CONSENT. Where you decline personalized ads, ads still appear but are contextual (based on the app and your general region, not on a profile of you). You can also reset your device&#x27;s advertising ID or opt out of personalization in your device&#x27;s Google settings.</p>
 <h2>WHAT LEAVES YOUR DEVICE</h2>
@@ -65,12 +70,14 @@ footer a { color: #6b7285; }
 <h2>CHILDREN</h2>
 <p>PolyBall is not directed at children. It is a simple arcade game with no chat, no user-generated content, and no external links inside gameplay. The game itself collects no personal data from anyone. Ad serving follows the consent rules above, including the regional consent requirements that apply to users under the age of digital consent.</p>
 <h2>PERMISSIONS</h2>
-<p>- INTERNET: used only by the ad system and by Google Play billing. - VIBRATE: used only for optional haptic feedback (toggle in Settings). It accesses no data. - Writing the manual export may prompt for storage access on older Android versions. It is used only to place the export files in your Downloads folder.</p>
+<p>- INTERNET: used by the ad system, Google Play billing, the anonymous analytics, and the online leaderboard - nothing else. - VIBRATE: used only for optional haptic feedback (toggle in Settings). It accesses no data. - Writing the manual export may prompt for storage access on older Android versions. It is used only to place the export files in your Downloads folder.</p>
 <h2>ANALYTICS</h2>
 <p>The game sends anonymous usage statistics (which screens are used, how runs end, frame-rate tier) to PostHog, our analytics processor, over HTTPS. These are tied to a random install identifier generated on your device - never your name, email, advertising ID, or anything you typed. You can turn this off any time in Settings &gt; DATA &gt; ANALYTICS. Clearing the app&#x27;s data resets the identifier.</p>
-<p>LEADERBOARD (when available) If you submit a best score to the online leaderboard, the game transmits your score and your GENERATED player name (names you type yourself are never transmitted) plus the same install identifier, so your row can be updated. This appears on other players&#x27; screens.</p>
+<p>LEADERBOARD (when available) If a ranked run sets a new best, the game transmits exactly one row: that score, the mode and the side count the run was played at, your GENERATED player name (names you type yourself are never transmitted - there is no code path that can send one), the plate style, title and title font you have equipped, and the same random install identifier, so your row can be updated rather than duplicated. Nothing else is sent. The row appears on other players&#x27; screens. Submissions happen only while your player name is a generated one: set a name of your own and nothing is submitted from then on.</p>
+<h2>BROWSER VERSION</h2>
+<p>PolyBall also runs in a web browser as a WebAssembly build. For data it behaves exactly like the Android app: the same anonymous PostHog analytics, on by default with the same off switch in Settings &gt; DATA &gt; ANALYTICS, and the same single leaderboard row on a new ranked best, keyed to a random install identifier your browser stores. It shows no ads and offers no purchases at all, because the AdMob and Google Play billing components are Android-only and are absent from that build. Clearing the site data for that page in your browser erases the local save and resets the identifier.</p>
 <h2>DATA DELETION</h2>
-<p>The game&#x27;s own data lives on your device: Settings &gt; DATA &gt; Reset progress erases progress, and uninstalling the app removes everything the game stored locally. Two things can exist server-side: your leaderboard row (install identifier, generated name, best scores) and the anonymous analytics events. Resetting or uninstalling does not remove those - email <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a> and they will be deleted; the deletion page linked from the store listing explains the steps. Data collected by Google for ad serving is handled under Google&#x27;s privacy policy and controls (advertising ID reset and ad personalization settings on your device).</p>
+<p>The game&#x27;s own data lives on your device: Settings &gt; DATA &gt; Reset progress erases progress, and uninstalling the app removes everything the game stored locally. Two things can exist server-side: your leaderboard row (install identifier, generated name, and each best score with its mode, side count and the plate, title and title font shown beside it) and the anonymous analytics events. Resetting or uninstalling does not remove those - email <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a> and they will be deleted; the deletion page linked from the store listing explains the steps. Data collected by Google for ad serving is handled under Google&#x27;s privacy policy and controls (advertising ID reset and ad personalization settings on your device).</p>
 <h2>CHANGES</h2>
 <p>The analytics and leaderboard features described above shipped with this version of the policy. If a future version adds anything new that transmits data, this policy will be updated first and the change will be visible in the app&#x27;s store listing before it applies.</p>
 <h2>CONTACT</h2>

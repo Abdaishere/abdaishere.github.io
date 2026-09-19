@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#1a1d27"/><stop offset=".62" stop-color="#0c0d12"/><stop offset="1" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="backglow" cx="50%" cy="50%" r="54%">
+      <stop offset="0" stop-color="#8c96d2" stop-opacity=".18"/><stop offset="1" stop-color="#8c96d2" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="neon" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="26"/></filter>
+    <!-- The RING is the whole mark: a 5-gon (sides are always ODD in-game),
+         centred on the canvas at r 310. The ball + trail are gone — at launcher
+         size they collapsed into a smudge sitting above an off-centre shape
+         (beta feedback, Android + iOS). Red is drawn LAST so it stays on top at
+         both of its corners. -->
+    <g id="ring" stroke-width="58" stroke-linecap="round">
+      <line x1="217" y1="608" x2="512" y2="822" stroke="#4bd86b"/>
+      <line x1="512" y1="822" x2="807" y2="608" stroke="#3fd0e0"/>
+      <line x1="807" y1="608" x2="694" y2="261" stroke="#f45cd0"/>
+      <line x1="330" y1="261" x2="217" y2="608" stroke="#ffd23f"/>
+      <line x1="694" y1="261" x2="330" y2="261" stroke="#ff5a5a"/>
+    </g>
+  </defs>
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="224" fill="url(#backglow)"/>
+  <use xlink:href="#ring" filter="url(#halo)" opacity=".5"/>
+  <use xlink:href="#ring" filter="url(#neon)"/>
+</svg>

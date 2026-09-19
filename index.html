@@ -3,80 +3,859 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PolyBall</title>
+<title>PolyBall: one miss ends the run</title>
+<meta name="description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run. Free on Android, in closed testing across 177 countries.">
+<!-- Canonical host: abdaishere.github.io (custom domain deferred, docs/BRAND-PLAN.md
+     section 3). If a domain is bought, change canonical, og:url, og:image and the JSON-LD
+     url together. -->
+<link rel="canonical" href="https://abdaishere.github.io/">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#08090C">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.github.io/">
+<meta property="og:site_name" content="PolyBall">
+<meta property="og:title" content="PolyBall: one miss ends the run">
+<meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
+<!-- Absolute, not relative: every scraper (Facebook, Slack, Discord, X, LinkedIn)
+     silently drops a relative og:image. -->
+<!-- 1200x630 share card, rendered from tools/og_image.html. The 1024x500 feature.png
+     stays the Play feature graphic only; it cropped badly at 1.91:1. -->
+<meta property="og:image" content="https://abdaishere.github.io/img/og.png">
+<!-- PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PolyBall: the five-colour ring, the wordmark and the line Every note you hear, you played.">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Everything this page loads: app.js, one inline script (hashed), one inline <style>
+     plus style="" attributes and el.style writes, self-hosted woff2 in fonts/, data: SVGs
+     in CSS, one Supabase origin, and a same-origin HEAD probe for play/. The JSON-LD block is a data block, not a script,
+     so script-src does not apply to it. Keep the inline script byte-identical or the hash
+     must be recomputed. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PtdI6/36DhPdMEgjNWV5ExIEqFovVcjUHPeOyApfBhs='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://osnwwrpkyvcflfcixwmw.supabase.co; base-uri 'none'; form-action 'none'">
+
+<!-- Fonts are self-hosted, not Google Fonts: loading from Google sends every visitor's IP
+     to Google (ruled a GDPR breach, LG Munich 3 O 17493/20). Same Latin subsets the game
+     ships. Licence: fonts/OFL.txt. -->
+<link rel="preload" href="fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.github.io/",
+"description":"A colour-matching arcade game for Android. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
+"image":"https://abdaishere.github.io/img/og.png","genre":["Arcade","Casual","Music"],
+"gamePlatform":"Android","applicationCategory":"GameApplication","operatingSystem":"Android",
+"playMode":"SinglePlayer","inLanguage":"en",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"author":{"@type":"Person","name":"Abdallah El Belkasy"}}
+</script>
+
+<script>document.documentElement.className='js'</script>
 <style>
-:root { color-scheme: dark light; }
-* { box-sizing: border-box; }
-body {
-  margin: 0; padding: 2.5rem 1.25rem 5rem;
-  background: #0f1117; color: #e6e8ee;
-  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+@font-face{ font-family:"Chakra Petch"; font-weight:500; font-display:swap; src:url(fonts/chakra-petch-500.woff2) format("woff2") }
+@font-face{ font-family:"Chakra Petch"; font-weight:700; font-display:swap; src:url(fonts/chakra-petch-700.woff2) format("woff2") }
+@font-face{ font-family:Nunito; font-weight:200 1000; font-display:swap; src:url(fonts/nunito-var.woff2) format("woff2") }
+/* ============================================================
+   PolyBall landing page.
+   Every colour, size and number here traces to the game repo:
+   theme.tres, scripts/palette.gd, scripts/player/player_polygon.gd,
+   scripts/ui/name_plate.gd, project.godot.
+   ============================================================ */
+:root{
+  color-scheme: dark;
+  --bg:#08090C;
+  --ground: radial-gradient(120% 95% at 50% 30%, #191B22 0%, #0C0D11 68%, #090A0D 100%);
+  --card: rgba(14,15,20,.92);
+  --sheet: rgba(14,15,20,.94);
+  --hair: rgba(255,255,255,.09);
+  --hair-hi: rgba(255,255,255,.34);  /* first alpha that clears WCAG 1.4.11 3:1 on both the sheet and the page ground */
+  --fg:#EDEEF2;
+  --mid:rgba(237,238,242,.75);
+  --low:rgba(237,238,242,.5);
+  --accent:#5AD1E6;  /* theme.tres Tokens/colors/accent */
+  --coin:#FFC24B;
+  --gem:#B48CFF;
+  --ok:#5BD6A0;
+  --danger:#FF5A5A;
+  /* scripts/palette.gd PALETTE_63, entries 0-6 */
+  --c1:#ff5a5a; --c2:#ff9f43; --c3:#ffd23f; --c4:#4bd86b;
+  --c5:#3fd0e0; --c6:#4a8cff; --c7:#f45cd0;
+  --m-classic:#5AD1E6; --m-music:#B06CFF; --m-time:#FFC24B; --m-zen:#5BD6A0;
+  --s1:.5rem; --s2:1rem; --s3:1.5rem; --s4:2rem; --s6:3rem; --s8:4.5rem;
+  --header-h:56px;
 }
-main { max-width: 46rem; margin: 0 auto; }
-h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .35rem; letter-spacing: -.01em; }
-h2 {
-  font-size: .82rem; text-transform: uppercase; letter-spacing: .09em;
-  color: #8fa2ff; margin: 2.4rem 0 .6rem; font-weight: 600;
+*,*::before,*::after{ box-sizing:border-box; min-width:0 }
+[hidden]{ display:none!important }
+html{
+  -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth;
+  scroll-padding-top:72px;
+  overflow-x:hidden;
 }
-p, li { color: #c3c8d4; }
-a { color: #8fa2ff; }
-.lede { font-size: 1.05rem; color: #e6e8ee; }
-.meta { color: #7d8496; font-size: .9rem; margin: 0 0 2rem; }
-.card {
-  border: 1px solid #262b39; border-radius: 14px;
-  padding: 1.1rem 1.25rem; margin: 1rem 0; background: #151824;
+body{
+  margin:0; max-width:100%; overflow-x:hidden;
+  background:var(--bg); color:var(--fg);
+  font:500 17px/1.6 Nunito, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-.card h3 { margin: 0 0 .35rem; font-size: 1rem; }
-.card p { margin: 0; font-size: .95rem; }
-footer { margin-top: 3.5rem; color: #6b7285; font-size: .85rem; }
-footer a { color: #6b7285; }
-@media (prefers-color-scheme: light) {
-  body { background: #fbfbfd; color: #14161d; }
-  p, li { color: #3d4353; }
-  .card { background: #fff; border-color: #e3e6ee; }
-  h2 { color: #3b4ea8; }
-  a { color: #3b4ea8; }
-  footer, .meta { color: #767c8c; }
+h1,h2,h3{ font-family:"Chakra Petch", Nunito, system-ui, sans-serif; margin:0; overflow-wrap:break-word }
+h1{ font-weight:700; font-size:clamp(34px,8.5vw,76px); letter-spacing:-.02em; line-height:1.03; max-inline-size:16ch; text-wrap:balance }
+h2{ font-weight:700; font-size:30px; letter-spacing:-.015em; line-height:1.15 }
+h3{ font-weight:500; font-size:18px; line-height:1.25 }
+p{ margin:0 0 var(--s2) }
+img{ max-width:100%; height:auto; display:block }
+a{ color:var(--accent) }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
+.vh{ position:absolute!important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0 }
+
+/* ---- chamfer: the game's signature shape (scripts/ui/chamfer_box.gd) ---- */
+.chm{
+  --cut:10px; position:relative; background:var(--hair);
+  --cp:polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)),
+       calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+  clip-path:var(--cp); isolation:isolate;
+}
+.chm::before{ content:""; position:absolute; inset:1px; clip-path:var(--cp); background:var(--card); z-index:-1 }
+/* clip-path clips an element's own outline, so the focus ring has to be drawn
+   INSIDE the chamfer: a 3px white edge, which cannot be mistaken for the 1px
+   cyan edge of a selected mode button. An inset box-shadow will not work —
+   .chm::before sits at z-index:-1 and paints over it.
+   .tab[aria-pressed="true"]{background:var(--tc)} below has the same (0,2,0)
+   specificity and comes later, so the selected tab needs naming here or its
+   focus ring is drawn in its own mode colour and reads as the 1px selected edge. */
+.chm:focus-visible,
+.tab[aria-pressed="true"]:focus-visible{ background:var(--fg); outline:none }
+.chm:focus-visible::before{ inset:3px }
+
+.wrap{ max-width:1140px; margin:0 auto; padding:0 24px }
+.section{ padding:var(--s8) 0 }
+.eyebrow{ font:800 11px/1 Nunito, sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low); margin:0 0 12px }
+.lede{ color:var(--mid); max-width:60ch }
+.cap{ font-size:14px; color:var(--mid) }
+.low{ color:var(--low) }
+.sec-head{ margin-bottom:var(--s4); max-width:62ch }
+.sec-head p{ margin:10px 0 0; color:var(--mid) }
+
+/* ---- skip link ---- */
+.skip{
+  position:absolute; left:12px; top:-60px; z-index:100;
+  background:var(--accent); color:#08090C; font:800 15px/1 Nunito,sans-serif;
+  padding:14px 18px; border-radius:999px; text-decoration:none; transition:top .12s ease-out;
+}
+.skip:focus{ top:12px }
+
+/* ---- sticky header ---- */
+.site-head{
+  position:sticky; top:0; z-index:50; height:var(--header-h);
+  background:rgba(8,9,12,.94); border-bottom:1px solid var(--hair);
+}
+@supports (backdrop-filter:blur(8px)){ .site-head{ backdrop-filter:blur(8px) } }
+.site-head .wrap{ height:100%; display:flex; align-items:center; gap:var(--s3) }
+.mark{
+  font:700 20px/1 "Chakra Petch", sans-serif; letter-spacing:.02em; text-decoration:none;
+  /* wordmark gradient: five hue-sorted palette stops at 100deg, scrolling (shaders/logo_gradient.gdshader) */
+  background:linear-gradient(100deg,#ff5a5a,#ffd23f,#4bd86b,#4a8cff,#f45cd0,#ff5a5a);
+  background-size:300% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:markflow 20s linear infinite;
+  padding:6px 2px;
+}
+@keyframes markflow{ to{ background-position:300% 0 } }
+.site-nav{ margin-left:auto; display:flex; gap:4px; align-items:center }
+.site-nav a{
+  color:var(--mid); text-decoration:none; font:800 12px/1 Nunito,sans-serif;
+  text-transform:uppercase; letter-spacing:.1em;
+  min-height:44px; display:inline-flex; align-items:center; padding:0 10px;
+}
+.site-nav a:hover{ color:var(--fg) }
+@media (max-width:640px){ .site-nav .opt{ display:none } }
+
+/* ---- buttons ---- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
+  min-height:48px; min-width:48px; padding:0 22px; cursor:pointer;
+  font:800 15px/1.2 Nunito, system-ui, sans-serif; text-decoration:none;
+  border:0; border-radius:999px; background:var(--hair); color:var(--fg);
+  /* #lbCta's label is "Pass <remote name>: join the closed test". A name at the
+     schema limit (public.scores.name text 3-24) is one unbreakable token that
+     overran the button by 49px at 375px, and body{overflow-x:hidden} clipped it
+     with no scrollbar to recover it. */
+  text-align:center; overflow-wrap:anywhere;
+  transition:transform 90ms cubic-bezier(.45,0,.55,1), background-color 160ms ease, color 160ms ease;
+}
+.btn svg{ width:18px; height:18px; flex:none }
+.btn:active{ transform:scale(.97) }
+.btn-primary{ background:var(--accent); color:#08090C }      /* 11.09:1 */
+.btn-primary:hover{ background:#7CDDEE }
+.btn-ghost{ background:transparent; box-shadow:inset 0 0 0 1px var(--hair-hi); color:var(--fg) }
+.btn-ghost:hover{ box-shadow:inset 0 0 0 1px var(--accent); color:var(--accent) }
+.btn-sm{ min-height:44px; padding:0 16px; font-size:14px }
+.cta-row{ display:flex; gap:12px; flex-wrap:wrap }
+@media (max-width:400px){ .cta-row .btn{ width:100% } }
+
+/* ---- hero ---- */
+.hero{ position:relative; padding:var(--s6) 0 var(--s8); overflow:hidden }
+.hero-bg{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:var(--ground);
+}
+.blob{ position:absolute; width:480px; height:480px; margin:-240px 0 0 -240px; border-radius:50%; filter:blur(80px); opacity:.55; will-change:transform }
+.blob-a{ background:#51586E; left:36%; top:40%; animation:orbA 27s linear infinite }
+.blob-b{ background:#3E4559; left:66%; top:61%; opacity:.5; animation:orbB 31s linear infinite }
+@keyframes orbA{ 0%,100%{transform:translate(0,0)} 25%{transform:translate(30px,-30px)} 50%{transform:translate(0,0)} 75%{transform:translate(-30px,30px)} }
+@keyframes orbB{ 0%,100%{transform:translate(0,0)} 25%{transform:translate(-30px,30px)} 50%{transform:translate(0,0)} 75%{transform:translate(30px,-30px)} }
+.grain{ /* shaders/bg_grain.gdshader, amount 0.015 */
+  position:absolute; inset:0; opacity:.015; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:120px 120px;
+}
+.hero .wrap{ position:relative; z-index:1 }
+.hero-grid{ display:grid; gap:var(--s4); align-items:center }
+/* --low (.5 alpha) is calibrated against the flat --bg. The blurred blobs lift
+   the local ground to ~rgb(50,55,70) under the text column, which drops 11px
+   .eyebrow and 12px .cap.low to 3.3–4.1:1 depending on viewport and animation
+   phase — below the 4.5:1 that applies to text this small. --mid clears it
+   over the blob peak, so nothing inside .hero uses --low. */
+.hero .eyebrow, .hero .cap.low, .stage-cap{ color:var(--mid) }
+.hero h1{ margin:0 0 14px }
+.hero .brandline{ font:500 clamp(18px,3.2vw,24px)/1.25 "Chakra Petch",sans-serif; margin:0 0 10px }
+.hero .sub{ font-size:17px; color:var(--mid); max-width:46ch; margin:0 0 18px }
+.hero .sub-short{ display:none }
+@media (max-width:400px){ .hero .sub-long{ display:none } .hero .sub-short{ display:block } }
+/* Both lines drop a remote leaderboard name into flowing prose; at the 24-char
+   schema limit that is one unbreakable token, so they need to break inside it. */
+.tension,.boss-line{ overflow-wrap:anywhere }
+.tension{ min-height:44px; margin:0 0 18px; padding-top:12px; font-size:15px; color:var(--mid) }
+.tension b{ color:var(--coin); font-family:"Chakra Petch",sans-serif; font-weight:500; font-variant-numeric:tabular-nums }
+.tension .sk{ display:inline-block; width:min(280px,80%); height:14px; border-radius:999px; background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12),rgba(255,255,255,.05)); background-size:200% 100%; animation:shim 1.4s linear infinite }
+@keyframes shim{ to{ background-position:-200% 0 } }
+
+.stage{ position:relative; justify-self:center; width:clamp(240px,72vw,300px) }
+.stage canvas{ display:block; width:100%; height:auto; aspect-ratio:560/740 }
+.stage-pause{
+  position:absolute; right:0; bottom:34px; width:44px; height:44px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:0; border-radius:999px; cursor:pointer;
+  background:rgba(14,15,20,.92); box-shadow:inset 0 0 0 1px var(--hair-hi); color:var(--fg);
+}
+.stage-pause svg{ width:16px; height:16px }
+.stage-cap{ margin:10px 0 0; text-align:center; font:800 11px/1.4 Nunito,sans-serif; letter-spacing:.14em; text-transform:uppercase; min-height:20px }
+.stage-cap.over{ color:var(--danger); font-family:"Chakra Petch",sans-serif; font-weight:700; letter-spacing:.06em }
+
+/* ---- sheet (leaderboard) ---- */
+.sheet{ --cut:14px; background:var(--hair-hi); box-shadow:0 14px 26px rgba(0,0,0,.55) }
+.sheet::before{ background:var(--sheet) }
+.sheet-in{ padding:24px }
+@media (min-width:768px){ .sheet-in{ padding:32px } }
+
+/* ---- filters ---- */
+.filters{ display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; margin:18px 0 }
+.tabs{ display:flex; gap:8px; flex-wrap:wrap }
+.tab{
+  --cut:7px; min-height:44px; padding:0 16px; display:inline-flex; align-items:center; gap:8px;
+  border:0; cursor:pointer; background:var(--hair); color:var(--mid);
+  font:800 12px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em;
+}
+.tab::before{ background:rgba(14,15,20,.94) }
+.tab .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; opacity:.35 }
+.tab[aria-pressed="true"]{ background:var(--tc); color:var(--fg) }
+.tab[aria-pressed="true"]::before{ background:color-mix(in srgb, var(--tc) 13%, #0E0F14) }
+.tab[aria-pressed="true"] .dot{ background:var(--tc); opacity:1 }
+.field{ display:flex; flex-direction:column; gap:6px }
+.field label{ font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low) }
+.field select,.field input{
+  min-height:44px; padding:0 12px; background:#12131A; color:var(--fg);
+  border:1px solid var(--hair-hi); border-radius:8px;
+  font:500 16px/1 Nunito,sans-serif;
+}
+.chase{ margin-left:auto }
+.chase input{ width:150px; font-variant-numeric:tabular-nums }
+
+/* ---- leaderboard table ---- */
+.lb-scroll{ overflow-x:auto }
+/* table-layout:fixed, so a 24-char name (public.scores.name allows text 3-24)
+   cannot widen the table past the viewport and push the Score column out of the
+   .lb-scroll region. Fixed layout reads its widths from the FIRST row, which is
+   the thead, so the th widths below must track the td widths. */
+table.lb{ width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0 8px }
+table.lb th{ text-align:left; font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low); padding:0 12px 8px }
+table.lb th:first-child{ width:52px; padding-left:0 } table.lb th:last-child{ width:96px; padding-right:0 }
+table.lb th.r,table.lb td.score{ text-align:right }
+table.lb td{ vertical-align:middle; padding:0 }
+td.rank{
+  width:52px; padding-right:12px; text-align:right;
+  font:800 20px/1 Nunito,sans-serif; font-variant-numeric:tabular-nums; color:var(--low);
+  white-space:nowrap;
+}
+td.rank svg{ width:12px; height:12px; vertical-align:-1px; margin-right:4px }
+td.score{
+  width:96px; padding-left:12px;
+  font:500 26px/1 "Chakra Petch",sans-serif; font-variant-numeric:tabular-nums; color:var(--fg);
+}
+td.plate-cell{ width:100% }   /* soaks up the remainder; the two fixed columns hold */
+.deltachip{ display:block; font:800 11px/1.4 Nunito,sans-serif; color:var(--low); font-variant-numeric:tabular-nums }
+
+/* ---- the plate (scripts/ui/name_plate.gd) ---- */
+.plate{
+  position:relative; min-height:68px; padding:10px 18px; border-radius:18px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  overflow:hidden; transition:transform 160ms ease, box-shadow 160ms ease;
+}
+tr:hover .plate.framed{ transform:translateY(-2px) }
+.plate.framed::before{ /* inner highlight line, 1.5px below the top edge, inset by the radius */
+  content:""; position:absolute; left:18px; right:18px; top:1.5px; height:1px;
+  background:rgba(255,255,255,.16);
+}
+.plate .nm{
+  font-size:21px; line-height:1.05; color:#EDF0F2; font-weight:700;
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.plate .ti{ font-size:14px; line-height:1.2; margin-top:3px; color:var(--accent); font-weight:700 }
+@media (max-width:420px){
+  .plate{ min-height:56px; padding:8px 12px }
+  .plate .nm{ font-size:18px } .plate .ti{ font-size:12px }
+  .plate.framed::before{ left:12px; right:12px }
+  td.score,table.lb th:last-child{ width:88px } td.score{ font-size:22px }
+  td.rank,table.lb th:first-child{ width:42px } td.rank{ font-size:17px }
+}
+/* eleven flair recipes */
+.f-slate  { background:linear-gradient(180deg,#262B38,#12141C); box-shadow:0 0 0 1px rgba(255,255,255,1),0 0 0 3.5px rgba(255,255,255,.06),0 0 14px rgba(255,255,255,.06) }
+.f-neon   { background:linear-gradient(180deg,#102E3C,#0A1217); box-shadow:0 0 0 1px rgba(90,209,230,.95),0 0 0 3.5px rgba(90,209,230,.28),0 0 14px rgba(90,209,230,.28) }
+.f-circuit{ background:linear-gradient(180deg,#0F2117,#08120D); box-shadow:0 0 0 1px rgba(75,216,107,.85),0 0 0 3.5px rgba(75,216,107,.20),0 0 14px rgba(75,216,107,.20) }
+.f-circuit::after{ content:""; position:absolute; left:16px; right:16px; bottom:3.5px; height:2.6px;
+  background:linear-gradient(90deg,rgba(75,216,107,.9) 0 2.6px,rgba(75,216,107,.4) 2.6px calc(100% - 2.6px),rgba(75,216,107,.9) calc(100% - 2.6px) 100%);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%) }
+.f-frost  { background:linear-gradient(180deg,#2A3C4D,#0D141C); box-shadow:0 0 0 1px rgba(191,232,255,.9),0 0 0 3.5px rgba(191,232,255,.24),0 0 14px rgba(191,232,255,.24) }
+.f-frost::after{ content:""; position:absolute; inset:6px; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cg stroke='%23BFE8FF' stroke-opacity='.55' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M6 1v10M1.7 3.5l8.6 5M10.3 3.5l-8.6 5'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:left top,right top,left bottom,right bottom; background-size:12px 12px }
+.f-gilded { background:linear-gradient(180deg,#382B0F,#170F05); box-shadow:0 0 0 1px rgba(255,214,102,1),0 0 0 3.5px rgba(255,214,102,.26),0 0 0 5px rgba(102,71,15,.9),0 0 14px rgba(255,214,102,.26) }
+.f-ember  { background:linear-gradient(180deg,#2E120A,#421708); box-shadow:0 0 0 1px rgba(255,122,58,.95),0 0 0 3.5px rgba(255,122,58,.26),0 0 14px rgba(255,122,58,.26) }
+.f-ember::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,122,58,.26) 0 1.25px,transparent 1.25px 9px);
+  -webkit-mask-image:linear-gradient(0deg,#000,transparent); mask-image:linear-gradient(0deg,#000,transparent);
+  animation:heat 2.2s linear infinite }
+@keyframes heat{ to{ background-position:0 -9px } }
+.f-holo   { background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35)),
+            linear-gradient(90deg,hsla(0,50%,60%,.26),hsla(60,50%,60%,.26),hsla(120,50%,60%,.26),hsla(180,50%,60%,.26),hsla(240,50%,60%,.26),hsla(300,50%,60%,.26),hsla(360,50%,60%,.26));
+            background-size:auto,300% 100%; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.18),0 0 14px rgba(255,255,255,.18);
+            animation:holo 4.5s linear infinite }
+.f-holo::before{ background:rgba(255,255,255,.22) }
+@keyframes holo{ to{ background-position:0 0,300% 0 } }
+.f-void   { background:radial-gradient(circle at 18% 30%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
+            radial-gradient(circle at 72% 24%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
+            radial-gradient(circle at 55% 74%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
+            linear-gradient(180deg,#0F0A1F,#05030D);
+            box-shadow:0 0 0 1px rgba(176,140,252,1),0 0 0 3.5px rgba(176,140,252,.24),0 0 14px rgba(176,140,252,.24) }
+.f-bloom  { background:linear-gradient(180deg,#331724,#170A12); box-shadow:0 0 0 1px rgba(245,143,168,.9),0 0 0 3.5px rgba(245,143,168,.24),0 0 14px rgba(245,143,168,.24) }
+.f-bloom::after{ content:""; position:absolute; left:0; top:50%; width:40px; height:56px; transform:translateY(-50%); pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='56' fill='none' stroke='%23F58FA8' stroke-opacity='.55' stroke-width='2'%3E%3Cpath d='M-6 8C10 14 16 26 6 44'/%3E%3Cpath d='M-8 24C4 28 8 36 2 50'/%3E%3C/svg%3E") }
+.f-carbon { background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3.5px),
+            linear-gradient(180deg,#212429,#0F0F14);
+            box-shadow:0 0 0 1px rgba(191,199,217,.85),0 0 0 3.5px rgba(191,199,217,.10),0 0 14px rgba(191,199,217,.10) }
+/* rank 1 gets the game's tier-2 record chrome: near-black behind the plate art,
+   inside an animated tri-gradient frame (scripts/ui/game_over_screen.gd tier 2) */
+tr.boss .plate{ background-color:rgba(15,16,21,.94) }
+tr.boss .plate-wrap{ position:relative; padding:2px; border-radius:20px; overflow:hidden; isolation:isolate }
+tr.boss .plate-wrap::before{
+  content:""; position:absolute; left:-60%; top:-160%; width:220%; height:420%; z-index:0;
+  background:conic-gradient(#5AD1E6,#B48CFF,#FFC24B,#5AD1E6); animation:boss 8s linear infinite;
+}
+tr.boss .plate-wrap .plate{ position:relative; z-index:1 }
+@keyframes boss{ to{ transform:rotate(360deg) } }
+/* ghost row for the chase input */
+tr.ghost .plate{ background:transparent; box-shadow:none; border:2px dashed var(--accent) }
+tr.ghost .nm{ color:var(--accent) }
+tr.ghost .ti{ color:var(--low) }
+
+.lb-status{ margin:14px 0 0; font-size:14px; color:var(--mid); min-height:22px }
+.skel{ height:68px; border-radius:18px; background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.09),rgba(255,255,255,.04)); background-size:200% 100%; animation:shim 1.4s linear infinite }
+.boss-line{ font:500 18px/1.4 "Chakra Petch",sans-serif; color:var(--mid); margin:0 0 12px }
+.boss-line b{ color:var(--coin); font-weight:500 }
+
+/* ---- generic grids ---- */
+.grid{ display:grid; gap:12px; grid-template-columns:1fr }
+@media (min-width:768px){ .grid.g2,.grid.g3,.grid.g4{ grid-template-columns:1fr 1fr } }
+@media (min-width:1024px){ .grid.g3{ grid-template-columns:repeat(3,1fr) } .grid.g4{ grid-template-columns:repeat(4,1fr) } }
+.card{ padding:20px }
+.card h3{ margin:0 0 6px; color:var(--fg) }
+.card p{ margin:0; font-size:15px; color:var(--mid) }
+.card .ico{ display:block; width:22px; height:22px; margin-bottom:12px; color:var(--accent) }
+.card .bar{ display:block; width:26px; height:4px; border-radius:999px; margin-bottom:12px }
+
+/* ---- fall-time bars ---- */
+.falls{ display:flex; align-items:flex-end; justify-content:flex-start; gap:6px; height:110px; margin:24px 0 8px; max-width:520px }
+.falls-legend{ max-width:520px }
+.falls i{ flex:0 1 18px; background:linear-gradient(180deg,var(--accent),rgba(90,209,230,.22)); border-radius:2px 2px 0 0; min-width:6px }
+.falls-legend{ display:flex; justify-content:space-between; font:800 11px/1 Nunito,sans-serif; letter-spacing:.1em; text-transform:uppercase; color:var(--low) }
+
+/* ---- 63 swatches ---- */
+.swatch-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(20px,1fr)); gap:4px; margin-top:14px }
+.swatch-grid i{ display:block; aspect-ratio:1; --cut:5px;
+  clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px) }
+
+/* ---- screenshots ---- */
+.shots{ display:grid; gap:12px; grid-template-columns:repeat(2,1fr) }
+@media (min-width:768px){ .shots{ grid-template-columns:repeat(3,1fr) } }
+@media (min-width:1024px){ .shots{ grid-template-columns:repeat(5,1fr) } }
+.shots img{ width:100%; border-radius:12px; border:1px solid var(--hair) }
+
+/* ---- downloads ---- */
+.dl-grid{ display:grid; gap:12px; grid-template-columns:1fr }
+@media (min-width:768px){ .dl-grid{ grid-template-columns:1fr 1fr } }
+@media (min-width:1024px){ .dl-grid{ grid-template-columns:repeat(3,1fr) } }
+.dl{ padding:20px; display:flex; flex-direction:column; gap:10px }
+.dl.span{ grid-column:1/-1 }
+.dl.span::before{ background:linear-gradient(180deg,rgba(90,209,230,.10),rgba(14,15,20,.94)) }
+.dl-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.dl-head svg{ width:16px; height:16px; color:var(--accent); flex:none }
+.dl-head h3{ margin:0 }
+.dl-size{ font:500 24px/1 "Chakra Petch",sans-serif; font-variant-numeric:tabular-nums }
+.dl-size span{ font:500 14px/1 Nunito,sans-serif; color:var(--mid); margin-left:8px }
+.dl p{ margin:0; font-size:14px; color:var(--mid) }
+.dl code{ font:500 13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:rgba(255,255,255,.06); padding:2px 6px; border-radius:4px; overflow-wrap:anywhere }
+.dl details summary{ cursor:pointer; font:800 12px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); min-height:44px; display:flex; align-items:center }
+/* display:flex drops ::marker, so the disclosure triangle has to be drawn back in
+   or this reads as one more cyan uppercase link. */
+.dl details summary::after{ content:""; width:7px; height:7px; margin:-3px 0 0 9px; flex:none;
+  border-right:2px solid; border-bottom:2px solid; transform:rotate(45deg); transition:transform 140ms ease }
+.dl details[open] summary::after{ margin:3px 0 0 9px; transform:rotate(-135deg) }
+.dl details p{ margin:0 0 8px }
+.dl .btn{ align-self:flex-start; margin-top:auto }
+.chip{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
+  font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em }
+.chip svg{ width:12px; height:12px }
+.chip-rel{ background:rgba(90,209,230,.16); box-shadow:inset 0 0 0 1px rgba(90,209,230,.55); color:#9BE6F3 }
+.chip-dbg{ background:rgba(255,194,75,.16); box-shadow:inset 0 0 0 1px rgba(255,194,75,.55); color:var(--coin) }
+.chip-na{ background:transparent; border:1px dashed rgba(237,238,242,.35); border-radius:0; color:var(--low) }
+
+/* ---- fair ---- */
+.fair{ display:grid; gap:12px; grid-template-columns:1fr; max-width:900px }
+@media (min-width:720px){ .fair{ grid-template-columns:1fr 1fr } }
+.fair .card p{ font-size:16px }
+
+footer{ border-top:1px solid var(--hair); padding:var(--s4) 0 var(--s6); font-size:14px; color:var(--mid) }
+footer p{ margin:0 0 6px }
+footer a{ color:var(--mid) }
+footer a:hover{ color:var(--accent) }
+footer nav{ display:flex; gap:var(--s3); flex-wrap:wrap; margin-top:10px }
+footer nav a{ min-height:44px; display:inline-flex; align-items:center }
+
+/* ---- scroll reveal: opt-in, so no-JS and print keep every card visible ---- */
+.js .rev{ opacity:0; transform:translateY(12px); transition:opacity 340ms ease-out, transform 340ms ease-out }
+.js .rev.in{ opacity:1; transform:none }
+
+@media (min-width:1280px){
+  .hero-grid{ grid-template-columns:1fr 1fr; min-height:min(560px,88dvh) }
+  .stage{ width:440px }
+  .sheet{ max-width:720px; margin:0 auto }
+}
+@media (min-width:768px) and (max-width:1279px){
+  .wrap{ max-width:720px; padding:0 40px }
+  .stage{ width:360px }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  *,*::before,*::after{ animation-duration:0s!important; animation-iteration-count:1!important; transition-duration:0s!important }
+  .js .rev{ opacity:1; transform:none }
 }
 </style>
 </head>
 <body>
-<main>
-<h1>PolyBall</h1>
-<p class="meta">A polygon arena arcade game for Android.</p>
-<p class="lede">Match the ball to the segment it is about to hit. That is the whole
-game, and it gets faster than you do.</p>
 
-<h2>What it costs</h2>
-<div class="card">
-  <h3>Free, with ads</h3>
-  <p>Interstitials between runs, never during one, and never on your first day.
-  Optional rewarded ads you choose to watch.</p>
-</div>
-<div class="card">
-  <h3>Nothing is sold that affects play</h3>
-  <p>Every purchase is cosmetic or removes ads. No item makes the ball easier to
-  steer, and nothing random is ever sold for money.</p>
-</div>
-<div class="card">
-  <h3>The daily run stays free</h3>
-  <p>One attempt per day, the same for everyone, and no purchase buys another.</p>
-</div>
+<a class="skip" href="#top">Skip to main content</a>
 
-<h2>Your data</h2>
-<p>Saves, scores and settings stay on your device. The gameplay log is off unless
-you switch it on, and it never leaves the phone unless you export it yourself.
-The full detail is in the <a href="/privacy.html">privacy policy</a>, and you can
-<a href="/delete.html">delete everything</a> at any time.</p>
+<header class="site-head">
+  <div class="wrap">
+    <a class="mark" href="#top">PolyBall</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#leaderboard">Leaderboard</a>
+      <a class="opt" href="#run">How it ends</a>
+      <a class="opt" href="#modes">Modes</a>
+      <a href="#get">Get it</a>
+    </nav>
+  </div>
+</header>
 
-<h2>Contact</h2>
-<p>Support and privacy questions: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
+<main id="top" tabindex="-1">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="blob blob-a"></div><div class="blob blob-b"></div><div class="grain"></div>
+  </div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Closed testing · 177 countries</p>
+        <p class="brandline">Every note you hear, you played.</p>
+        <h1>One miss ends the run.</h1>
+        <p class="sub sub-long">Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.</p>
+        <p class="sub sub-short">Match the colour. Miss once and the run is over.</p>
+        <p class="tension" id="tension"><span class="sk" aria-hidden="true"></span></p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
+            Join the closed test
+          </a>
+          <a class="btn btn-ghost" href="#leaderboard">See who you are chasing</a>
+        </div>
+        <p class="cap low" style="margin-top:14px;font-size:12px">Android only for now.<span data-play> There is also a browser build below.</span></p>
+      </div>
+
+      <div class="stage">
+        <canvas id="ring" width="560" height="740" role="img"
+          aria-label="A seven-sided ring of coloured segments spins while a ball drops onto the matching colour, falling faster each time until it misses."></canvas>
+        <button class="stage-pause" id="ringToggle" type="button" aria-label="Pause hero animation">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" id="ringIcon"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>
+        </button>
+        <p class="stage-cap" id="ringCap" aria-hidden="true">Live demo run</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEADERBOARD ============ -->
+<section class="section" id="leaderboard">
+  <div class="wrap">
+    <div class="chm sheet"><div class="sheet-in">
+      <p class="eyebrow">Live board</p>
+      <h2>Somebody is already better than you.</h2>
+      <p class="lede" style="margin-top:10px">Real runs, straight from the game. Zen runs and assisted runs never appear here.</p>
+
+      <div class="filters">
+        <!-- Toggle buttons, not tabs: there is no panel to control and no arrow-key
+             navigation, so the tab role would promise both and deliver neither. -->
+        <div class="tabs" role="group" aria-label="Game mode">
+          <button class="chm tab" id="tab-0" aria-pressed="true"  style="--tc:var(--m-classic)" data-mode="0"><span class="dot" aria-hidden="true"></span>Classic</button>
+          <button class="chm tab" id="tab-1" aria-pressed="false" style="--tc:var(--m-music)"   data-mode="1"><span class="dot" aria-hidden="true"></span>Music</button>
+          <button class="chm tab" id="tab-2" aria-pressed="false" style="--tc:var(--m-time)"    data-mode="2"><span class="dot" aria-hidden="true"></span>Time</button>
+        </div>
+        <div class="field">
+          <label for="sides">Sides</label>
+          <select id="sides"></select>
+        </div>
+        <div class="field chase">
+          <label for="best">Your best run</label>
+          <input id="best" type="number" inputmode="numeric" min="0" max="999999" step="1" placeholder="0">
+        </div>
+      </div>
+
+      <p class="boss-line" id="bossLine" hidden></p>
+
+      <!-- No tabindex/role: table.lb is table-layout:fixed with both edge columns
+           pinned and the name ellipsised, so scrollWidth always equals clientWidth.
+           A focusable "scrollable region" that cannot scroll is a dead keyboard stop. -->
+      <div class="lb-scroll">
+        <table class="lb">
+          <caption class="vh" id="lbCaption">Top runs from the live PolyBall leaderboard</caption>
+          <thead>
+            <tr><th scope="col" class="r">Rank</th><th scope="col">Player</th><th scope="col" class="r">Score</th></tr>
+          </thead>
+          <tbody id="lbBody"></tbody>
+        </table>
+      </div>
+
+      <noscript><p class="lb-status">The live board and the hero animation both need JavaScript. Everything else on this page works without it.</p></noscript>
+      <!-- tabindex=-1: focus lands here when the button that was focused gets hidden -->
+      <p class="lb-status" id="lbStatus" role="status" aria-atomic="true" tabindex="-1"></p>
+      <div class="cta-row" style="margin-top:14px">
+        <!-- Label is rewritten with the real row count by render() before this is ever shown. -->
+        <button class="btn btn-ghost btn-sm" id="lbMore" type="button" hidden>Show all</button>
+        <button class="btn btn-ghost btn-sm" id="lbRetry" type="button" hidden>Retry</button>
+        <a class="btn btn-primary btn-sm" id="lbCta" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
+      </div>
+      <p class="cap low" style="margin:12px 0 0;font-size:14px">Your best run is stored in this browser only. Nothing is sent anywhere: this page reads the public board and never writes to it.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============ HOW A RUN ENDS ============ -->
+<section class="section" id="run">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Classic</p>
+      <h2>How a run ends</h2>
+      <p>Sides are always odd, three to sixty-three. The worst case is exactly (N&nbsp;−&nbsp;1)&nbsp;÷&nbsp;2 taps, which is only exact because the count is odd.</p>
+    </div>
+    <div class="grid g3">
+      <article class="chm card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5" fill="currentColor" stroke="none"/></svg>
+        <h3>Match the colour</h3>
+        <p>The ball is one of the colours on the ring. Rotate so its own segment is under it. Anything else is a miss, and that part is the same in all four modes.</p>
+      </article>
+      <article class="chm card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        <h3>The clock is the difficulty</h3>
+        <p>A seven-sided Classic run gives you 2.34 seconds on the first drop (your first three runs fall slower still and cap at five sides, a deliberate on-ramp), 1.44 once you have twenty catches, and it bottoms out near 1.01. The fall time is solved backwards from a deadline, never tuned by hand. Time ramps the same way; Zen holds one calm 2.66 and never speeds up, and Music locks each drop to a whole number of beats instead.</p>
+      </article>
+      <article class="chm card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--danger)" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <h3>One miss</h3>
+        <p>Wrong segment, run over, score submitted, in Classic and the Daily. Music, Time and Zen only break your combo and drop a fresh ball. In Classic, one rewarded-ad revive is offered per run once a run is worth saving, and a bought Combo Shield absorbs one fatal miss while a combo is live. With no combo going it does not fire at all, and it never fires in the Daily. Take either and the run is flagged assisted and never reaches the leaderboard.</p>
+      </article>
+    </div>
+    <div class="falls" id="falls" aria-hidden="true"></div>
+    <div class="falls-legend"><span>1st drop · 2.34s</span><span>after 20 catches · 1.44s</span></div>
+  </div>
+</section>
+
+<!-- ============ MODES ============ -->
+<section class="section" id="modes">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Modes</p>
+      <h2>Four ways to play</h2>
+    </div>
+    <div class="grid g4">
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--m-classic)" aria-hidden="true"></span>
+        <h3 style="color:var(--m-classic)">Classic</h3>
+        <p>The pure loop. Endless, and it only gets faster.</p>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--m-music)" aria-hidden="true"></span>
+        <h3 style="color:var(--m-music)">Music</h3>
+        <p>Perform the song. Balls land on the beat and you play the chord tones.</p>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--m-time)" aria-hidden="true"></span>
+        <h3 style="color:var(--m-time)">Time</h3>
+        <p>Beat the clock. Every clean catch buys back seconds.</p>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--m-zen)" aria-hidden="true"></span>
+        <h3 style="color:var(--m-zen)">Zen</h3>
+        <p>Just flow. Zen runs are never submitted to the board, which is why the filter above has three tabs, not four.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CRAFT ============ -->
+<section class="section" id="craft">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Under the hood</p>
+      <h2>Built properly</h2>
+    </div>
+    <div class="grid g2">
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--c5)" aria-hidden="true"></span>
+        <h3>Sixty-three colours, none of them a guess</h3>
+        <p>The palette is validated to a minimum pairwise redmean distance of 0.087, and neighbours differ in both hue and lightness. A colour-blind mode adds a shape mark per index, with the mark's ink picked by measured WCAG ratio rather than a luma cut-off.</p>
+        <!-- decorative: the paragraph above states the claim; the grid illustrates it -->
+        <div class="swatch-grid" id="swatches" aria-hidden="true"></div>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--m-music)" aria-hidden="true"></span>
+        <h3>No music files ship</h3>
+        <p>Every note is generated live by an additive synth: a stack of oscillators mixed and enveloped into a sample at runtime. Sixteen voice recipes ship as alternative Sound themes, one equipped at a time, and each re-voices the notes, the run layers and the bed without touching the colour-to-note mapping, so no theme can be pay-to-win. Each colour is a degree of the current chord over an eight-bar progression, so every match lands in key, and a combo gates the bass, arp and lead in one at a time on a swung beat grid.</p>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--c4)" aria-hidden="true"></span>
+        <h3>Fifteen locales, right-to-left tested</h3>
+        <p>Including Modern Standard and Egyptian Arabic. RTL layout is verified by a test script in the repo, not assumed to work.</p>
+      </article>
+      <article class="chm card rev">
+        <span class="bar" style="background:var(--coin)" aria-hidden="true"></span>
+        <h3>Contrast encoded as ratios</h3>
+        <p>The theme stores contrast ratios, not alpha values, and re-solves every neutral at runtime against whichever ground you have equipped. Surfaces are clamped to CIE L* 4–96, so nothing ever bottoms out into a hole in the art.</p>
+      </article>
+    </div>
+    <div class="shots" style="margin-top:12px">
+      <img src="img/phone_01_run_combo.webp" alt="A run in progress, combo building on a multi-sided polygon" width="540" height="960" loading="lazy" decoding="async">
+      <img src="img/phone_02_run_fever.webp" alt="Fever, the arena lit warm gold at a high combo" width="540" height="960" loading="lazy" decoding="async">
+      <img src="img/phone_03_home.webp" alt="The PolyBall home screen with the ring and mode select" width="540" height="960" loading="lazy" decoding="async">
+      <img src="img/phone_04_shop.webp" alt="The cosmetics shop listing plates and segment styles" width="540" height="960" loading="lazy" decoding="async">
+      <img src="img/phone_05_box.webp" alt="Opening a mystery box reward" width="540" height="960" loading="lazy" decoding="async">
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOWNLOADS ============ -->
+<!--
+  HOSTING NOTE — READ BEFORE PUBLISHING.
+  The binaries referenced below live in builds/dist/ (395 MB total) and are NOT in this
+  folder and MUST NOT be committed: GitHub Pages publishes web/, and these files are far
+  too large for the repository.
+  TODO before this section is live:
+    1. Create a GitHub Release on Abdaishere/PolyBall and upload:
+         PolyBall-Android-arm64-debug.apk   (96,122,415 bytes)
+         PolyBall-Windows-x86_64.exe        (118,442,040 bytes)
+         PolyBall-Linux-x86_64.x86_64       (82,714,984 bytes)
+         PolyBall-macOS-universal.zip       (66,976,878 bytes)
+    2. The APK/Windows/Linux/macOS cards currently have NO link at all — a chip-na
+       chip and a "not uploaded yet" line where the button used to be, because a
+       "Release" chip on an href that 404s is the one thing this section must not
+       ship. When the assets exist, add back
+         <a class="btn btn-ghost" href="https://github.com/Abdaishere/PolyBall/releases/download/v0.9.2/<file>" download
+            aria-label="Download ... , NN megabytes">Download ...</a>
+       delete the "not uploaded yet" paragraph, and restore chip-rel (chip-dbg with
+       its warning triangle svg on the APK). Also revert the section lede, the
+       closing caveat and the hero's "Android only for now" line, all three of
+       which currently state that only Play and the browser build are reachable.
+    3. DONE — the nine-file Godot web export is copied from builds/dist/web/ into
+       web/play/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
+        index.audio.position.worklet.js, index.icon.png, index.png,
+        index.apple-touch-icon.png). All nine are required. That directory is 48 MB,
+       of which index.wasm alone is 39.5 MB, so committing it puts 48 MB in the
+       repository permanently. If you would rather host the browser build from a
+       Release instead, delete web/play/ AND change the browser card's chip from
+       chip-rel to chip-na — never ship a "Release" chip on a link that 404s.
+-->
+<section class="section" id="get">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Downloads</p>
+      <h2>Get it</h2>
+      <p>Two you can play right now, four still waiting on an upload, one that does not exist. Every caveat is on the card, not in a footnote.</p>
+    </div>
+    <div class="dl-grid">
+
+      <article class="chm dl span rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
+          <h3>Android · Google Play</h3>
+          <span class="chip chip-rel">Release</span>
+        </div>
+        <p>PolyBall: Color Spin Arcade, v0.9.2 (build 4), package <code>com.polyball.game</code>. In closed testing across 177 countries.</p>
+        <p>Opt in with your Google account, then install from Play as normal. Updates arrive normally. The public store page is not open yet.</p>
+        <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
+      </article>
+
+      <article class="chm dl rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
+          <h3>Android · APK</h3>
+          <span class="chip chip-na">Debug build · not uploaded yet</span>
+        </div>
+        <p class="dl-size">91.7 MB <span>arm64-v8a · minSdk 24 · targetSdk 36</span></p>
+        <details>
+          <summary>Read this first</summary>
+          <p>This is a debug build: slower, verbose logging, debug asserts on.</p>
+          <p>It is debug-signed, so its signature does not match the Play build. It will not install over the Play closed-testing build and cannot be uploaded to Play.</p>
+          <p>arm64-v8a only. It will not install on armeabi-v7a, x86 or most emulators.</p>
+          <p>Sideloading needs "Install unknown apps" enabled for your browser, plus an explicit Play Protect override.</p>
+          <p><strong>If you can use Play, use Play.</strong></p>
+        </details>
+        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test in the meantime.</p>
+      </article>
+
+      <article class="chm dl rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
+          <h3>Windows</h3>
+          <span class="chip chip-na">Not uploaded yet</span>
+        </div>
+        <p class="dl-size">113.0 MB <span>x86_64</span></p>
+        <p>A single self-contained .exe with the PCK embedded. No installer, no runtime dependencies.</p>
+        <p>Not code-signed. SmartScreen will show "Windows protected your PC". Choose More info, then Run anyway. Some antivirus engines flag unsigned Godot exports heuristically. No 32-bit or ARM64 build.</p>
+        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play in browser below</span>.</p>
+      </article>
+
+      <article class="chm dl rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 3.5c0 2-1.5 3-1.5 5.5 0 3-3 4.5-3 7.5 0 2 1.5 3.5 3.5 3.5h8c2 0 3.5-1.5 3.5-3.5 0-3-3-4.5-3-7.5C16.5 6.5 15 5.5 15 3.5a3 3 0 0 0-6 0Z"/><path d="M10 9h.01M14 9h.01"/></svg>
+          <h3>Linux</h3>
+          <span class="chip chip-na">Not uploaded yet</span>
+        </div>
+        <p class="dl-size">78.9 MB <span>x86_64</span></p>
+        <p>Single file, PCK embedded. Exported from Windows, so the execute bit is missing: run <code>chmod +x PolyBall-Linux-x86_64.x86_64</code> first.</p>
+        <p>Needs a glibc distro with X11 or Wayland and OpenGL or Vulkan drivers. No AppImage, no .desktop entry.</p>
+        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play in browser below</span>.</p>
+      </article>
+
+      <article class="chm dl rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
+          <h3>macOS</h3>
+          <span class="chip chip-na">Not uploaded yet</span>
+        </div>
+        <p class="dl-size">63.9 MB <span>universal (x86_64 + arm64)</span></p>
+        <p><code>PolyBall.app</code> inside a zip. Unsigned and unnotarised: no Apple Developer identity exists for this project, so Gatekeeper will refuse it.</p>
+        <p>Run <code>xattr -dr com.apple.quarantine /path/to/PolyBall.app</code>, or right-click the app and choose Open. On Apple Silicon the quarantine removal is usually mandatory.</p>
+        <p class="low">Known mismatch: the macOS export preset still declares 0.8.0, so the app reports 0.8.0 in Finder while the game is 0.9.2.</p>
+        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play in browser below</span>.</p>
+      </article>
+
+      <article class="chm dl rev" data-play>
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+          <h3>Play in browser</h3>
+          <span class="chip chip-rel">Release</span>
+        </div>
+        <p class="dl-size">47 MB <span>WebAssembly, single-threaded</span></p>
+        <p>About 47 MB cold, roughly 15–20 MB gzipped, heavy on mobile data. Audio starts on your first tap. Runs on plain static hosting; no cross-origin isolation needed.</p>
+        <p class="low">Same data behaviour as the app: anonymous PostHog events unless you turn them off in Settings &rsaquo; DATA, and a leaderboard row on a new ranked best. No ads and no purchases in the browser build.</p>
+        <a class="btn btn-ghost" href="play/">Play in browser</a>
+      </article>
+
+      <article class="chm dl na rev">
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--low)" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
+          <h3>iOS</h3>
+          <span class="chip chip-na">Not available</span>
+        </div>
+        <p>Not available yet. An iOS build needs macOS, Xcode and an Apple Developer account. None of the three exist for this project, so there is nothing to hand you rather than something that will not install.</p>
+      </article>
+
+    </div>
+    <p class="cap low" style="margin-top:18px">The APK, Windows, Linux and macOS builds are exported and sitting on a disk, but they are not uploaded to a GitHub Release yet, so this page has no link to offer for them. The cards are here so the caveats are on record before the files land, not to sell you a click that goes nowhere. Right now <span data-play>the Play closed test and the browser build are the only two builds</span><span data-noplay hidden>the Play closed test is the only build</span> you can actually start. When those four do land: only the Android build carries the 0.9.2 version stamp, the desktop and browser exports report the project version, 0.9.0, and macOS declares 0.8.0; none of them is code-signed on any platform.</p>
+  </div>
+</section>
+
+<!-- ============ FAIR (compliance content, preserved) ============ -->
+<section class="section" id="fair">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Monetisation and data</p>
+      <h2>What it costs, plainly</h2>
+    </div>
+    <div class="fair">
+      <article class="chm card">
+        <h3>Free, with ads</h3>
+        <p>Interstitials between runs, never during one, at most one a minute and ten a session. A banner on the results screen. An occasional full-screen ad when you come back after a couple of minutes away, never over a run. Rewarded ads are always yours to choose.</p>
+      </article>
+      <article class="chm card">
+        <h3>Nothing sold affects your rank</h3>
+        <p>Money buys Remove Ads, a starter pack, gems or coins. Those buy cosmetics, and coins also buy Combo Shields, so a purchase can extend a run. A shield absorbs one fatal miss while a combo is live, once per run; with no combo going it does not fire, and it never fires in the Daily. Any run a shield or an ad revive touched is marked assisted and never submitted to the leaderboard. Nothing random is ever sold for money: the boxes you pay a wallet price for reveal three items and let you pick one, and the only box that still rolls is paid for with a rewarded ad.</p>
+      </article>
+      <article class="chm card">
+        <h3>The daily run stays free</h3>
+        <p>One attempt per day, the same for everyone, and no purchase buys another.</p>
+      </article>
+      <article class="chm card">
+        <h3>Your data stays yours</h3>
+        <p>Saves, settings and your local bests stay on your device. Two things leave, on top of the ad and Google Play billing traffic: when a ranked run sets a new best under a generated name, the game sends that score, the mode and side count it was set on, that generated name, your equipped plate, title and title font, and a random install id to the leaderboard. Nothing else, and never a name you typed. Anonymous usage events go to PostHog by default and switch off in Settings &rsaquo; DATA. The detailed gameplay log is off unless you switch it on, and never leaves the phone unless you export it yourself. The <a href="/privacy.html">privacy policy</a> lists all of it, and <a href="/delete.html">deleting your leaderboard row</a> takes one email.</p>
+      </article>
+      <article class="chm card">
+        <h3>The board is anonymous</h3>
+        <p>Leaderboard names are generated by the game, never typed by a player. The game itself uploads a row when you beat your own best; this page only reads that public board and never writes to it.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
 
 <footer>
-<p>PolyBall &middot; com.polyball.game &middot; <a href="/">Home</a>
-&middot; <a href="/privacy.html">Privacy</a>
-&middot; <a href="/delete.html">Delete my data</a></p>
+  <div class="wrap">
+    <p>PolyBall · com.polyball.game · built by <a href="https://github.com/Abdaishere">Abdallah El Belkasy</a></p>
+    <p>Support and privacy questions: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
+    <nav aria-label="Site">
+      <a href="/">Home</a>
+      <a href="/privacy.html">Privacy policy</a>
+      <a href="/delete.html">Delete my data</a>
+      <a href="/press/">Press kit</a>
+    </nav>
+    <p class="low" style="margin-top:10px">v0.9.2 (build 4) on Android · closed testing</p>
+  </div>
 </footer>
-</main>
+
+<script src="app.js" defer></script>
 </body>
 </html>

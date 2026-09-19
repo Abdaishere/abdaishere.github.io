@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PolyBall press kit</title>
+<meta name="description" content="PolyBall press kit: fact sheet, description, the procedural music engine, screenshots, logos and the icon, all free to use in coverage.">
+<link rel="canonical" href="https://abdaishere.github.io/press/">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="theme-color" content="#08090C">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.github.io/press/">
+<meta property="og:title" content="PolyBall press kit">
+<meta property="og:description" content="Fact sheet, screenshots, logos and the story of an arcade game that writes its own soundtrack.">
+<meta property="og:image" content="https://abdaishere.github.io/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!-- No scripts at all on this page. Fonts and images are same-origin. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<style>
+@font-face{ font-family:"Chakra Petch"; font-weight:700; font-display:swap; src:url(../fonts/chakra-petch-700.woff2) format("woff2") }
+@font-face{ font-family:Nunito; font-weight:200 1000; font-display:swap; src:url(../fonts/nunito-var.woff2) format("woff2") }
+:root{ color-scheme:dark; --bg:#08090C; --card:#0E0F14; --hair:rgba(255,255,255,.09); --fg:#EDEEF2; --mid:rgba(237,238,242,.75); --accent:#5AD1E6 }
+*{ box-sizing:border-box }
+body{ margin:0; background:var(--bg); color:var(--fg); font:500 17px/1.6 Nunito, system-ui, sans-serif }
+main{ max-width:62rem; margin:0 auto; padding:2.5rem 1.25rem 5rem }
+h1,h2{ font-family:"Chakra Petch", Nunito, sans-serif; font-weight:700; line-height:1.2; margin:0 }
+h1{ font-size:1rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mid); margin:1.5rem 0 .5rem }
+h2{ font-size:1.5rem; margin:3rem 0 1rem }
+p,li{ color:var(--mid); max-width:44rem }
+a{ color:var(--accent) }
+a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px }
+.lede{ font-size:1.3rem; color:var(--fg); font-weight:700 }
+.logo{ display:block; width:min(100%, 34rem); height:auto }
+.facts{ display:grid; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); gap:1px; background:var(--hair); border:1px solid var(--hair); border-radius:14px; overflow:hidden; margin:0 }
+.facts div{ background:var(--card); padding:1rem 1.25rem }
+.facts dt{ font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; color:var(--mid) }
+.facts dd{ margin:.2rem 0 0; color:var(--fg) }
+.shots{ display:grid; grid-template-columns:repeat(auto-fill, minmax(10rem, 1fr)); gap:1rem; padding:0; list-style:none }
+.shots img{ width:100%; height:auto; aspect-ratio:9/16; border-radius:12px; border:1px solid var(--hair); display:block }
+.logos{ display:grid; grid-template-columns:repeat(auto-fit, minmax(16rem, 1fr)); gap:1rem; padding:0; list-style:none }
+.logos li{ background:var(--card); border:1px solid var(--hair); border-radius:14px; padding:1.25rem; max-width:none }
+.logos li.light{ background:#fbfbfd }
+.logos img{ display:block; height:5rem; width:auto; max-width:100%; margin:0 auto 1rem }
+.logos p{ margin:0; font-size:.95rem }
+.logos li.light p{ color:#3d4353 }
+.logos li.light a{ color:#1f6f7d }
+.btn{ display:inline-block; background:var(--accent); color:#06222A; font-weight:800; text-decoration:none; padding:.8rem 1.4rem; border-radius:999px; min-height:44px }
+footer{ margin-top:4rem; color:#7c8396; font-size:.9rem }
+footer a{ color:#7c8396 }
+</style>
+</head>
+<body>
+<main>
+<img class="logo" src="../brand/lockup-horizontal.svg" alt="PolyBall" width="971" height="264">
+<h1>Press kit</h1>
+<p class="lede">Every note you hear, you played. One miss ends the run.</p>
+<p><a class="btn" href="polyball-press-kit.zip" download>Download everything (zip, 1.6 MB)</a></p>
+
+<h2>Fact sheet</h2>
+<dl class="facts">
+  <div><dt>Developer</dt><dd>Abdallah El Belkasy, solo</dd></div>
+  <div><dt>Status</dt><dd>Closed testing on Google Play. Release date to be announced</dd></div>
+  <div><dt>Platform</dt><dd>Android. A browser build exists and is not public yet</dd></div>
+  <div><dt>Price</dt><dd>Free, with ads and optional purchases</dd></div>
+  <div><dt>Languages</dt><dd>15: English, Spanish, Brazilian Portuguese, French, German, Italian, Russian, Turkish, Japanese, Korean, Simplified Chinese, Arabic (Egyptian and Modern Standard), Hindi, Indonesian</dd></div>
+  <div><dt>Engine</dt><dd>Godot 4, GDScript</dd></div>
+  <div><dt>Website</dt><dd><a href="/">abdaishere.github.io</a></dd></div>
+  <div><dt>Contact</dt><dd><a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></dd></div>
+</dl>
+
+<h2>Description</h2>
+<p>PolyBall is a one-thumb colour-matching arcade game. A ball falls onto a spinning polygon split into coloured segments. Rotate the polygon so the ball lands on its own colour. Every catch scores, builds your combo and speeds the game up. One wrong segment ends the run.</p>
+<p>There are four modes. Classic is the endless climb. Music drops the balls on the beat of a backing track. Time is a race against the clock. Zen has no score and no fail. The polygon runs from three sides to sixty-three, and every side count keeps its own best score. A daily run gives everyone the same single attempt, and a global leaderboard ranks the best runs.</p>
+
+<h2>The music is played, not played back</h2>
+<p>No music files ship with PolyBall. Every note is generated live by an additive synthesiser inside the game. Each colour on the ring is a degree of the current chord over an eight-bar progression, so every match lands in key and the player's run becomes the melody. Hold a combo and the bass, arpeggio and lead enter one at a time on a swung beat grid. Miss, and they fall away. Sixteen voice recipes ship as alternative sound themes, and none of them change the colour-to-note mapping.</p>
+
+<h2>Features</h2>
+<ul>
+  <li>Four modes: Classic, Music, Time and Zen</li>
+  <li>Polygons from 3 to 63 sides, each with its own high score</li>
+  <li>A daily run, one attempt per day, the same for everyone</li>
+  <li>A global leaderboard for ranked runs</li>
+  <li>Colour-blind mode that stamps a distinct shape on every colour</li>
+  <li>Right-to-left layout for Arabic</li>
+  <li>Cosmetics earned by playing: balls, trails, segment styles, themes and cores</li>
+</ul>
+
+<h2>What money buys</h2>
+<p>Remove Ads, a starter pack, gems or coins. Those buy cosmetics, and coins also buy Combo Shields, so a purchase can extend a run. Any run a shield or an ad revive touched is marked assisted and never reaches the leaderboard. Nothing random is sold for money.</p>
+
+<h2>Screenshots</h2>
+<p>1080&times;1920. Click for the full-size JPEG.</p>
+<ul class="shots">
+  <li><a href="shots/phone_02_run_fever.jpg"><img src="../img/phone_02_run_fever.webp" alt="A run in Fever, the combo ribbon lit" width="1080" height="1920" loading="lazy"></a></li>
+  <li><a href="shots/phone_01_run_combo.jpg"><img src="../img/phone_01_run_combo.webp" alt="A run with the combo at full height" width="1080" height="1920" loading="lazy"></a></li>
+  <li><a href="shots/phone_03_home.jpg"><img src="../img/phone_03_home.webp" alt="The home screen: the ring and the mode strip" width="1080" height="1920" loading="lazy"></a></li>
+  <li><a href="shots/phone_04_shop.jpg"><img src="../img/phone_04_shop.webp" alt="The cosmetics shop" width="1080" height="1920" loading="lazy"></a></li>
+  <li><a href="shots/phone_05_box.jpg"><img src="../img/phone_05_box.webp" alt="A mystery box reveal: the item won" width="1080" height="1920" loading="lazy"></a></li>
+</ul>
+
+<h2>Logo and icon</h2>
+<p>Free to use in coverage of PolyBall. Write the name as PolyBall: one word, capital P and B. Keep the ring-colour versions on a dark ground; on white, use the dark wordmark.</p>
+<ul class="logos">
+  <li><img src="../brand/lockup-horizontal.svg" alt="" width="971" height="264"><p>Horizontal lockup: <a href="../brand/lockup-horizontal.svg">SVG</a> &middot; <a href="png/lockup-horizontal.png">PNG</a></p></li>
+  <li><img src="../brand/lockup-stacked.svg" alt="" width="770" height="618"><p>Stacked lockup: <a href="../brand/lockup-stacked.svg">SVG</a> &middot; <a href="png/lockup-stacked.png">PNG</a></p></li>
+  <li><img src="../brand/mark.svg" alt="" width="512" height="512"><p>Mark: <a href="../brand/mark.svg">SVG</a> &middot; <a href="png/mark.png">PNG</a> &middot; <a href="png/icon-512.png">app icon, 512 px</a></p></li>
+  <li><img src="../brand/wordmark-ring.svg" alt="" width="592" height="172"><p>Wordmark, ring colours: <a href="../brand/wordmark-ring.svg">SVG</a> &middot; <a href="png/wordmark-ring.png">PNG</a></p></li>
+  <li><img src="../brand/wordmark-solid.svg" alt="" width="592" height="172"><p>Wordmark, light: <a href="../brand/wordmark-solid.svg">SVG</a> &middot; <a href="png/wordmark-solid.png">PNG</a></p></li>
+  <li class="light"><img src="../brand/wordmark-dark.svg" alt="" width="592" height="172"><p>Wordmark, dark: <a href="../brand/wordmark-dark.svg">SVG</a> &middot; <a href="png/wordmark-dark.png">PNG</a></p></li>
+</ul>
+
+<footer>
+<p>PolyBall &middot; <a href="/">Home</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/delete.html">Delete my data</a></p>
+</footer>
+</main>
+</body>
+</html>

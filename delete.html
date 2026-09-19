@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Delete your PolyBall data</title>
+<link rel="canonical" href="https://abdaishere.github.io/delete.html">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <style>
 :root { color-scheme: dark light; }
 * { box-sizing: border-box; }
@@ -28,8 +32,9 @@ a { color: #8fa2ff; }
 }
 .card h3 { margin: 0 0 .35rem; font-size: 1rem; }
 .card p { margin: 0; font-size: .95rem; }
-footer { margin-top: 3.5rem; color: #6b7285; font-size: .85rem; }
-footer a { color: #6b7285; }
+/* #7c8396 is 5.0:1 on #0f1117; the old #6b7285 was 3.9:1 and failed AA. */
+footer { margin-top: 3.5rem; color: #7c8396; font-size: .85rem; }
+footer a { color: #7c8396; }
 @media (prefers-color-scheme: light) {
   body { background: #fbfbfd; color: #14161d; }
   p, li { color: #3d4353; }
@@ -45,12 +50,13 @@ footer a { color: #6b7285; }
 <h1>Delete your data</h1>
 <p class="meta">PolyBall has no accounts. Almost everything the game knows about
 you is on your phone; two anonymous things can exist server-side and are deleted
-on request &mdash; both explained below.</p>
+on request. Both are explained below.</p>
 
 <h2>The fastest way</h2>
 <p>Uninstalling PolyBall removes the save file, your settings, your scores and the
 gameplay log with it. Nothing survives the uninstall and nothing is kept
-elsewhere.</p>
+elsewhere. In the browser build, clearing this site's data in your browser does
+the same for that browser.</p>
 
 <h2>Without uninstalling</h2>
 <p>In the game: <strong>Settings &rsaquo; DATA &rsaquo; RESET PROGRESS</strong>
@@ -77,10 +83,11 @@ form so you can withdraw consent.</p>
 <p>Two anonymous records can exist on our servers, both keyed to a random install
 identifier generated on your device (never your name, email or anything you
 typed):</p>
-<p><strong>Leaderboard row</strong> &mdash; your best scores with your GENERATED
-player name, if the game ever submitted one. Kept so the board can show your
+<p><strong>Leaderboard row:</strong> your best scores, each with its mode
+and side count and the plate, title and title font you had equipped, under your
+GENERATED player name, if the game ever submitted one. Kept so the board can show your
 rank; not removed by RESET PROGRESS or uninstalling.</p>
-<p><strong>Analytics events</strong> &mdash; anonymous usage statistics (PostHog),
+<p><strong>Analytics events:</strong> anonymous usage statistics (PostHog),
 which you can switch off in <strong>Settings &rsaquo; DATA &rsaquo;
 ANALYTICS</strong>.</p>
 <p>To delete either or both: email
