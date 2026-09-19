@@ -508,7 +508,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
           </a>
           <a class="btn btn-ghost" href="#leaderboard">See who you are chasing</a>
         </div>
-        <p class="cap low" style="margin-top:14px;font-size:12px">Android only for now.<span data-play> There is also a browser build below.</span></p>
+        <p class="cap low" style="margin-top:14px;font-size:12px">Direct downloads for Android, Windows, Linux and macOS below<span data-play>, plus a browser build</span>.</p>
       </div>
 
       <div class="stage">
@@ -686,25 +686,18 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
 <!-- ============ DOWNLOADS ============ -->
 <!--
   HOSTING NOTE — READ BEFORE PUBLISHING.
-  The binaries referenced below live in builds/dist/ (395 MB total) and are NOT in this
-  folder and MUST NOT be committed: GitHub Pages publishes web/, and these files are far
-  too large for the repository.
-  TODO before this section is live:
-    1. Create a GitHub Release on Abdaishere/PolyBall and upload:
-         PolyBall-Android-arm64-debug.apk   (96,122,415 bytes)
-         PolyBall-Windows-x86_64.exe        (118,442,040 bytes)
-         PolyBall-Linux-x86_64.x86_64       (82,714,984 bytes)
-         PolyBall-macOS-universal.zip       (66,976,878 bytes)
-    2. The APK/Windows/Linux/macOS cards currently have NO link at all — a chip-na
-       chip and a "not uploaded yet" line where the button used to be, because a
-       "Release" chip on an href that 404s is the one thing this section must not
-       ship. When the assets exist, add back
-         <a class="btn btn-ghost" href="https://github.com/Abdaishere/PolyBall/releases/download/v0.9.2/<file>" download
-            aria-label="Download ... , NN megabytes">Download ...</a>
-       delete the "not uploaded yet" paragraph, and restore chip-rel (chip-dbg with
-       its warning triangle svg on the APK). Also revert the section lede, the
-       closing caveat and the hero's "Android only for now" line, all three of
-       which currently state that only Play and the browser build are reachable.
+  The desktop/APK binaries live in builds/dist/ and MUST NOT be committed anywhere: GitHub
+  Pages publishes web/, and the files are far too large for a repository.
+    1. They are hosted as assets on the v0.9.2 GitHub Release of the PUBLIC site repo
+       Abdaishere/abdaishere.github.io (Abdaishere/PolyBall is private, so its release
+       URLs 404 for visitors). Uploaded 2026-09-19, exported from PolyBall HEAD:
+         PolyBall-Android-arm64-debug.apk   (95,555,682 bytes, 91.1 MB)
+         PolyBall-Windows-x86_64.exe        (117,876,400 bytes, 112.4 MB)
+         PolyBall-Linux-x86_64.x86_64       (82,149,344 bytes, 78.3 MB)
+         PolyBall-macOS-universal.zip       (66,412,210 bytes, 63.3 MB)
+    2. On a new build: upload replacement assets (or a new tag), then update each card's
+       href, its dl-size and the megabytes in its aria-label to the new byte size.
+       Never ship a "Release" chip on an href that 404s; check each URL unauthenticated.
     3. DONE — the nine-file Godot web export is copied from builds/dist/web/ into
        web/play/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
         index.audio.position.worklet.js, index.icon.png, index.png,
@@ -719,7 +712,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
     <div class="sec-head">
       <p class="eyebrow">Downloads</p>
       <h2>Get it</h2>
-      <p>Two you can play right now, four still waiting on an upload, one that does not exist. Every caveat is on the card, not in a footnote.</p>
+      <p>Six ways in, one platform that does not exist yet. Every caveat is on the card, not in a footnote.</p>
     </div>
     <div class="dl-grid">
 
@@ -750,9 +743,9 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
           <h3>Android · APK</h3>
-          <span class="chip chip-na">Debug build · not uploaded yet</span>
+          <span class="chip chip-dbg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:inherit" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>Debug build</span>
         </div>
-        <p class="dl-size">91.7 MB <span>arm64-v8a · minSdk 24 · targetSdk 36</span></p>
+        <p class="dl-size">91.1 MB <span>arm64-v8a · minSdk 24 · targetSdk 36</span></p>
         <details>
           <summary>Read this first</summary>
           <p>This is a debug build: slower, verbose logging, debug asserts on.</p>
@@ -761,44 +754,43 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
           <p>Sideloading needs "Install unknown apps" enabled for your browser, plus an explicit Play Protect override.</p>
           <p><strong>If you can use Play, use Play.</strong></p>
         </details>
-        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test in the meantime.</p>
+        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Android-arm64-debug.apk" download aria-label="Download the Android debug APK, 91.1 megabytes">Download APK</a>
       </article>
 
       <article class="chm dl rev">
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
           <h3>Windows</h3>
-          <span class="chip chip-na">Not uploaded yet</span>
+          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">113.0 MB <span>x86_64</span></p>
+        <p class="dl-size">112.4 MB <span>x86_64</span></p>
         <p>A single self-contained .exe with the PCK embedded. No installer, no runtime dependencies.</p>
         <p>Not code-signed. SmartScreen will show "Windows protected your PC". Choose More info, then Run anyway. Some antivirus engines flag unsigned Godot exports heuristically. No 32-bit or ARM64 build.</p>
-        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play it in your browser</span>.</p>
+        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Windows-x86_64.exe" download aria-label="Download for Windows, 112.4 megabytes">Download for Windows</a>
       </article>
 
       <article class="chm dl rev">
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 3.5c0 2-1.5 3-1.5 5.5 0 3-3 4.5-3 7.5 0 2 1.5 3.5 3.5 3.5h8c2 0 3.5-1.5 3.5-3.5 0-3-3-4.5-3-7.5C16.5 6.5 15 5.5 15 3.5a3 3 0 0 0-6 0Z"/><path d="M10 9h.01M14 9h.01"/></svg>
           <h3>Linux</h3>
-          <span class="chip chip-na">Not uploaded yet</span>
+          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">78.9 MB <span>x86_64</span></p>
+        <p class="dl-size">78.3 MB <span>x86_64</span></p>
         <p>Single file, PCK embedded. Exported from Windows, so the execute bit is missing: run <code>chmod +x PolyBall-Linux-x86_64.x86_64</code> first.</p>
         <p>Needs a glibc distro with X11 or Wayland and OpenGL or Vulkan drivers. No AppImage, no .desktop entry.</p>
-        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play it in your browser</span>.</p>
+        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Linux-x86_64.x86_64" download aria-label="Download for Linux, 78.3 megabytes">Download for Linux</a>
       </article>
 
       <article class="chm dl rev">
         <div class="dl-head">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
           <h3>macOS</h3>
-          <span class="chip chip-na">Not uploaded yet</span>
+          <span class="chip chip-rel">Release</span>
         </div>
-        <p class="dl-size">63.9 MB <span>universal (x86_64 + arm64)</span></p>
+        <p class="dl-size">63.3 MB <span>universal (x86_64 + arm64)</span></p>
         <p><code>PolyBall.app</code> inside a zip. Unsigned and unnotarised: no Apple Developer identity exists for this project, so Gatekeeper will refuse it.</p>
         <p>Run <code>xattr -dr com.apple.quarantine /path/to/PolyBall.app</code>, or right-click the app and choose Open. On Apple Silicon the quarantine removal is usually mandatory.</p>
-        <p class="low">Known mismatch: the macOS export preset still declares 0.8.0, so the app reports 0.8.0 in Finder while the game is 0.9.2.</p>
-        <p class="cap low" style="margin:12px 0 0">Not uploaded yet: the file is not hosted anywhere you can reach. Use the Play closed test<span data-play>, or play it in your browser</span>.</p>
+        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-macOS-universal.zip" download aria-label="Download for macOS, 63.3 megabytes">Download for macOS</a>
       </article>
 
       <article class="chm dl na rev">
@@ -811,7 +803,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
       </article>
 
     </div>
-    <p class="cap low" style="margin-top:18px">The APK, Windows, Linux and macOS builds are exported and sitting on a disk, but they are not uploaded to a GitHub Release yet, so this page has no link to offer for them. The cards are here so the caveats are on record before the files land, not to sell you a click that goes nowhere. Right now <span data-play>the Play closed test and the browser build are the only two builds</span><span data-noplay hidden>the Play closed test is the only build</span> you can actually start. When those four do land: only the Android build carries the 0.9.2 version stamp, the desktop and browser exports report the project version, 0.9.0, and macOS declares 0.8.0; none of them is code-signed on any platform.</p>
+    <p class="cap low" style="margin-top:18px">The APK, Windows, Linux and macOS files are attached to a public GitHub Release on this site's repository, not the game's source repository, which is private. All of them, and the browser build, report version 0.9.2. None is code-signed on any platform: the APK carries a debug signature and the desktop builds carry none.</p>
   </div>
 </section>
 
