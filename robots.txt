@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /play/
 
 Sitemap: https://abdaishere.github.io/sitemap.xml
