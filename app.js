@@ -829,7 +829,16 @@ function $(id) { return document.getElementById(id); }
   els.forEach(function (e) { io.observe(e); });
 })();
 
-/* The play/ probe that used to live here is gone: the site ships no browser
-   build at all now (native apps only), so there is nothing to detect. */
+/* ======================================================================
+   5. Browser build probe. tools/publish_site.sh leaves play/ off the site
+   while the Poki option is open, so every mention of it hides when absent.
+   ====================================================================== */
+fetch('play/index.html', { method: 'HEAD', cache: 'no-store' })
+  .then(function (r) { return r.ok; }, function () { return false; })
+  .then(function (ok) {
+    if (ok) return;
+    [].forEach.call(document.querySelectorAll('[data-play]'), function (e) { e.hidden = true; });
+    [].forEach.call(document.querySelectorAll('[data-noplay]'), function (e) { e.hidden = false; });
+  });
 
 })();

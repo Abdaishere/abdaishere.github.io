@@ -33,7 +33,7 @@
 
 <!-- Everything this page loads: app.js, one inline script (hashed), one inline <style>
      plus style="" attributes and el.style writes, self-hosted woff2 in fonts/, data: SVGs
-     in CSS and one Supabase origin. The JSON-LD block is a data block, not a script,
+     in CSS, one Supabase origin, and a same-origin HEAD probe for play/. The JSON-LD block is a data block, not a script,
      so script-src does not apply to it. Keep the inline script byte-identical or the hash
      must be recomputed. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PtdI6/36DhPdMEgjNWV5ExIEqFovVcjUHPeOyApfBhs='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://osnwwrpkyvcflfcixwmw.supabase.co; base-uri 'none'; form-action 'none'">
@@ -504,9 +504,9 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
             Join the closed test
           </a>
-          <a class="btn btn-ghost" href="#get">Windows, Mac and Linux</a>
+          <a class="btn btn-ghost" href="#leaderboard">See who you are chasing</a>
         </div>
-        <p class="cap low" style="margin-top:14px;font-size:12px">Free, no account needed. <a href="#leaderboard">See who you are chasing</a>.</p>
+        <p class="cap low" style="margin-top:14px;font-size:12px">Also on Windows, Mac and Linux<span data-play>, or play in your browser</span>.</p>
       </div>
 
       <div class="stage">
@@ -696,17 +696,21 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
     2. On a new build: upload replacement assets (or a new tag), then update each card's
        href, its dl-size and the megabytes in its aria-label to the new byte size.
        Never ship a "Release" chip on an href that 404s; check each URL unauthenticated.
-    3. There is NO browser build on this site. The web export is deliberately not
-       published (decided 2026-09-20: native apps only, docs/BRAND-PLAN.md section 2).
-       tools/publish_site.sh strips play/ on every publish. Do not add a "Play in
-       browser" card or link back unless that decision is reversed.
+    3. DONE — the nine-file Godot web export is copied from builds/dist/web/ into
+       web/play/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
+        index.audio.position.worklet.js, index.icon.png, index.png,
+        index.apple-touch-icon.png). All nine are required. That directory is 48 MB,
+       of which index.wasm alone is 39.5 MB, so committing it puts 48 MB in the
+       repository permanently. If you would rather host the browser build from a
+       Release instead, delete web/play/ AND change the browser card's chip from
+       chip-rel to chip-na — never ship a "Release" chip on a link that 404s.
 -->
 <section class="section" id="get">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Downloads</p>
       <h2>Get it</h2>
-      <p>Play on your phone or your computer.</p>
+      <p>Play on your phone, your computer or right here in the browser.</p>
     </div>
     <div class="dl-grid">
 
@@ -718,6 +722,19 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         </div>
         <p>The best way to play. Join the test with your Google account, then install from Play and get updates automatically.</p>
         <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
+      </article>
+
+      <article class="chm dl rev" data-play>
+        <div class="dl-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+          <h3>Play in browser</h3>
+        </div>
+        <p class="dl-size">47 MB <span>no install</span></p>
+        <p>Starts right here. Sound comes on with your first tap.</p>
+        <!-- Data disclosure, keep: PostHog events (off in Settings > DATA) and a leaderboard
+             row on a new ranked best, same as the app. No ads, no purchases in this build. -->
+        <p class="low">No ads or purchases. Anonymous usage stats, which you can turn off in Settings.</p>
+        <a class="btn btn-ghost" href="play/">Play in browser</a>
       </article>
 
       <article class="chm dl rev">
@@ -829,6 +846,6 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
 </footer>
 
 <!-- ?v= busts the 10-minute Pages cache (and phone heuristic caches) on every app.js change -->
-<script src="app.js?v=0.9.2-4" defer></script>
+<script src="app.js?v=0.9.2-3" defer></script>
 </body>
 </html>
