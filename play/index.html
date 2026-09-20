@@ -106,6 +106,72 @@ window.AudioBufferSourceNode && (() => {
 		return start.call(this, when, offset, ...rest);
 	};
 })();
+// iOS Safari plays a WebAudio-only page in the AMBIENT audio session, which the
+// hardware ringer switch silences, and its AudioContext only resumes inside a real
+// gesture handler. Track every context; on each tap resume it synchronously and keep
+// a silent looping audio element playing, which promotes the page to a media session
+// the ringer switch no longer mutes. Everything here is guarded: on a browser that
+// never needed it, the element simply plays silence.
+try {
+	const AC = window.AudioContext || window.webkitAudioContext;
+	if (AC) {
+		const ctxs = [];
+		class TrackedAudioContext extends AC {
+			constructor(...args) {
+				super(...args);
+				ctxs.push(this);
+			}
+		}
+		window.AudioContext = TrackedAudioContext;
+		if (window.webkitAudioContext) {
+			window.webkitAudioContext = TrackedAudioContext;
+		}
+		// 0.5 s of 8-bit silence, built here so the shim carries no base64 payload.
+		const silentUrl = () => {
+			const rate = 8000, frames = rate / 2, b = new Uint8Array(44 + frames);
+			const view = new DataView(b.buffer);
+			const tag = (off, s) => {
+				for (let i = 0; i < s.length; i++) b[off + i] = s.charCodeAt(i);
+			};
+			tag(0, 'RIFF');
+			view.setUint32(4, 36 + frames, true);
+			tag(8, 'WAVEfmt ');
+			view.setUint32(16, 16, true);
+			view.setUint16(20, 1, true);
+			view.setUint16(22, 1, true);
+			view.setUint32(24, rate, true);
+			view.setUint32(28, rate, true);
+			view.setUint16(32, 1, true);
+			view.setUint16(34, 8, true);
+			tag(36, 'data');
+			view.setUint32(40, frames, true);
+			b.fill(128, 44);
+			return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+		};
+		let el = null;
+		const kick = () => {
+			try {
+				for (const c of ctxs) {
+					if (c.state !== 'running') c.resume();
+				}
+				if (el === null) {
+					el = new Audio(silentUrl());
+					el.loop = true;
+					el.setAttribute('playsinline', '');
+				}
+				if (el.paused) el.play().catch(() => {});
+			} catch (err) { /* never break the game over audio */ }
+		};
+		for (const type of ['touchend', 'pointerup', 'mouseup', 'click', 'keydown']) {
+			window.addEventListener(type, kick, { capture: true });
+		}
+		// Read from the console (or the /audio-test.html page) when diagnosing.
+		window.polyballAudioState = () => ({
+			contexts: ctxs.map((c) => c.state + ' @' + c.sampleRate),
+			silentLoop: el !== null && !el.paused,
+		});
+	}
+} catch (err) { /* no audio fix, but the game still boots */ }
 </script>
 	</head>
 	<body>
