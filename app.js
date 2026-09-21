@@ -830,10 +830,10 @@ function $(id) { return document.getElementById(id); }
 })();
 
 /* ======================================================================
-   5. Browser build probe. tools/publish_site.sh leaves play/ off the site
+   5. Browser build probe. tools/publish_site.sh leaves polyball/ off the site
    while the Poki option is open, so every mention of it hides when absent.
    ====================================================================== */
-fetch('play/index.html', { method: 'HEAD', cache: 'no-store' })
+fetch('polyball/index.html', { method: 'HEAD', cache: 'no-store' })
   .then(function (r) { return r.ok; }, function () { return false; })
   .then(function (ok) {
     if (ok) return;

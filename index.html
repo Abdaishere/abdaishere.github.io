@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PolyBall: one miss ends the run</title>
 <meta name="description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run. Free on Android, in closed testing across 177 countries.">
-<!-- Canonical host: abdaishere.github.io (custom domain deferred, docs/BRAND-PLAN.md
-     section 3). If a domain is bought, change canonical, og:url, og:image and the JSON-LD
-     url together. -->
-<link rel="canonical" href="https://abdaishere.github.io/">
+<!-- Canonical host: abdaishere.com (bought 2026-09-21, Porkbun; GitHub Pages custom domain,
+     web/CNAME). abdaishere.github.io 301s here. Change canonical, og:url, og:image and the
+     JSON-LD url together. -->
+<link rel="canonical" href="https://abdaishere.com/">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="img/favicon.svg?v=2" type="image/svg+xml">
 <link rel="icon" href="img/favicon-32.png?v=2" type="image/png" sizes="32x32">
@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#08090C">
 
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://abdaishere.github.io/">
+<meta property="og:url" content="https://abdaishere.com/">
 <meta property="og:site_name" content="PolyBall">
 <meta property="og:title" content="PolyBall: one miss ends the run">
 <meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
@@ -27,7 +27,7 @@
      silently drops a relative og:image. -->
 <!-- 1200x630 share card, rendered from tools/og_image.html. The 1024x500 feature.png
      stays the Play feature graphic only; it cropped badly at 1.91:1. -->
-<meta property="og:image" content="https://abdaishere.github.io/img/og.png">
+<meta property="og:image" content="https://abdaishere.com/img/og.png">
 <!-- PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -48,9 +48,9 @@
 <link rel="preload" href="fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.github.io/",
+{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/",
 "description":"A colour-matching arcade game for Android. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
-"image":"https://abdaishere.github.io/img/og.png","genre":["Arcade","Casual","Music"],
+"image":"https://abdaishere.com/img/og.png","genre":["Arcade","Casual","Music"],
 "gamePlatform":"Android","applicationCategory":"GameApplication","operatingSystem":"Android",
 "playMode":"SinglePlayer","inLanguage":"en",
 "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
@@ -701,12 +701,12 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
        href, its dl-size and the megabytes in its aria-label to the new byte size.
        Never ship a "Release" chip on an href that 404s; check each URL unauthenticated.
     3. DONE — the nine-file Godot web export is copied from builds/dist/web/ into
-       web/play/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
+       web/polyball/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
         index.audio.position.worklet.js, index.icon.png, index.png,
         index.apple-touch-icon.png). All nine are required. That directory is 48 MB,
        of which index.wasm alone is 39.5 MB, so committing it puts 48 MB in the
        repository permanently. If you would rather host the browser build from a
-       Release instead, delete web/play/ AND change the browser card's chip from
+       Release instead, delete web/polyball/ AND change the browser card's chip from
        chip-rel to chip-na — never ship a "Release" chip on a link that 404s.
 -->
 <section class="section" id="get">
@@ -738,7 +738,7 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
         <!-- Data disclosure, keep: PostHog events (off in Settings > DATA) and a leaderboard
              row on a new ranked best, same as the app. No ads, no purchases in this build. -->
         <p class="low">No ads or purchases. Anonymous usage stats, which you can turn off in Settings.</p>
-        <a class="btn btn-ghost" href="play/">Play in browser</a>
+        <a class="btn btn-ghost" href="polyball/">Play in browser</a>
       </article>
 
       <article class="chm dl rev">
@@ -850,6 +850,6 @@ footer nav a{ min-height:44px; display:inline-flex; align-items:center }
 </footer>
 
 <!-- ?v= busts the 10-minute Pages cache (and phone heuristic caches) on every app.js change -->
-<script src="app.js?v=0.9.2-3" defer></script>
+<script src="app.js?v=0.9.2-4" defer></script>
 </body>
 </html>
