@@ -3,4 +3,12 @@ Allow: /
 Disallow: /polyball/
 Disallow: /play/
 
+# Link-preview crawlers honour robots.txt too; without these a shared /polyball/ link
+# gets no card on X or LinkedIn. Search engines above still skip the raw game build.
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
 Sitemap: https://abdaishere.com/sitemap.xml

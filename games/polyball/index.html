@@ -25,15 +25,17 @@
 <meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
 <!-- Absolute, not relative: every scraper (Facebook, Slack, Discord, X, LinkedIn)
      silently drops a relative og:image. -->
-<!-- 1200x630 share card, rendered from tools/og_image.html. The 1024x500 feature.png
-     stays the Play feature graphic only; it cropped badly at 1.91:1. -->
-<meta property="og:image" content="https://abdaishere.com/img/og.png">
+<!-- 1200x630 share card, rendered by tools/make_og.py from tools/og/cards.html. The 1024x500
+     feature.png stays the Play feature graphic only; it cropped badly at 1.91:1. -->
+<meta property="og:image" content="https://abdaishere.com/img/og/polyball.png">
 <!-- PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="PolyBall: the five-colour ring, the wordmark and the line Every note you hear, you played.">
+<meta property="og:image:alt" content="PolyBall: the five-colour neon ring, the wordmark, the line Every note you hear, you played. One miss ends the run. Free on Android, play in your browser.">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/polyball.png">
+<meta name="twitter:image:alt" content="PolyBall: the five-colour neon ring and the line Every note you hear, you played.">
 
 <!-- Everything this page loads: site.css, board.js, landing.js (no inline script), self-hosted
      woff2, one Supabase origin (read-only leaderboard), and the trailer iframe only after a click. -->
@@ -47,7 +49,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/games/polyball/",
 "description":"A colour-matching arcade game for Android. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
-"image":"https://abdaishere.com/img/og.png","genre":["Arcade","Casual","Music"],
+"image":"https://abdaishere.com/img/og/polyball.png","genre":["Arcade","Casual","Music"],
 "gamePlatform":"Android","applicationCategory":"GameApplication","operatingSystem":"Android",
 "playMode":"SinglePlayer","inLanguage":"en",
 "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
