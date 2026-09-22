@@ -6,7 +6,7 @@ const BEAT = 0.5;          // seconds per beat (120 BPM)
 const CYCLE = 4 * BEAT;    // a packet's full trip lasts four beats, so a wave crosses the switch on every beat
 
 export function start(canvas, { lowPower = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: true, powerPreference: 'low-power' }); // decorative: prefer the integrated GPU
   let dprCap = lowPower ? 1.5 : 1.75;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 50);
@@ -42,7 +42,7 @@ export function start(canvas, { lowPower = false } = {}) {
         float pass = exp(-40.0 * (t - 0.5) * (t - 0.5));           // brighten while crossing the switch
         float fade = smoothstep(0.0, 0.08, t) * smoothstep(1.0, 0.92, t);
         vAlpha = mix(fade * (0.55 + 0.45 * pass), 1.0, aData.w);
-        vWarm = aData.z;
+        vWarm = smoothstep(0.45, 0.95, pass) * (0.35 + 0.65 * aData.z); // amber only on the beat, at the switch
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         float boost = 1.0 + (1.0 - aData.w) * (0.8 * pass + 1.4 * exp(-3.0 * uBurst));
         gl_PointSize = aData.y * boost * uScale / -mv.z;
@@ -113,7 +113,7 @@ export function start(canvas, { lowPower = false } = {}) {
     uniforms.uCold.value = c('--scene-packet'); uniforms.uWarm.value = c('--scene-beat');
     material.blending = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
     material.needsUpdate = true;
-    linkMat.color = c('--scene-line');
+    linkMat.color = c('--scene-line'); linkMat.opacity = dark ? 0.16 : 0.3;
     rings.forEach((r, k) => { r.material.color = c(k === 0 ? '--scene-beat' : '--scene-line'); });
   }
   applyTheme();
@@ -128,9 +128,7 @@ export function start(canvas, { lowPower = false } = {}) {
     renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    const wide = w / h > 1.6; // full-bleed banners push the switch right of the copy; framed stages keep it centred
-    world.position.x = wide ? 2.7 : 0;
-    world.scale.setScalar(wide ? 1 : Math.max(0.55, Math.min(1, (w / h) * 0.95)));
+    world.scale.setScalar(Math.max(0.55, Math.min(1, (w / h) * 0.95))); // the stage is a framed 4:3 box, switch centred
     uniforms.uScale.value = renderer.getPixelRatio() * Math.max(0.8, h / 800) * Math.sqrt(world.scale.x);
   }
   const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
@@ -143,13 +141,15 @@ export function start(canvas, { lowPower = false } = {}) {
   host.addEventListener('pointerdown', onDown, { passive: true });
 
   const api = { fps: 0, state: 'running', packets: packetCount, paused: false, setPaused, dispose };
-  let raf = 0, visible = true, last = performance.now(), time = 0, frames = 0, acc = 0, strikes = 0;
+  let raf = 0, visible = true, last = performance.now(), time = 0, frames = 0, acc = 0, strikes = 0, beat = -1;
 
   function frame(now) {
     raf = 0;
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
     time += dt; uniforms.uTime.value = time; uniforms.uBurst.value += dt;
     const beatPhase = (time % BEAT) / BEAT;
+    // the page's beat dots pulse on this event, so everything that moves shares one clock
+    if (Math.floor(time / BEAT) !== beat) { beat = Math.floor(time / BEAT); canvas.dispatchEvent(new CustomEvent('scene-beat')); }
     const pulse = 1 + 0.09 * Math.exp(-6 * beatPhase) + 0.18 * Math.exp(-3 * uniforms.uBurst.value);
     rings.forEach((r) => { r.scale.setScalar(r.userData.r * pulse); r.rotation.x += r.userData.spin * dt; });
     world.rotation.y += ((-0.55 + target.x * 0.22) - world.rotation.y) * Math.min(1, dt * 3);
@@ -160,21 +160,26 @@ export function start(canvas, { lowPower = false } = {}) {
     frames++; acc += dt;
     if (acc >= 2) {
       api.fps = Math.round(frames / acc);
-      if (api.fps < 40 && ++strikes) {
+      if (api.fps >= 40 && strikes > 1) strikes = 1; // only consecutive slow windows count toward giving up
+      if (api.fps < 40) {
+        strikes++;
         if (strikes === 1) { dprCap = 1; packetCount = Math.round(packetCount / 2); points.geometry.dispose(); points.geometry = buildPoints(packetCount); api.packets = packetCount; resize(); }
         else if (strikes >= 3) { api.state = 'fallback'; canvas.dispatchEvent(new CustomEvent('scene-fallback', { bubbles: true })); dispose(); return; }
       }
       frames = 0; acc = 0;
     }
-    schedule();
+    if (running()) raf = requestAnimationFrame(frame); // continuous: dt includes render time, so the beat stays at 120 BPM
   }
-  function schedule() { if (!raf && visible && !api.paused && !document.hidden && api.state === 'running') { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  const running = () => visible && !api.paused && !document.hidden && api.state === 'running';
+  // (re)start after a pause, tab switch or scroll-away; resetting `last` here keeps the gap out of dt
+  function schedule() { if (!raf && running()) { last = performance.now(); raf = requestAnimationFrame(frame); } }
   function setPaused(p) { api.paused = p; schedule(); }
   const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; schedule(); });
   io.observe(canvas);
   document.addEventListener('visibilitychange', schedule);
 
   function dispose() {
+    if (api.state === 'running') api.state = 'disposed';
     cancelAnimationFrame(raf); io.disconnect(); ro.disconnect(); themeWatch.disconnect();
     schemeMq.removeEventListener('change', applyTheme);
     document.removeEventListener('visibilitychange', schedule);

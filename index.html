@@ -32,10 +32,13 @@
 <link rel="stylesheet" href="home.css">
 <script>
 // This page used to be the PolyBall landing. Old deep links (/#leaderboard, /#mode=1&sides=7)
-// carry on to where that page lives now; this page's own anchors stay here.
+// carry on to where that page lives now; any anchor that exists on this page stays here.
 (function () {
   var h = location.hash.slice(1);
-  if (h && !/^(top|main|work|ejam|polyball|odoo|path|skills|about|contact)$/.test(h)) location.replace('/games/polyball/' + location.hash);
+  if (h) document.addEventListener('DOMContentLoaded', function () {
+    var id; try { id = decodeURIComponent(h); } catch (e) { id = h; }
+    if (!document.getElementById(id)) location.replace('/games/polyball/' + location.hash);
+  });
 })();
 document.documentElement.classList.add('js');
 try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -47,16 +50,14 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="#top"><span class="beat" aria-hidden="true"></span><span class="name-full">Abdallah El Belkasy</span><span class="name-short">A. El Belkasy</span></a>
+    <button class="pill-btn menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
     <nav class="nav" id="nav" aria-label="Sections">
       <a href="#work">Work</a>
       <a href="#path">Path</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
-    <div class="top-tools">
-      <button class="pill-btn" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
-      <button class="pill-btn menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
-    </div>
+    <button class="pill-btn" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
   </div>
 </header>
 
@@ -65,7 +66,7 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy">
-          <ul class="pills" aria-label="Status">
+          <ul role="list" class="pills" aria-label="Status">
             <li><span class="dot" aria-hidden="true"></span>Open to Rust · systems · backend</li>
             <li>Dubai · UTC+4<span class="clock"> · <span id="clock">--:--</span></span></li>
           </ul>
@@ -81,19 +82,19 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
 
         <figure class="fig hero-fig">
           <div class="stage">
-            <svg class="poster" viewBox="690 110 880 660" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><line class="ln" x1="896" y1="579" x2="1130" y2="440"/><line class="ln" x1="936" y1="609" x2="1130" y2="440"/><line class="ln" x1="911" y1="546" x2="1130" y2="440"/><line class="ln" x1="878" y1="462" x2="1130" y2="440"/><line class="ln" x1="887" y1="419" x2="1130" y2="440"/><line class="ln" x1="932" y1="377" x2="1130" y2="440"/><line class="ln" x1="821" y1="302" x2="1130" y2="440"/><line class="ln" x1="885" y1="331" x2="1130" y2="440"/><line class="ln" x1="753" y1="274" x2="1130" y2="440"/><line class="ln" x1="812" y1="330" x2="1130" y2="440"/><line class="ln" x1="830" y1="387" x2="1130" y2="440"/><line class="ln" x1="801" y1="489" x2="1130" y2="440"/><line class="ln" x1="870" y1="510" x2="1130" y2="440"/><line class="ln" x1="779" y1="563" x2="1130" y2="440"/><line class="ln" x1="1427" y1="557" x2="1130" y2="440"/><line class="ln" x1="1425" y1="607" x2="1130" y2="440"/><line class="ln" x1="1399" y1="547" x2="1130" y2="440"/><line class="ln" x1="1406" y1="462" x2="1130" y2="440"/><line class="ln" x1="1470" y1="397" x2="1130" y2="440"/><line class="ln" x1="1465" y1="355" x2="1130" y2="440"/><line class="ln" x1="1410" y1="298" x2="1130" y2="440"/><line class="ln" x1="1444" y1="231" x2="1130" y2="440"/><line class="ln" x1="1406" y1="326" x2="1130" y2="440"/><line class="ln" x1="1423" y1="335" x2="1130" y2="440"/><line class="ln" x1="1316" y1="396" x2="1130" y2="440"/><line class="ln" x1="1279" y1="493" x2="1130" y2="440"/><line class="ln" x1="1410" y1="535" x2="1130" y2="440"/><line class="ln" x1="1396" y1="542" x2="1130" y2="440"/><polygon class="ring beat" points="1130,540 1172,490 1172,390 1130,340 1088,390 1088,490"/><polygon class="ring" points="1161,558 1194,443 1163,326 1099,322 1066,437 1097,554"/><polygon class="ring" points="1130,618 1173,594 1204,529 1216,440 1204,351 1173,286 1130,262 1087,286 1056,351 1044,440 1056,529 1087,594"/><circle class="pk" cx="921" cy="563" r="3.9"/><circle class="pk" cx="1072" cy="475" r="3.3"/><circle class="pk" cx="989" cy="563" r="3.6"/><circle class="pk" cx="1077" cy="486" r="4.9"/><circle class="pk w" cx="959" cy="523" r="4.3"/><circle class="pk" cx="1075" cy="467" r="5.0"/><circle class="pk" cx="955" cy="455" r="4.2"/><circle class="pk w" cx="1038" cy="448" r="3.7"/><circle class="pk w" cx="922" cy="422" r="4.4"/><circle class="pk w" cx="1029" cy="431" r="3.1"/><circle class="pk w" cx="971" cy="390" r="3.6"/><circle class="pk" cx="1093" cy="428" r="4.7"/><circle class="pk" cx="915" cy="344" r="3.5"/><circle class="pk" cx="1071" cy="414" r="4.7"/><circle class="pk w" cx="968" cy="368" r="3.1"/><circle class="pk" cx="1031" cy="396" r="3.7"/><circle class="pk w" cx="846" cy="315" r="3.5"/><circle class="pk" cx="990" cy="378" r="3.9"/><circle class="pk" cx="919" cy="367" r="4.0"/><circle class="pk" cx="1053" cy="413" r="2.6"/><circle class="pk" cx="928" cy="404" r="4.5"/><circle class="pk" cx="1065" cy="429" r="3.5"/><circle class="pk w" cx="842" cy="483" r="2.7"/><circle class="pk w" cx="1045" cy="453" r="2.9"/><circle class="pk w" cx="918" cy="497" r="2.9"/><circle class="pk w" cx="1017" cy="470" r="3.4"/><circle class="pk" cx="816" cy="550" r="2.9"/><circle class="pk" cx="1064" cy="463" r="3.4"/><circle class="pk" cx="1370" cy="535" r="5.0"/><circle class="pk" cx="1253" cy="488" r="3.7"/><circle class="pk" cx="1389" cy="587" r="3.2"/><circle class="pk" cx="1254" cy="510" r="2.9"/><circle class="pk" cx="1370" cy="536" r="2.9"/><circle class="pk" cx="1174" cy="458" r="2.6"/><circle class="pk" cx="1342" cy="457" r="4.2"/><circle class="pk" cx="1173" cy="443" r="3.4"/><circle class="pk" cx="1422" cy="403" r="4.4"/><circle class="pk" cx="1204" cy="431" r="3.1"/><circle class="pk" cx="1363" cy="380" r="4.5"/><circle class="pk" cx="1182" cy="427" r="4.3"/><circle class="pk" cx="1366" cy="320" r="2.6"/><circle class="pk w" cx="1212" cy="398" r="3.2"/><circle class="pk" cx="1392" cy="265" r="3.6"/><circle class="pk" cx="1206" cy="389" r="5.0"/><circle class="pk" cx="1313" cy="365" r="3.1"/><circle class="pk w" cx="1224" cy="401" r="3.0"/><circle class="pk" cx="1348" cy="362" r="3.7"/><circle class="pk" cx="1183" cy="421" r="4.5"/><circle class="pk" cx="1294" cy="401" r="4.5"/><circle class="pk" cx="1177" cy="429" r="3.7"/><circle class="pk" cx="1257" cy="485" r="4.5"/><circle class="pk" cx="1162" cy="451" r="3.5"/><circle class="pk" cx="1354" cy="516" r="2.9"/><circle class="pk w" cx="1176" cy="456" r="2.9"/><circle class="pk w" cx="1309" cy="508" r="4.6"/><circle class="pk" cx="1185" cy="461" r="4.1"/><circle class="node" cx="896" cy="579" r="6"/><circle class="node" cx="936" cy="609" r="6"/><circle class="node" cx="911" cy="546" r="6"/><circle class="node" cx="878" cy="462" r="6"/><circle class="node" cx="887" cy="419" r="6"/><circle class="node" cx="932" cy="377" r="6"/><circle class="node" cx="821" cy="302" r="6"/><circle class="node" cx="885" cy="331" r="6"/><circle class="node" cx="753" cy="274" r="6"/><circle class="node" cx="812" cy="330" r="6"/><circle class="node" cx="830" cy="387" r="6"/><circle class="node" cx="801" cy="489" r="6"/><circle class="node" cx="870" cy="510" r="6"/><circle class="node" cx="779" cy="563" r="6"/><circle class="node" cx="1427" cy="557" r="6"/><circle class="node" cx="1425" cy="607" r="6"/><circle class="node" cx="1399" cy="547" r="6"/><circle class="node" cx="1406" cy="462" r="6"/><circle class="node" cx="1470" cy="397" r="6"/><circle class="node" cx="1465" cy="355" r="6"/><circle class="node" cx="1410" cy="298" r="6"/><circle class="node" cx="1444" cy="231" r="6"/><circle class="node" cx="1406" cy="326" r="6"/><circle class="node" cx="1423" cy="335" r="6"/><circle class="node" cx="1316" cy="396" r="6"/><circle class="node" cx="1279" cy="493" r="6"/><circle class="node" cx="1410" cy="535" r="6"/><circle class="node" cx="1396" cy="542" r="6"/></svg>
+            <svg class="poster" viewBox="690 110 880 660" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><line class="ln" x1="896" y1="579" x2="1130" y2="440"/><line class="ln" x1="936" y1="609" x2="1130" y2="440"/><line class="ln" x1="911" y1="546" x2="1130" y2="440"/><line class="ln" x1="878" y1="462" x2="1130" y2="440"/><line class="ln" x1="887" y1="419" x2="1130" y2="440"/><line class="ln" x1="932" y1="377" x2="1130" y2="440"/><line class="ln" x1="821" y1="302" x2="1130" y2="440"/><line class="ln" x1="885" y1="331" x2="1130" y2="440"/><line class="ln" x1="753" y1="274" x2="1130" y2="440"/><line class="ln" x1="812" y1="330" x2="1130" y2="440"/><line class="ln" x1="830" y1="387" x2="1130" y2="440"/><line class="ln" x1="801" y1="489" x2="1130" y2="440"/><line class="ln" x1="870" y1="510" x2="1130" y2="440"/><line class="ln" x1="779" y1="563" x2="1130" y2="440"/><line class="ln" x1="1427" y1="557" x2="1130" y2="440"/><line class="ln" x1="1425" y1="607" x2="1130" y2="440"/><line class="ln" x1="1399" y1="547" x2="1130" y2="440"/><line class="ln" x1="1406" y1="462" x2="1130" y2="440"/><line class="ln" x1="1470" y1="397" x2="1130" y2="440"/><line class="ln" x1="1465" y1="355" x2="1130" y2="440"/><line class="ln" x1="1410" y1="298" x2="1130" y2="440"/><line class="ln" x1="1444" y1="231" x2="1130" y2="440"/><line class="ln" x1="1406" y1="326" x2="1130" y2="440"/><line class="ln" x1="1423" y1="335" x2="1130" y2="440"/><line class="ln" x1="1316" y1="396" x2="1130" y2="440"/><line class="ln" x1="1279" y1="493" x2="1130" y2="440"/><line class="ln" x1="1410" y1="535" x2="1130" y2="440"/><line class="ln" x1="1396" y1="542" x2="1130" y2="440"/><polygon class="ring on" points="1130,540 1172,490 1172,390 1130,340 1088,390 1088,490"/><polygon class="ring" points="1161,558 1194,443 1163,326 1099,322 1066,437 1097,554"/><polygon class="ring" points="1130,618 1173,594 1204,529 1216,440 1204,351 1173,286 1130,262 1087,286 1056,351 1044,440 1056,529 1087,594"/><circle class="pk" cx="921" cy="563" r="3.9"/><circle class="pk" cx="1072" cy="475" r="3.3"/><circle class="pk" cx="989" cy="563" r="3.6"/><circle class="pk" cx="1077" cy="486" r="4.9"/><circle class="pk" cx="959" cy="523" r="4.3"/><circle class="pk" cx="1075" cy="467" r="5.0"/><circle class="pk" cx="955" cy="455" r="4.2"/><circle class="pk" cx="1038" cy="448" r="3.7"/><circle class="pk" cx="922" cy="422" r="4.4"/><circle class="pk" cx="1029" cy="431" r="3.1"/><circle class="pk" cx="971" cy="390" r="3.6"/><circle class="pk" cx="1093" cy="428" r="4.7"/><circle class="pk" cx="915" cy="344" r="3.5"/><circle class="pk" cx="1071" cy="414" r="4.7"/><circle class="pk" cx="968" cy="368" r="3.1"/><circle class="pk" cx="1031" cy="396" r="3.7"/><circle class="pk" cx="846" cy="315" r="3.5"/><circle class="pk" cx="990" cy="378" r="3.9"/><circle class="pk" cx="919" cy="367" r="4.0"/><circle class="pk" cx="1053" cy="413" r="2.6"/><circle class="pk" cx="928" cy="404" r="4.5"/><circle class="pk" cx="1065" cy="429" r="3.5"/><circle class="pk" cx="842" cy="483" r="2.7"/><circle class="pk" cx="1045" cy="453" r="2.9"/><circle class="pk" cx="918" cy="497" r="2.9"/><circle class="pk" cx="1017" cy="470" r="3.4"/><circle class="pk" cx="816" cy="550" r="2.9"/><circle class="pk" cx="1064" cy="463" r="3.4"/><circle class="pk" cx="1370" cy="535" r="5.0"/><circle class="pk" cx="1253" cy="488" r="3.7"/><circle class="pk" cx="1389" cy="587" r="3.2"/><circle class="pk" cx="1254" cy="510" r="2.9"/><circle class="pk" cx="1370" cy="536" r="2.9"/><circle class="pk" cx="1174" cy="458" r="2.6"/><circle class="pk" cx="1342" cy="457" r="4.2"/><circle class="pk" cx="1173" cy="443" r="3.4"/><circle class="pk" cx="1422" cy="403" r="4.4"/><circle class="pk" cx="1204" cy="431" r="3.1"/><circle class="pk" cx="1363" cy="380" r="4.5"/><circle class="pk" cx="1182" cy="427" r="4.3"/><circle class="pk" cx="1366" cy="320" r="2.6"/><circle class="pk" cx="1212" cy="398" r="3.2"/><circle class="pk" cx="1392" cy="265" r="3.6"/><circle class="pk" cx="1206" cy="389" r="5.0"/><circle class="pk" cx="1313" cy="365" r="3.1"/><circle class="pk" cx="1224" cy="401" r="3.0"/><circle class="pk" cx="1348" cy="362" r="3.7"/><circle class="pk" cx="1183" cy="421" r="4.5"/><circle class="pk" cx="1294" cy="401" r="4.5"/><circle class="pk" cx="1177" cy="429" r="3.7"/><circle class="pk" cx="1257" cy="485" r="4.5"/><circle class="pk" cx="1162" cy="451" r="3.5"/><circle class="pk" cx="1354" cy="516" r="2.9"/><circle class="pk" cx="1176" cy="456" r="2.9"/><circle class="pk" cx="1309" cy="508" r="4.6"/><circle class="pk" cx="1185" cy="461" r="4.1"/><circle class="node" cx="896" cy="579" r="6"/><circle class="node" cx="936" cy="609" r="6"/><circle class="node" cx="911" cy="546" r="6"/><circle class="node" cx="878" cy="462" r="6"/><circle class="node" cx="887" cy="419" r="6"/><circle class="node" cx="932" cy="377" r="6"/><circle class="node" cx="821" cy="302" r="6"/><circle class="node" cx="885" cy="331" r="6"/><circle class="node" cx="753" cy="274" r="6"/><circle class="node" cx="812" cy="330" r="6"/><circle class="node" cx="830" cy="387" r="6"/><circle class="node" cx="801" cy="489" r="6"/><circle class="node" cx="870" cy="510" r="6"/><circle class="node" cx="779" cy="563" r="6"/><circle class="node" cx="1427" cy="557" r="6"/><circle class="node" cx="1425" cy="607" r="6"/><circle class="node" cx="1399" cy="547" r="6"/><circle class="node" cx="1406" cy="462" r="6"/><circle class="node" cx="1470" cy="397" r="6"/><circle class="node" cx="1465" cy="355" r="6"/><circle class="node" cx="1410" cy="298" r="6"/><circle class="node" cx="1444" cy="231" r="6"/><circle class="node" cx="1406" cy="326" r="6"/><circle class="node" cx="1423" cy="335" r="6"/><circle class="node" cx="1316" cy="396" r="6"/><circle class="node" cx="1279" cy="493" r="6"/><circle class="node" cx="1410" cy="535" r="6"/><circle class="node" cx="1396" cy="542" r="6"/></svg>
             <canvas id="scene" aria-hidden="true"></canvas>
             <p class="stage-label" aria-hidden="true">Generators <span>→</span> Switch <span>→</span> Verifiers</p>
             <button class="pill-btn pause" type="button" id="pause" aria-pressed="false"><span class="sr">Pause the animation</span><span aria-hidden="true" class="p-on">Pause</span><span aria-hidden="true" class="p-off">Play</span></button>
           </div>
-          <figcaption class="cap">Fig. 01 — Traffic generators fire packets through a polygon-ring switch to the verifiers, one wave per beat at 120&nbsp;BPM. The amber ring is the beat. E-Jam and PolyBall in one sketch.<span class="hint"> Click it to send a burst.</span></figcaption>
+          <figcaption class="cap">Fig. 01 — Traffic generators fire packets through a polygon-ring switch to the verifiers, one wave per beat at 120&nbsp;BPM. The amber ring is the beat. E-Jam and PolyBall in one sketch.<span class="hint"> Click or tap it to send a burst.</span></figcaption>
         </figure>
       </div>
 
-      <ul class="ledger" aria-label="Highlights">
+      <ul role="list" class="ledger" aria-label="Highlights">
         <li class="lead"><a href="#ejam"><span class="eyebrow">2023 · Siemens EDA · E-Jam</span><span class="l-what">One full switch test cycle</span><span class="l-num"><s>2&nbsp;h+</s> <span class="arrow" aria-hidden="true">→</span><span class="sr">down to</span> ~10&nbsp;min</span></a></li>
         <li><a href="#polyball"><span class="eyebrow">2026 · PolyBall · v0.9.2</span><span class="l-what">Google Play closed testing</span><span class="l-num">177 countries</span></a></li>
-        <li><a href="#odoo"><span class="eyebrow">2025–now · Odoo</span><span class="l-what">Python + PostgreSQL backends</span><span class="l-num">100+ client projects</span></a></li>
+        <li><a href="#odoo"><span class="eyebrow">2025–now · Odoo</span><span class="l-what">Enterprise clients · Python + PostgreSQL</span><span class="l-num">100+ projects</span></a></li>
       </ul>
     </div>
   </section>
@@ -108,7 +109,7 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
       <div class="wrap">
         <header class="case-head">
           <p class="eyebrow">Case 01</p>
-          <h3 id="ejam-h">E-Jam <span>— a distributed test bench for network switches</span></h3>
+          <h3 id="ejam-h">E-Jam <span>— a&nbsp;distributed test bench for network switches</span></h3>
           <dl class="meta">
             <div><dt>My part</dt><dd>Center Point, the Rust control plane, and the Flutter admin client</dd></div>
             <div><dt>Context</dt><dd>Siemens EDA graduation project, remote from Cairo</dd></div>
@@ -118,54 +119,54 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
         </header>
         <div class="case-body">
           <div class="story">
-            <section class="block">
+            <section class="block o1">
               <h4 class="eyebrow">Problem</h4>
               <p>One test cycle on a network switch took more than two hours, and many of the test cases were run by hand.</p>
             </section>
-            <section class="block">
+            <section class="block o2">
               <h4 class="eyebrow">What we built</h4>
               <p>E-Jam spreads the load across many machines. On every node, C++ packet generators fire traffic at the switch and verifiers check what comes out, each in Docker. Apache Kafka streams their statistics back.</p>
             </section>
-            <section class="block mine">
+            <section class="block mine o3">
               <h4 class="eyebrow">My part</h4>
               <p><strong>Center Point</strong>, a Rust service on Actix Web. Its REST API drives every stream, device and process through explicit state machines, and it publishes to Kafka against a schema registry.</p>
               <p>The <strong>Flutter admin client</strong> configures tests and charts the results live.</p>
             </section>
-            <section class="block">
+            <section class="block o6">
               <h4 class="eyebrow">Outcome</h4>
-              <ul class="stats">
+              <ul role="list" class="stats">
                 <li><b>~10 min</b><span>per test cycle, down from 2&nbsp;h+</span></li>
                 <li><b>5+ cases</b><span>manual tests now automated end to end, with pass/fail</span></li>
                 <li><b>255 commits</b><span>top contributor to the repository</span></li>
               </ul>
             </section>
-            <ul class="tags" aria-label="Technologies"><li>Rust</li><li>Actix Web</li><li>C++</li><li>Apache Kafka</li><li>Schema registry</li><li>Docker</li><li>Flutter</li></ul>
-            <p class="links">
+            <ul role="list" class="tags o7" aria-label="Technologies"><li>Rust</li><li>Actix Web</li><li>C++</li><li>Apache Kafka</li><li>Schema registry</li><li>Docker</li><li>Flutter</li></ul>
+            <p class="links o8">
               <a class="more" href="https://github.com/Abdaishere/E-Jam">Source on GitHub <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
               <a class="more" href="https://youtu.be/oPZLR4RM150">Watch the walkthrough <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
             </p>
           </div>
 
           <div class="artifacts">
-            <figure class="fig panel cycle" aria-labelledby="cycle-cap">
-              <figcaption class="cap cap-row" id="cycle-cap"><span>Fig. 02 — Switch test cycle, to scale</span><span aria-hidden="true">minutes</span><span class="sr">: over 120 minutes before E-Jam, about 10 minutes with it.</span></figcaption>
+            <figure class="fig panel cycle o4" aria-labelledby="cycle-cap">
+              <figcaption class="cap" id="cycle-cap">Fig. 02 — Switch test cycle, to scale<span class="sr">: over 120 minutes before E-Jam, about 10 minutes with it.</span></figcaption>
               <div class="bars" aria-hidden="true">
-                <span class="k">Before</span><span class="track"><i class="bar before"></i></span><span class="v">120+</span>
-                <span class="k now">E-Jam</span><span class="track"><i class="bar after"></i></span><span class="v now">~10</span>
+                <span class="k">Before</span><span class="track"><i class="bar before"></i></span><span class="v">120+ min</span>
+                <span class="k now">E-Jam</span><span class="track"><i class="bar after"></i></span><span class="v now">~10 min</span>
               </div>
             </figure>
 
-            <figure class="fig panel arch" aria-labelledby="arch-cap">
+            <figure class="fig panel arch o5" aria-labelledby="arch-cap">
               <figcaption class="cap" id="arch-cap">Fig. 03 — How it fits together</figcaption>
               <div class="diag">
                 <div class="d-client box">Admin client<small>Flutter · live charts</small></div>
                 <p class="d-rest edge"><span aria-hidden="true">↓</span> REST</p>
                 <div class="d-cp box mine"><span>Center Point <em>mine</em></span><small>Rust · Actix Web · explicit state machines</small></div>
                 <p class="d-drive edge"><span class="h">drives <span aria-hidden="true">→</span></span><span class="v"><span aria-hidden="true">↓</span> drives every stream, device and process</span></p>
-                <div class="d-node box">Test node ×N<small>C++ generator + verifier · Docker</small></div>
-                <p class="d-pk edge"><span aria-hidden="true">↓</span> packets</p>
+                <div class="d-node box">Test node ×N<small>C++ generator + verifier<br>Docker</small></div>
+                <p class="d-pk edge"><span class="h"><span aria-hidden="true">↕</span> packets</span><span class="v"><span aria-hidden="true">↕</span> packets to the switch and back</span></p>
                 <div class="d-dut box dut"><svg class="hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 20.7,7 20.7,17 12,22 3.3,17 3.3,7"/></svg>Switch under test</div>
-                <p class="d-stats edge"><span aria-hidden="true">↑</span> statistics from every node, back to Center Point</p>
+                <p class="d-stats edge"><span class="h"><span aria-hidden="true">↓</span> statistics from every node</span><span class="v"><span aria-hidden="true">↓</span> each test node streams its statistics into Kafka</span></p>
                 <div class="d-kafka box">Apache Kafka<small>statistics stream · schema registry</small></div>
               </div>
               <p class="key"><span><i class="sw mine" aria-hidden="true"></i>Built by me</span><span><i class="sw" aria-hidden="true"></i>Team</span><span><svg class="sw" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><polygon points="12,2 20.7,7 20.7,17 12,22 3.3,17 3.3,7"/></svg>Device under test</span></p>
@@ -179,11 +180,11 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
       <div class="wrap">
         <header class="case-head">
           <p class="eyebrow">Case 02</p>
-          <h3 id="pb-h">PolyBall <span>— a rhythm game I designed, coded and shipped alone</span></h3>
+          <h3 id="pb-h">PolyBall <span>— a&nbsp;rhythm game I designed, coded and shipped alone</span></h3>
           <dl class="meta">
             <div><dt>My part</dt><dd>All of it: design, code, audio, release</dd></div>
             <div><dt>Version</dt><dd>v0.9.2</dd></div>
-            <div><dt>Status</dt><dd>Google Play closed testing, 177 countries</dd></div>
+            <div><dt>Status</dt><dd>Google Play closed testing</dd></div>
             <div><dt>Runs on</dt><dd>Android · web · desktop</dd></div>
           </dl>
         </header>
@@ -192,8 +193,8 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
             <figure class="fig screens" aria-labelledby="screens-cap">
               <div class="phones" tabindex="0" role="group" aria-label="Three PolyBall screens, scrolls sideways on small screens">
                 <figure><img src="img/phone_03_home.webp" width="540" height="960" loading="lazy" decoding="async" alt="PolyBall home screen: a nine-colour polygon ring, Classic mode selected, best score 28."><figcaption>Home</figcaption></figure>
-                <figure><img src="img/phone_01_run_combo.webp" width="540" height="960" loading="lazy" decoding="async" alt="Mid-run: score 29 on a combo of 6, a ball falling toward the ring."><figcaption>Run, combo</figcaption></figure>
-                <figure><img src="img/phone_02_run_fever.webp" width="540" height="960" loading="lazy" decoding="async" alt="Mega Fever: score 399 at triple score, the ring glowing amber."><figcaption>Run, Fever</figcaption></figure>
+                <figure><img src="img/phone_01_run_combo.webp" width="540" height="960" loading="lazy" decoding="async" alt="Mid-run: score 29 on a combo of 6, a ball falling toward the ring."><figcaption>Run · combo</figcaption></figure>
+                <figure><img src="img/phone_02_run_fever.webp" width="540" height="960" loading="lazy" decoding="async" alt="Mega Fever: score 399 at triple score, the ring glowing amber."><figcaption>Run · Fever</figcaption></figure>
               </div>
               <figcaption class="cap" id="screens-cap">Fig. 04 — Three in-game screens from v0.9.2.</figcaption>
             </figure>
@@ -202,27 +203,27 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
           <div class="story">
             <section class="block">
               <h4 class="eyebrow">Problem</h4>
-              <p>A rhythm game has to land every tap on the beat on a cheap Android phone, in any language. With a team of one, the release process can't depend on anyone remembering the steps.</p>
+              <p>A rhythm game has to land every tap on the beat on Android, web and desktop, in 15 languages. With a team of one, the release process can't depend on anyone remembering the steps.</p>
             </section>
             <section class="block">
               <h4 class="eyebrow">What I built</h4>
-              <ol class="steps">
+              <ol role="list" class="steps">
                 <li><strong>An audio engine</strong> that synthesises every note at runtime: 16 additive voices, colour mapped to chord degree, no music files shipped.</li>
-                <li><strong>CI across six targets</strong>, driven by bots that play 24 runs per pass with deliberate mistakes, so the test data looks like real play.</li>
+                <li><strong>CI across six targets</strong>, driven by bots that play 24 runs per pass with deliberate mistakes.</li>
                 <li><strong>Opt-in telemetry</strong>, then a difficulty curve re-derived from real beta tap rates.</li>
                 <li><strong>15 locales</strong>, with Arabic right-to-left layout covered by automated tests.</li>
-                <li><strong>Web audio that works everywhere</strong>, iOS included, and a live leaderboard on the game page.</li>
+                <li><strong>Web audio fixed</strong>, iOS included, and a live leaderboard on the game page.</li>
               </ol>
             </section>
             <section class="block">
               <h4 class="eyebrow">Outcome</h4>
-              <ul class="stats">
+              <ul role="list" class="stats">
                 <li><b>177 countries</b><span>in Google Play closed testing, and playable in the browser</span></li>
                 <li><b>−32 MB</b><span>of dead payload cut from every export</span></li>
                 <li><b>40 → 1.5 MB</b><span>of fonts in every export</span></li>
               </ul>
             </section>
-            <ul class="tags" aria-label="Technologies"><li>Godot 4</li><li>GDScript</li><li>GitHub Actions</li><li>Supabase</li></ul>
+            <ul role="list" class="tags" aria-label="Technologies"><li>Godot 4</li><li>GDScript</li><li>GitHub Actions</li><li>Supabase</li></ul>
             <p class="links">
               <a class="more" href="/polyball/">Play it in your browser <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
               <a class="more" href="https://youtu.be/0A4oTiEH7Co">Watch the trailer <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
@@ -259,11 +260,11 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
           </div>
           <section class="block">
             <h4 class="eyebrow">Outcome</h4>
-            <ul class="stats two">
+            <ul role="list" class="stats two">
               <li><b>100+ projects</b><span>enterprise clients, Python and PostgreSQL</span></li>
               <li><b>5+ modules</b><span>adopted by every client in their segments</span></li>
             </ul>
-            <ul class="tags" aria-label="Technologies"><li>Python</li><li>PostgreSQL</li><li>Odoo ORM</li><li>REST APIs</li></ul>
+            <ul role="list" class="tags" aria-label="Technologies"><li>Python</li><li>PostgreSQL</li><li>Odoo ORM</li><li>REST APIs</li></ul>
           </section>
         </div>
       </div>
@@ -276,7 +277,7 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
         <h2 id="path-h">Path so far</h2>
         <p>Most recent first. The 2023–24 line is Egypt's mandatory national service.</p>
       </div>
-      <ol class="path">
+      <ol role="list" class="path">
         <li><span class="p-when">2025–now</span><span class="p-what"><b>Software engineer</b>, Odoo PSAE, Dubai.</span></li>
         <li><span class="p-when">2023–24</span><span class="p-what"><b>Mandatory national service</b>, Egypt.</span></li>
         <li><span class="p-when">2023</span><span class="p-what"><b>E-Jam</b>, Siemens EDA graduation project, remote from Cairo. Center Point and the admin client.</span></li>
@@ -291,7 +292,7 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
     <div class="wrap split">
       <div class="about">
         <h2 id="about-h">About</h2>
-        <p class="voice">I like the part of engineering where a number moves: a two-hour test run that becomes ten minutes, a query that stops timing out, a frame that lands on the beat.</p>
+        <p class="voice">I like the part of engineering where a number moves: a two-hour test run that becomes ten minutes, a 40&nbsp;MB font bundle that becomes 1.5&nbsp;MB, a frame that lands on the beat.</p>
         <dl class="facts">
           <div><dt>Based in</dt><dd>Dubai, UTC+4</dd></div>
           <div><dt>Nationality</dt><dd>Egyptian</dd></div>
@@ -322,15 +323,18 @@ try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dat
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
         <span>Copy address</span>
       </button>
+      <a class="pill-btn" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+        <span>Download CV (PDF)</span>
+      </a>
       <span class="sr" id="copy-status" role="status"></span>
       <p class="where">Dubai, UTC+4<span class="clock">, where it's <span id="clock2">--:--</span> now</span>.</p>
     </div>
-    <!-- TODO(abdallah): link a public CV PDF here once one exists without the phone number. -->
-    <ul class="links social">
-      <li><a href="https://github.com/Abdaishere">GitHub</a></li>
-      <li><a href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn</a></li>
-      <li><a href="https://www.youtube.com/@abdaizhere">YouTube</a></li>
-      <li><a href="https://abdaishere.itch.io">itch.io</a></li>
+    <ul role="list" class="links social">
+      <li><a href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a href="https://www.youtube.com/@abdaizhere">YouTube <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a href="https://abdaishere.itch.io">itch.io <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
     </ul>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
@@ -347,25 +351,29 @@ document.getElementById('theme').addEventListener('click', () => {
   try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
 });
 
-// Small screens fold the section links behind a Menu button.
+// Small screens fold the section links behind a Menu button. The nav follows the button in the DOM,
+// so Tab goes from Menu straight into the open list; widening past the breakpoint resets it.
 const menu = document.getElementById('menu');
+const narrow = matchMedia('(max-width: 53.75rem)');
 const setMenu = (open) => { menu.setAttribute('aria-expanded', open); menu.textContent = open ? 'Close' : 'Menu'; root.classList.toggle('menu-open', open); };
 menu.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') !== 'true'));
 document.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setMenu(false); menu.focus(); } });
+narrow.addEventListener('change', () => setMenu(false));
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setMenu(false); if (narrow.matches) menu.focus(); } });
 
 // Figures that animate only while on screen (CSS keeps them in their final state without JS or with reduced motion).
 const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('seen'); seen.unobserve(e.target); } }), { threshold: 0.35 });
 document.querySelectorAll('.cycle').forEach((el) => seen.observe(el));
 
-// Nav marks the section being read.
+// Nav marks the section being read: nothing while the hero crosses the middle of the screen, and Contact once the
+// closing block is half in view (on tall screens it never reaches the middle band, so it gets its own observer).
 const links = new Map([...document.querySelectorAll('.nav a')].map((a) => [a.hash.slice(1), a]));
-const spy = new IntersectionObserver((entries) => entries.forEach((e) => {
-  if (!e.isIntersecting) return;
-  links.forEach((l) => l.removeAttribute('aria-current'));
-  links.get(e.target.id).setAttribute('aria-current', 'true');
-}), { rootMargin: '-45% 0px -50% 0px' });
-links.forEach((a, id) => spy.observe(document.getElementById(id)));
+const mark = (id) => links.forEach((l, key) => (key === id ? l.setAttribute('aria-current', 'true') : l.removeAttribute('aria-current')));
+// While Contact is half in view it wins; otherwise the section crossing the middle band does, whatever order the observers fire in.
+let band = null, atEnd = false;
+const spy = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { band = e.target.id; if (!atEnd) mark(band); } }), { rootMargin: '-45% 0px -50% 0px' });
+['top', 'work', 'path', 'about'].forEach((id) => spy.observe(document.getElementById(id)));
+new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; mark(atEnd ? 'contact' : band); }, { threshold: 0.5 }).observe(document.getElementById('contact'));
 
 // Local time in Dubai, so a recruiter in another timezone knows whether a reply is likely today.
 const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit' });
@@ -374,47 +382,58 @@ tick(); setInterval(tick, 30000);
 
 // Copy the address: webmail users get nothing from a mailto: click.
 const copy = document.getElementById('copy');
+let copyReset = 0;
 copy.addEventListener('click', async () => {
   const label = copy.querySelector('span'), status = document.getElementById('copy-status');
+  clearTimeout(copyReset);
   try { await navigator.clipboard.writeText(copy.dataset.email); label.textContent = 'Copied'; status.textContent = 'Email address copied'; }
-  catch (e) { label.textContent = 'Copy failed, select the address'; }
-  setTimeout(() => { label.textContent = 'Copy address'; status.textContent = ''; }, 2400);
+  catch (e) { label.textContent = 'Copy failed, select the address'; status.textContent = 'Copy failed. Select the address above instead.'; }
+  copyReset = setTimeout(() => { label.textContent = 'Copy address'; status.textContent = ''; }, 2400);
 });
 
-// One Pause control stops everything that loops: the hero scene and both beat dots (WCAG 2.2.2).
+// The beat dots pulse only on the scene's own beat, so one clock drives everything that moves, and the Pause
+// button (shown only while the scene runs) stops all of it (WCAG 2.2.2).
+const canvas = document.getElementById('scene');
+const stage = canvas.closest('.stage');
 const pause = document.getElementById('pause');
-let sceneApi = null;
+let sceneApi = null, booting = false, gaveUp = false, phase = false;
+canvas.addEventListener('scene-beat', () => { phase = !phase; root.classList.toggle('beat-a', phase); root.classList.toggle('beat-b', !phase); });
 pause.addEventListener('click', () => {
   const p = pause.getAttribute('aria-pressed') !== 'true';
   pause.setAttribute('aria-pressed', p);
   pause.querySelector('.sr').textContent = p ? 'Play the animation' : 'Pause the animation';
-  root.classList.toggle('still', p);
   sceneApi?.setPaused(p);
 });
 
 // Hero scene: only when motion is welcome, the device is not constrained, and WebGL exists. Otherwise the SVG poster stays.
-// Phones and small screens wait for the first interaction, so the page paints and settles before three.js is fetched.
-const canvas = document.getElementById('scene');
-const stage = canvas.closest('.stage');
+// Phones and small screens wait for a first interaction while the stage is on screen, so three.js is never fetched
+// for a hero that is being scrolled away from.
 const calm = matchMedia('(prefers-reduced-motion: reduce)');
 const constrained = navigator.connection?.saveData || (navigator.deviceMemory && navigator.deviceMemory <= 2);
 const lowPower = matchMedia('(pointer: coarse)').matches || innerWidth < 720;
 async function boot() {
-  if (sceneApi || calm.matches || constrained) return;
+  if (sceneApi || booting || gaveUp || calm.matches || constrained) return;
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return;
+  booting = true;
   try {
     const { start } = await import('./scene.js');
+    if (sceneApi || calm.matches) return; // reduced motion was switched on while the module loaded
     sceneApi = window.__scene = start(canvas, { lowPower });
-    sceneApi.setPaused(root.classList.contains('still'));
+    sceneApi.setPaused(pause.getAttribute('aria-pressed') === 'true');
     stage.classList.add('live');
   } catch (err) { console.info('Hero scene unavailable, keeping the static poster.', err); }
+  finally { booting = false; }
 }
-function toPoster() { sceneApi?.dispose(); sceneApi = null; stage.classList.remove('live'); }
-canvas.addEventListener('scene-fallback', toPoster);
-calm.addEventListener('change', () => (calm.matches ? toPoster() : boot()));
+const toPoster = () => { sceneApi = window.__scene = null; stage.classList.remove('live'); root.classList.remove('beat-a', 'beat-b'); };
+// The scene gave up on a slow device and disposed itself: keep the poster for the rest of the visit.
+canvas.addEventListener('scene-fallback', () => { gaveUp = true; toPoster(); });
+let interacted = !lowPower; // phones boot only after a first interaction with the hero on screen
+calm.addEventListener('change', () => { if (calm.matches) { sceneApi?.dispose(); toPoster(); } else if (interacted) boot(); });
 if (lowPower) {
-  const go = () => { ['pointerdown', 'keydown', 'scroll'].forEach((t) => removeEventListener(t, go)); boot(); };
+  let onScreen = false;
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }, { threshold: 0.5 }).observe(stage);
+  const go = () => { if (!onScreen) return; interacted = true; ['pointerdown', 'keydown', 'scroll'].forEach((t) => removeEventListener(t, go)); boot(); };
   ['pointerdown', 'keydown', 'scroll'].forEach((t) => addEventListener(t, go, { passive: true }));
 } else {
   addEventListener('load', () => (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(boot));
