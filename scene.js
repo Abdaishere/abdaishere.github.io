@@ -42,7 +42,7 @@ export function start(canvas, { lowPower = false } = {}) {
         float pass = exp(-40.0 * (t - 0.5) * (t - 0.5));           // brighten while crossing the switch
         float fade = smoothstep(0.0, 0.08, t) * smoothstep(1.0, 0.92, t);
         vAlpha = mix(fade * (0.55 + 0.45 * pass), 1.0, aData.w);
-        vWarm = smoothstep(0.45, 0.95, pass) * (0.35 + 0.65 * aData.z); // amber only on the beat, at the switch
+        vWarm = step(0.7, pass) * aData.z; // amber only while crossing the switch on the beat; no in-between hues
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         float boost = 1.0 + (1.0 - aData.w) * (0.8 * pass + 1.4 * exp(-3.0 * uBurst));
         gl_PointSize = aData.y * boost * uScale / -mv.z;
@@ -105,6 +105,9 @@ export function start(canvas, { lowPower = false } = {}) {
     return ring;
   });
 
+  let raf = 0, visible = true, last = performance.now(), time = 0, frames = 0, acc = -1, strikes = 0, beat = -1;
+  // acc starts at -1: the first second (shader compile, first upload) is not judged, so api.fps reads 0 for ~3 s.
+  // raf is 0 whenever no frame is queued (paused, off-screen, or mid-frame), which is when resize/applyTheme repaint.
   // Theme: colours come from CSS custom properties so light and dark stay coherent with the page.
   function applyTheme() {
     const cs = getComputedStyle(document.documentElement);
@@ -115,6 +118,7 @@ export function start(canvas, { lowPower = false } = {}) {
     material.needsUpdate = true;
     linkMat.color = c('--scene-line'); linkMat.opacity = dark ? 0.16 : 0.3;
     rings.forEach((r, k) => { r.material.color = c(k === 0 ? '--scene-beat' : '--scene-line'); });
+    if (!raf) renderer.render(scene, camera); // paused: show the new colours now
   }
   applyTheme();
   const themeWatch = new MutationObserver(applyTheme);
@@ -130,6 +134,7 @@ export function start(canvas, { lowPower = false } = {}) {
     camera.aspect = w / h; camera.updateProjectionMatrix();
     world.scale.setScalar(Math.max(0.55, Math.min(1, (w / h) * 0.95))); // the stage is a framed 4:3 box, switch centred
     uniforms.uScale.value = renderer.getPixelRatio() * Math.max(0.8, h / 800) * Math.sqrt(world.scale.x);
+    if (!raf) renderer.render(scene, camera); // setSize clears the canvas; repaint when paused
   }
   const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
 
@@ -141,7 +146,6 @@ export function start(canvas, { lowPower = false } = {}) {
   host.addEventListener('pointerdown', onDown, { passive: true });
 
   const api = { fps: 0, state: 'running', packets: packetCount, paused: false, setPaused, dispose };
-  let raf = 0, visible = true, last = performance.now(), time = 0, frames = 0, acc = 0, strikes = 0, beat = -1;
 
   function frame(now) {
     raf = 0;
@@ -160,8 +164,9 @@ export function start(canvas, { lowPower = false } = {}) {
     frames++; acc += dt;
     if (acc >= 2) {
       api.fps = Math.round(frames / acc);
-      if (api.fps >= 40 && strikes > 1) strikes = 1; // only consecutive slow windows count toward giving up
-      if (api.fps < 40) {
+      const slow = api.fps < 27; // below a 30 fps battery-saver cap, not just capped
+      if (!slow && strikes > 1) strikes = 1; // only consecutive slow windows count toward giving up
+      if (slow) {
         strikes++;
         if (strikes === 1) { dprCap = 1; packetCount = Math.round(packetCount / 2); points.geometry.dispose(); points.geometry = buildPoints(packetCount); api.packets = packetCount; resize(); }
         else if (strikes >= 3) { api.state = 'fallback'; canvas.dispatchEvent(new CustomEvent('scene-fallback', { bubbles: true })); dispose(); return; }

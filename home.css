@@ -39,7 +39,7 @@
   .contact { --line: #27272a; --line2: #3f3f46; --ink: #fafafa; --mid: #d4d4d8; --mut: #a1a1aa; --accent: #8ab4ff; }
   .poster .ln { stroke: rgb(63 63 70 / 0.34); }
   /* one palette only: no theme switch, no additive blending on the light page */
-  :root, :root[data-theme] { color-scheme: light; --scene-additive: 0 !important; }
+  :root, :root[data-theme] { color-scheme: light !important; --scene-additive: 0 !important; }
   #theme { display: none; }
 }
 :root[data-theme="dark"] { color-scheme: dark; --scene-additive: 1; }
@@ -133,8 +133,10 @@ h1 { font: 800 clamp(3rem, 14vw, 7.75rem)/0.86 var(--display); letter-spacing: -
 .stage-label { position: absolute; left: 0; top: 0; padding: 0.75rem 0.9rem; font: 500 0.75rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut); pointer-events: none; }
 .stage-label span { padding-inline: 0.3rem; }
 .pause { position: absolute; right: 0.625rem; bottom: 0.625rem; display: none; background: var(--bg); }
-.pause .p-off, .pause[aria-pressed="true"] .p-on { display: none; }
-.pause[aria-pressed="true"] .p-off { display: inline; }
+/* shown while the scene runs; .live is removed by JS only after focus has been moved off the button */
+.js .stage.live .pause { display: inline-flex; }
+.pause .p-off, .pause[data-paused="true"] .p-on { display: none; }
+.pause[data-paused="true"] .p-off { display: inline; }
 /* the hint reserves its line from the start, so the caption does not grow when the scene goes live */
 .hint { visibility: hidden; }
 .stage.live + .cap .hint { visibility: visible; }
@@ -273,7 +275,9 @@ svg.sw { border: 0; border-radius: 0; stroke: var(--beat); stroke-width: 2; }
 .big { max-width: 100%; font: 800 clamp(1.6rem, 5.4vw, 5rem)/1 var(--display); letter-spacing: -0.045em; overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 0.05em; text-decoration-skip-ink: none; text-underline-offset: 0.12em; transition: color var(--t-fast); }
 .big:hover { color: var(--accent); }
 .mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin-top: -0.5rem; }
-.copy { display: none; border-color: #71717a; color: var(--ink); font: 500 0.875rem var(--sans); letter-spacing: 0; text-transform: none; padding-inline: 1.1rem; }
+/* the two contact actions share one style: sentence case, Plex, a border that holds 3:1 on black */
+.action { border-color: #71717a; color: var(--ink); font: 500 0.875rem var(--sans); letter-spacing: 0; text-transform: none; padding-inline: 1.1rem; text-decoration: none; }
+.copy { display: none; }
 .js .copy { display: inline-flex; }
 .where { font: 400 0.8125rem var(--mono); color: var(--mut); }
 .social { display: flex; flex-wrap: wrap; gap: 0 1.5rem; align-self: stretch; padding-top: 0.75rem; border-top: 1px solid var(--line); }
@@ -308,7 +312,6 @@ svg.sw { border: 0; border-radius: 0; stroke: var(--beat); stroke-width: 2; }
 
 /* Motion: the hero is the one authored moment; the bars and the beat dots are its echo. One Pause stops all of it. */
 @media (prefers-reduced-motion: no-preference) {
-  .js .stage.live .pause { display: inline-flex; }
   /* two identical keyframes, alternated per beat, so each scene-beat restarts the pulse */
   .js.beat-a .beat { animation: pulse-a 0.45s var(--ease-out); }
   .js.beat-b .beat { animation: pulse-b 0.45s var(--ease-out); }
@@ -327,10 +330,10 @@ svg.sw { border: 0; border-radius: 0; stroke: var(--beat); stroke-width: 2; }
 @media print {
   :root, :root[data-theme] { color-scheme: light !important; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .top, .pause, .copy, .stage canvas, .skip, .hint { display: none !important; }
+  .top, .pause, .copy, .action[download], .stage canvas, .skip, .hint { display: none !important; }
   .stage .poster { opacity: 1 !important; }
   .js .cycle .bar { transform: none; }
   .artifacts { position: static; }
-  .contact { color-scheme: light; background: none; }
+  .contact { color-scheme: light; background: none; --ink: #0c0c0f; --mid: #3f3f46; --mut: #52525b; --accent: #1d4ed8; --line: #e4e4e7; --line2: #c7c7cc; }
   a { text-decoration: underline; }
 }
