@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PolyBall: every note you hear, you played</title>
+<meta name="description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run. Free on Android, in closed testing across 177 countries.">
+<!-- Canonical host: abdaishere.com (bought 2026-09-21, Porkbun; GitHub Pages custom domain,
+     web/CNAME). abdaishere.github.io 301s here. Change canonical, og:url, og:image and the
+     JSON-LD url together. -->
+<link rel="canonical" href="https://abdaishere.com/games/polyball/">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/img/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png?v=2" type="image/png" sizes="32x32">
+<link rel="icon" href="/img/favicon-16.png?v=2" type="image/png" sizes="16x16">
+<link rel="icon" href="/img/favicon-192.png?v=2" type="image/png" sizes="192x192">
+<link rel="icon" href="/img/favicon-512.png?v=2" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
+<meta name="theme-color" content="#08090C">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.com/games/polyball/">
+<meta property="og:site_name" content="PolyBall">
+<meta property="og:title" content="PolyBall: one miss ends the run">
+<meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
+<!-- Absolute, not relative: every scraper (Facebook, Slack, Discord, X, LinkedIn)
+     silently drops a relative og:image. -->
+<!-- 1200x630 share card, rendered from tools/og_image.html. The 1024x500 feature.png
+     stays the Play feature graphic only; it cropped badly at 1.91:1. -->
+<meta property="og:image" content="https://abdaishere.com/img/og.png">
+<!-- PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PolyBall: the five-colour ring, the wordmark and the line Every note you hear, you played.">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Everything this page loads: site.css, board.js, landing.js (no inline script), self-hosted
+     woff2, one Supabase origin (read-only leaderboard), and the trailer iframe only after a click. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://osnwwrpkyvcflfcixwmw.supabase.co; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'">
+
+<!-- Fonts are self-hosted, not Google Fonts: loading from Google sends every visitor's IP
+     to Google (ruled a GDPR breach, LG Munich 3 O 17493/20). Same Latin subsets the game
+     ships. Licence: fonts/OFL.txt. -->
+<link rel="preload" href="/fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/games/polyball/",
+"description":"A colour-matching arcade game for Android. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
+"image":"https://abdaishere.com/img/og.png","genre":["Arcade","Casual","Music"],
+"gamePlatform":"Android","applicationCategory":"GameApplication","operatingSystem":"Android",
+"playMode":"SinglePlayer","inLanguage":"en",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"author":{"@type":"Person","name":"Abdallah El Belkasy"}}
+</script>
+<link rel="stylesheet" href="site.css">
+<style>
+/* ---------- hero ---------- */
+.hero{ position:relative; overflow:hidden; padding-block:clamp(40px,6vw,88px) clamp(56px,7vw,104px) }
+.hero::before{ content:""; position:absolute; inset:-20% -10% auto auto; width:70vw; height:70vw; max-width:980px; max-height:980px; pointer-events:none;
+  background:radial-gradient(closest-side,rgba(90,209,230,.13),rgba(180,140,255,.07) 45%,transparent 70%) }
+.hero .wrap{ position:relative; display:grid; grid-template-columns:1.05fr .95fr; gap:var(--s7); align-items:center }
+.hero h1 em{ font-style:normal; background:var(--ring-line); -webkit-background-clip:text; background-clip:text; color:transparent }
+.hero .lead{ margin-top:var(--s5); max-width:34ch }
+.hero .cta{ display:flex; flex-wrap:wrap; gap:var(--s3); margin-top:var(--s6) }
+.hero .also{ margin-top:var(--s4) }
+.hero .also a{ color:var(--ink-2) }
+.stage{ position:relative; aspect-ratio:1/1.08; width:min(100%,520px); margin-inline:auto; border-radius:32px; background:radial-gradient(circle at 50% 56%,#141722,#0a0b10 70%); border:1px solid var(--line); overflow:hidden; touch-action:manipulation; cursor:pointer; user-select:none }
+.stage svg{ width:100%; height:100% }
+.stage .hud{ position:absolute; left:var(--s5); top:var(--s4); font:700 2.25rem/1 var(--display); font-variant-numeric:tabular-nums }
+.stage .hud small{ display:block; font:500 var(--t-eyebrow)/1 var(--display); letter-spacing:.16em; color:var(--muted); margin-bottom:6px }
+.stage .band{ position:absolute; right:var(--s5); top:var(--s4); display:grid; gap:6px; font:500 var(--t-eyebrow)/1 var(--display); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:right }
+.stage .band span{ transition:color .2s, text-shadow .2s } .stage .band span.on{ color:var(--ink); text-shadow:0 0 12px currentColor }
+.stage .band span:nth-child(1).on{ color:var(--r-cyan) } .stage .band span:nth-child(2).on{ color:var(--r-magenta) } .stage .band span:nth-child(3).on{ color:var(--r-yellow) }
+.stage .hint{ position:absolute; inset:auto 0 var(--s4) 0; text-align:center; font-size:var(--t-small); color:var(--ink-2); padding-inline:60px }
+.stage .pause{ position:absolute; right:var(--s3); bottom:var(--s3); width:44px; height:44px; border-radius:50%; border:1px solid var(--line-2); background:rgba(0,0,0,.4); color:var(--ink); cursor:pointer; display:grid; place-items:center }
+.stage .pause svg{ width:18px; height:18px }
+#ringG{ transition:transform .09s cubic-bezier(.65,0,.35,1); transform-origin:0 0 }
+@media (max-width:900px){ .hero .wrap{ grid-template-columns:1fr } .hero .lead{ max-width:none } }
+@media (max-width:560px){ .trailer .play{ width:64px; height:64px; box-shadow:0 0 0 7px rgba(90,209,230,.18) } .trailer .play svg{ width:26px; height:26px; margin-left:4px } }
+
+/* ---------- the hook ---------- */
+.hook{ background:var(--raised); border-block:1px solid var(--line) }
+.steps{ counter-reset:s }
+.step{ position:relative; padding-top:var(--s7) }
+.step::before{ counter-increment:s; content:"0" counter(s); position:absolute; top:var(--s5); left:var(--s5); font:700 var(--t-small)/1 var(--display); letter-spacing:.1em; color:var(--muted) }
+.step p{ color:var(--ink-2); margin-top:var(--s2) }
+.bars{ display:flex; align-items:flex-end; gap:5px; height:56px; margin-bottom:var(--s5) }
+.bars i{ flex:1; border-radius:3px 3px 0 0; background:var(--c,var(--accent)); height:calc(var(--h)*1%); opacity:.9 }
+.step.silence .bars i{ background:var(--line-2); height:6% }
+.step.silence .bars i:nth-child(-n+5){ background:var(--danger); height:calc(var(--h)*1%); opacity:.5 }
+
+/* ---------- trailer ---------- */
+.trailer{ position:relative; display:block; width:min(100%,960px); margin-inline:auto; aspect-ratio:16/9; border-radius:var(--r-card); overflow:hidden; border:1px solid var(--line); background:#000; cursor:pointer; padding:0 }
+.trailer img{ width:100%; height:100% !important; object-fit:cover; opacity:.85; transition:opacity .2s, transform .4s var(--ease) }
+.trailer:hover img{ opacity:1; transform:scale(1.02) }
+.trailer .play{ position:absolute; inset:0; margin:auto; width:88px; height:88px; border-radius:50%; background:var(--accent); color:var(--on-accent); display:grid; place-items:center; box-shadow:0 0 0 10px rgba(90,209,230,.18) }
+.trailer .play svg{ width:34px; height:34px; margin-left:5px }
+.trailer .len{ position:absolute; left:var(--s4); bottom:var(--s4); background:rgba(0,0,0,.7); padding:6px 12px; border-radius:var(--r-pill); font:500 var(--t-small)/1 var(--display); color:var(--ink) }
+
+/* ---------- screenshots rail ---------- */
+.rail{ display:flex; gap:var(--s4); overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:var(--s4); margin-inline:calc((100vw - min(1160px,100vw - 40px))/-2); padding-inline:calc((100vw - min(1160px,100vw - 40px))/2); scrollbar-width:thin; scrollbar-color:var(--line-2) transparent }
+.rail figure{ flex:0 0 clamp(220px,24vw,280px); margin:0; scroll-snap-align:center }
+.rail img{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:24px; border:1px solid var(--line-2) }
+.rail figcaption{ margin-top:var(--s3); font:700 1rem/1.3 var(--display) }
+
+/* ---------- modes ---------- */
+.mode{ border-top:3px solid var(--mc) } .mode h3{ color:var(--mc) } .mode p{ color:var(--ink-2); margin-top:var(--s2) }
+
+/* ---------- cup teaser ---------- */
+.cupbox{ position:relative; border-radius:28px; padding:clamp(24px,4vw,56px); background:linear-gradient(135deg,rgba(255,194,75,.12),rgba(255,194,75,.02) 45%),var(--card); border:1px solid rgba(255,194,75,.28); display:grid; grid-template-columns:.9fr 1.1fr; gap:var(--s7); align-items:center }
+.cupbox .count{ font:700 clamp(1.75rem,3vw,2.5rem)/1 var(--display); color:var(--gold); font-variant-numeric:tabular-nums; margin-top:var(--s5) }
+.cupbox ol{ list-style:none; margin:0; padding:0; display:grid; gap:var(--s3) }
+.cupbox .pcard.first{ border-color:rgba(255,194,75,.5) } .cupbox .pcard.first .rank,.cupbox .pcard.first .score{ color:var(--gold) }
+@media (max-width:900px){ .cupbox{ grid-template-columns:1fr } }
+/* phones: the platform icon costs the name its room inside the padded box */
+@media (max-width:560px){ .cupbox{ padding:var(--s5) var(--s4) } .cupbox .pcard{ grid-template-columns:auto 1fr auto } .cupbox .pcard .plat{ display:none } }
+
+/* ---------- get it ---------- */
+.get{ display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:var(--s4) }
+.get .big{ grid-row:span 2; display:flex; flex-direction:column; justify-content:space-between; gap:var(--s6); background:linear-gradient(160deg,rgba(90,209,230,.14),transparent 60%),var(--card); border-color:rgba(90,209,230,.3) }
+.dl{ display:flex; align-items:center; gap:var(--s4); text-decoration:none; color:var(--ink); min-height:88px; transition:border-color .18s, transform .18s var(--ease) }
+.dl:hover{ border-color:var(--line-2); transform:translateY(-2px) }
+.dl svg{ width:32px; height:32px; flex:none; color:var(--ink-2) }
+.dl b{ display:block; font:700 1.125rem/1.2 var(--display) } .dl span{ font-size:var(--t-small); color:var(--muted) }
+@media (max-width:900px){ .get{ grid-template-columns:1fr 1fr } .get .big{ grid-column:1/-1; grid-row:auto } }
+@media (max-width:560px){ .get{ grid-template-columns:1fr } }
+
+.fair p{ color:var(--ink-2); margin-top:var(--s2) }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="PolyBall home"><img src="/brand/lockup-horizontal.svg" alt="PolyBall" height="26"></a>
+    <ul>
+      <li><a class="opt" href="#trailer">Trailer</a></li>
+      <li><a class="opt" href="#modes">Modes</a></li>
+      <li><a class="cup" href="leaderboard/">Leaderboard</a></li>
+      <li><a href="#get">Get it</a></li>
+    </ul>
+    <a class="btn btn-primary btn-sm" href="/polyball/">Play now</a>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Free to play · Early access</p>
+      <h1>Every note you hear, <em>you played.</em></h1>
+      <p class="lead">Catch the ball on its colour and the music builds, one note at a time. One miss ends the run.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/polyball/">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Play now in your browser</a>
+        <a class="btn btn-ghost" href="https://play.google.com/apps/testing/com.polyball.game">Get it on Android</a>
+      </div>
+      <p class="small also">Also on <a href="#get">Windows, Mac and Linux</a>. No sign-up.</p>
+    </div>
+
+    <div class="stage" id="stage" role="application" tabindex="0" aria-label="Playable ring. Left and right arrow keys spin it. Catch the ball on its matching colour to play a note.">
+      <div class="hud"><small>Streak</small><span id="combo">0</span></div>
+      <div class="band" aria-hidden="true"><span id="l1">Lead</span><span id="l2">Bass</span><span id="l3">Harmony</span></div>
+      <svg viewBox="-200 -230 400 430" aria-hidden="true">
+        <defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <g transform="translate(0,10)"><g id="ringG" filter="url(#glow)"></g></g>
+        <circle id="ball" r="13" cx="0" cy="-210" filter="url(#glow)"/>
+      </svg>
+      <p class="hint" id="hint">Try it. Tap left or right to spin the ring. Sound on.</p>
+      <button class="pause" id="pause" type="button" aria-label="Pause the demo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg></button>
+    </div>
+  </div>
+</section>
+<hr class="ring-line">
+
+<!-- ================= THE HOOK ================= -->
+<section class="section hook">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">No soundtrack. Just you.</p>
+      <h2>You are the band.</h2>
+      <p class="lead">PolyBall ships with no music files. Every sound comes from how you play.</p>
+    </div>
+    <div class="grid g3 steps">
+      <article class="card step">
+        <div class="bars" aria-hidden="true"><i style="--h:30"></i><i style="--h:48"></i><i style="--h:38"></i><i style="--h:60"></i><i style="--h:44"></i><i style="--h:70"></i><i style="--h:52"></i><i style="--h:64"></i></div>
+        <h3>Every catch is a note</h3>
+        <p>Land the ball on its colour and you hear it. That was you.</p>
+      </article>
+      <article class="card step">
+        <div class="bars" aria-hidden="true"><i style="--h:40"></i><i style="--h:60;--c:var(--r-magenta)"></i><i style="--h:52"></i><i style="--h:82;--c:var(--r-yellow)"></i><i style="--h:66;--c:var(--r-magenta)"></i><i style="--h:94"></i><i style="--h:74;--c:var(--r-yellow)"></i><i style="--h:100;--c:var(--r-magenta)"></i></div>
+        <h3>Keep your streak, the band joins in</h3>
+        <p>First the bass. Then the harmony. Hit Fever and the whole thing takes off.</p>
+      </article>
+      <article class="card step silence">
+        <div class="bars" aria-hidden="true"><i style="--h:80"></i><i style="--h:62"></i><i style="--h:44"></i><i style="--h:26"></i><i style="--h:12"></i><i></i><i></i><i></i></div>
+        <h3>One miss and it all stops</h3>
+        <p>Silence. Then you tap play again, because that song was getting good.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRAILER ================= -->
+<section class="section" id="trailer">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Trailer</p><h2>See it in twenty seconds</h2></div>
+    <!-- Click-to-load: no YouTube request until the player asks for it. Real build swaps the button for a youtube-nocookie iframe of 0A4oTiEH7Co. -->
+    <button class="trailer" type="button" id="trailerBtn" aria-label="Play the PolyBall trailer, 21 seconds">
+      <img src="trailer-poster.webp" alt="" loading="lazy" width="1280" height="720">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="len">0:21 · with sound</span>
+    </button>
+  </div>
+</section>
+
+<!-- ================= SCREENSHOTS ================= -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">A quick look</p><h2>Simple to start. Hard to put down.</h2></div>
+    <div class="rail" tabindex="0" role="region" aria-label="Screenshots, scroll sideways">
+      <figure><img src="/img/phone_01_run_combo.webp" alt="A run in progress with a growing streak" loading="lazy" width="1080" height="1920"><figcaption>Every note is yours</figcaption></figure>
+      <figure><img src="/img/phone_02_run_fever.webp" alt="Fever mode with the screen washed in gold" loading="lazy" width="1080" height="1920"><figcaption>Hit Fever, score big</figcaption></figure>
+      <figure><img src="/img/phone_03_home.webp" alt="The home screen" loading="lazy" width="1080" height="1920"><figcaption>63 shapes to master</figcaption></figure>
+      <figure><img src="/img/phone_04_shop.webp" alt="The shop with balls, trails and plates" loading="lazy" width="1080" height="1920"><figcaption>Make it yours</figcaption></figure>
+      <figure><img src="/img/phone_05_box.webp" alt="Opening a mystery box" loading="lazy" width="1080" height="1920"><figcaption>Earn it by playing</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODES ================= -->
+<section class="section" id="modes" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Modes</p><h2>Four ways to play</h2></div>
+    <div class="grid g4">
+      <article class="card mode" style="--mc:var(--m-classic)"><h3>Classic</h3><p>The pure loop. Endless, and it only gets faster.</p></article>
+      <article class="card mode" style="--mc:var(--m-music)"><h3>Music</h3><p>Perform the song. Balls land on the beat.</p></article>
+      <article class="card mode" style="--mc:var(--m-time)"><h3>Time</h3><p>Beat the clock. Clean catches buy back seconds.</p></article>
+      <article class="card mode" style="--mc:var(--m-zen)"><h3>Zen</h3><p>Just flow. No clock, no leaderboard.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LEADERBOARD TEASER (live) ================= -->
+<section class="section" id="leaderboard" style="padding-top:0">
+  <div class="wrap">
+    <div class="cupbox">
+      <div>
+        <p class="eyebrow gold">Leaderboard</p>
+        <h2>Who's on top</h2>
+        <p class="lead" style="margin-top:var(--s4)">The best Classic runs on five sides. Beat one and your name goes up here.</p>
+        <p style="margin-top:var(--s5)"><a class="btn btn-gold" href="leaderboard/">See the full leaderboard</a></p>
+      </div>
+      <ol id="cupTop" aria-label="Current top three" aria-busy="true"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GET IT ================= -->
+<section class="section" id="get" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Get it</p><h2>Play anywhere. It's free.</h2></div>
+    <div class="get">
+      <div class="card big">
+        <div><h3>Android</h3><p class="lead" style="margin-top:var(--s2)">The best way to play. In closed testing on Google Play, with updates as they land.</p></div>
+        <div><a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test on Google Play</a>
+        <p class="small" style="margin-top:var(--s3)">Or <a href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Android-arm64-debug.apk" download>download the test APK</a> · 91.1 MB</p></div>
+      </div>
+      <a class="card dl" href="/polyball/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg><div><b>Play in your browser</b><span>Nothing to install · 47 MB</span></div></a>
+      <a class="card dl" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Windows-x86_64.exe" download><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg><div><b>Windows</b><span>Just run it · 112.4 MB</span></div></a>
+      <a class="card dl" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-macOS-universal.zip" download><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg><div><b>Mac</b><span>Apple and Intel · 63.3 MB</span></div></a>
+      <a class="card dl" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Linux-x86_64.x86_64" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M9 3.5c0 2-1.5 3-1.5 5.5 0 3-3 4.5-3 7.5 0 2 1.5 3.5 3.5 3.5h8c2 0 3.5-1.5 3.5-3.5 0-3-3-4.5-3-7.5C16.5 6.5 15 5.5 15 3.5a3 3 0 0 0-6 0ZM10 9h.01M14 9h.01"/></svg><div><b>Linux</b><span>64-bit · 78.3 MB</span></div></a>
+    </div>
+    <p class="small" style="margin-top:var(--s4)">iPhone and iPad are coming later. The browser version works there today.</p>
+  </div>
+</section>
+
+<!-- ================= FAIR ================= -->
+<section class="section fair" style="padding-top:0">
+  <div class="wrap">
+    <div class="grid g3">
+      <div class="card"><h3>Free, and fair</h3><p>Ads sit between runs, never during one. Nothing you buy changes your rank.</p></div>
+      <div class="card"><h3>Plays offline</h3><p>No wifi needed to play. The leaderboard catches up when you are back online.</p></div>
+      <div class="card"><h3>No account</h3><p>The game gives you a name. No sign-up, no email, no typing. <a href="/privacy.html">Privacy policy</a></p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>PolyBall · made by Abdallah El Belkasy</span>
+    <nav aria-label="Site"><a href="leaderboard/">Leaderboard</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
+  </div>
+</footer>
+
+<script src="board.js"></script>
+<script src="landing.js"></script>
+</body>
+</html>

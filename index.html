@@ -3,853 +3,203 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PolyBall: one miss ends the run</title>
-<meta name="description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run. Free on Android, in closed testing across 177 countries.">
-<!-- Canonical host: abdaishere.com (bought 2026-09-21, Porkbun; GitHub Pages custom domain,
-     web/CNAME). abdaishere.github.io 301s here. Change canonical, og:url, og:image and the
-     JSON-LD url together. -->
+<title>Abdallah El Belkasy · Systems &amp; backend engineer</title>
+<meta name="description" content="Abdallah El Belkasy is a software engineer in Dubai building distributed systems in Rust, C++ and Python. Built E-Jam at Siemens EDA and PolyBall, a Godot rhythm game.">
+<meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://abdaishere.com/">
-<link rel="icon" href="favicon.ico" sizes="48x48">
-<link rel="icon" href="img/favicon.svg?v=2" type="image/svg+xml">
-<link rel="icon" href="img/favicon-32.png?v=2" type="image/png" sizes="32x32">
-<link rel="icon" href="img/favicon-16.png?v=2" type="image/png" sizes="16x16">
-<link rel="icon" href="img/favicon-192.png?v=2" type="image/png" sizes="192x192">
-<link rel="icon" href="img/favicon-512.png?v=2" type="image/png" sizes="512x512">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2">
-<meta name="theme-color" content="#08090C">
-
-<meta property="og:type" content="website">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<meta property="og:type" content="profile">
 <meta property="og:url" content="https://abdaishere.com/">
-<meta property="og:site_name" content="PolyBall">
-<meta property="og:title" content="PolyBall: one miss ends the run">
-<meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
-<!-- Absolute, not relative: every scraper (Facebook, Slack, Discord, X, LinkedIn)
-     silently drops a relative og:image. -->
-<!-- 1200x630 share card, rendered from tools/og_image.html. The 1024x500 feature.png
-     stays the Play feature graphic only; it cropped badly at 1.91:1. -->
-<meta property="og:image" content="https://abdaishere.com/img/og.png">
-<!-- PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="Abdallah El Belkasy · Systems &amp; backend engineer">
+<meta property="og:description" content="Distributed systems in Rust, C++ and Python. Built E-Jam at Siemens EDA and PolyBall, a Godot rhythm game.">
+<meta property="og:image" content="https://abdaishere.com/img/me/og.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="PolyBall: the five-colour ring, the wordmark and the line Every note you hear, you played.">
+<meta property="og:image:alt" content="Abdallah El Belkasy, systems and backend engineer. Packets flowing through a polygon-ring switch.">
 <meta name="twitter:card" content="summary_large_image">
-
-<!-- Everything this page loads: app.js, one inline script (hashed), one inline <style>
-     plus style="" attributes and el.style writes, self-hosted woff2 in fonts/, data: SVGs
-     in CSS, one Supabase origin, and a same-origin HEAD probe for play/. The JSON-LD block is a data block, not a script,
-     so script-src does not apply to it. Keep the inline script byte-identical or the hash
-     must be recomputed. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PtdI6/36DhPdMEgjNWV5ExIEqFovVcjUHPeOyApfBhs='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://osnwwrpkyvcflfcixwmw.supabase.co; base-uri 'none'; form-action 'none'">
-
-<!-- Fonts are self-hosted, not Google Fonts: loading from Google sends every visitor's IP
-     to Google (ruled a GDPR breach, LG Munich 3 O 17493/20). Same Latin subsets the game
-     ships. Licence: fonts/OFL.txt. -->
-<link rel="preload" href="fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/",
-"description":"A colour-matching arcade game for Android. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
-"image":"https://abdaishere.com/img/og.png","genre":["Arcade","Casual","Music"],
-"gamePlatform":"Android","applicationCategory":"GameApplication","operatingSystem":"Android",
-"playMode":"SinglePlayer","inLanguage":"en",
-"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-"author":{"@type":"Person","name":"Abdallah El Belkasy"}}
+{"@context":"https://schema.org","@type":"Person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/","jobTitle":"Software engineer","address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"sameAs":["https://github.com/Abdaishere","https://www.linkedin.com/in/abdallahelbelkasy"]}
 </script>
-
-<script>document.documentElement.className='js'</script>
-<style>
-@font-face{ font-family:"Chakra Petch"; font-weight:500; font-display:swap; src:url(fonts/chakra-petch-500.woff2) format("woff2") }
-@font-face{ font-family:"Chakra Petch"; font-weight:700; font-display:swap; src:url(fonts/chakra-petch-700.woff2) format("woff2") }
-@font-face{ font-family:Nunito; font-weight:200 1000; font-display:swap; src:url(fonts/nunito-var.woff2) format("woff2") }
-/* ============================================================
-   PolyBall landing page.
-   Every colour, size and number here traces to the game repo:
-   theme.tres, scripts/palette.gd, scripts/player/player_polygon.gd,
-   scripts/ui/name_plate.gd, project.godot.
-   ============================================================ */
-:root{
-  color-scheme: dark;
-  --bg:#08090C;
-  --ground: radial-gradient(120% 95% at 50% 30%, #191B22 0%, #0C0D11 68%, #090A0D 100%);
-  --card: rgba(14,15,20,.92);
-  --sheet: rgba(14,15,20,.94);
-  --hair: rgba(255,255,255,.09);
-  --hair-hi: rgba(255,255,255,.34);  /* first alpha that clears WCAG 1.4.11 3:1 on both the sheet and the page ground */
-  --fg:#EDEEF2;
-  --mid:rgba(237,238,242,.75);
-  --low:rgba(237,238,242,.5);
-  --accent:#5AD1E6;  /* theme.tres Tokens/colors/accent */
-  --coin:#FFC24B;
-  --gem:#B48CFF;
-  --ok:#5BD6A0;
-  --danger:#FF5A5A;
-  /* scripts/palette.gd PALETTE_63, entries 0-6 */
-  --c1:#ff5a5a; --c2:#ff9f43; --c3:#ffd23f; --c4:#4bd86b;
-  --c5:#3fd0e0; --c6:#4a8cff; --c7:#f45cd0;
-  --m-classic:#5AD1E6; --m-music:#B06CFF; --m-time:#FFC24B; --m-zen:#5BD6A0;
-  --s1:.5rem; --s2:1rem; --s3:1.5rem; --s4:2rem; --s6:3rem; --s8:4.5rem;
-  --header-h:56px;
-}
-*,*::before,*::after{ box-sizing:border-box; min-width:0 }
-[hidden]{ display:none!important }
-html{
-  -webkit-text-size-adjust:100%;
-  scroll-behavior:smooth;
-  scroll-padding-top:72px;
-  overflow-x:hidden;
-}
-body{
-  margin:0; max-width:100%; overflow-x:hidden;
-  background:var(--bg); color:var(--fg);
-  font:500 17px/1.6 Nunito, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-h1,h2,h3{ font-family:"Chakra Petch", Nunito, system-ui, sans-serif; margin:0; overflow-wrap:break-word }
-h1{ font-weight:700; font-size:clamp(34px,8.5vw,76px); letter-spacing:-.02em; line-height:1.03; max-inline-size:16ch; text-wrap:balance }
-h2{ font-weight:700; font-size:30px; letter-spacing:-.015em; line-height:1.15 }
-h3{ font-weight:500; font-size:18px; line-height:1.25 }
-p{ margin:0 0 var(--s2) }
-img{ max-width:100%; height:auto; display:block }
-a{ color:var(--accent) }
-:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
-.vh{ position:absolute!important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0 }
-
-/* ---- chamfer: the game's signature shape (scripts/ui/chamfer_box.gd) ---- */
-.chm{
-  --cut:10px; position:relative; background:var(--hair);
-  --cp:polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)),
-       calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
-  clip-path:var(--cp); isolation:isolate;
-}
-.chm::before{ content:""; position:absolute; inset:1px; clip-path:var(--cp); background:var(--card); z-index:-1 }
-/* clip-path clips an element's own outline, so the focus ring has to be drawn
-   INSIDE the chamfer: a 3px white edge, which cannot be mistaken for the 1px
-   cyan edge of a selected mode button. An inset box-shadow will not work —
-   .chm::before sits at z-index:-1 and paints over it.
-   .tab[aria-pressed="true"]{background:var(--tc)} below has the same (0,2,0)
-   specificity and comes later, so the selected tab needs naming here or its
-   focus ring is drawn in its own mode colour and reads as the 1px selected edge. */
-.chm:focus-visible,
-.tab[aria-pressed="true"]:focus-visible{ background:var(--fg); outline:none }
-.chm:focus-visible::before{ inset:3px }
-
-.wrap{ max-width:1140px; margin:0 auto; padding:0 24px }
-.section{ padding:var(--s8) 0 }
-.eyebrow{ font:800 11px/1 Nunito, sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low); margin:0 0 12px }
-.lede{ color:var(--mid); max-width:60ch }
-.cap{ font-size:14px; color:var(--mid) }
-.low{ color:var(--low) }
-.sec-head{ margin-bottom:var(--s4); max-width:62ch }
-.sec-head p{ margin:10px 0 0; color:var(--mid) }
-
-/* ---- skip link ---- */
-.skip{
-  position:absolute; left:12px; top:-60px; z-index:100;
-  background:var(--accent); color:#08090C; font:800 15px/1 Nunito,sans-serif;
-  padding:14px 18px; border-radius:999px; text-decoration:none; transition:top .12s ease-out;
-}
-.skip:focus{ top:12px }
-
-/* ---- sticky header ---- */
-.site-head{
-  position:sticky; top:0; z-index:50; height:var(--header-h);
-  background:rgba(8,9,12,.94); border-bottom:1px solid var(--hair);
-}
-@supports (backdrop-filter:blur(8px)){ .site-head{ backdrop-filter:blur(8px) } }
-.site-head .wrap{ height:100%; display:flex; align-items:center; gap:var(--s3) }
-.mark{
-  font:700 20px/1 "Chakra Petch", sans-serif; letter-spacing:.02em; text-decoration:none;
-  /* wordmark gradient: five hue-sorted palette stops at 100deg, scrolling (shaders/logo_gradient.gdshader) */
-  background:linear-gradient(100deg,#ff5a5a,#ffd23f,#4bd86b,#4a8cff,#f45cd0,#ff5a5a);
-  background-size:300% 100%;
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:markflow 20s linear infinite;
-  padding:6px 2px;
-}
-@keyframes markflow{ to{ background-position:300% 0 } }
-.site-nav{ margin-left:auto; display:flex; gap:4px; align-items:center }
-.site-nav a{
-  color:var(--mid); text-decoration:none; font:800 12px/1 Nunito,sans-serif;
-  text-transform:uppercase; letter-spacing:.1em;
-  min-height:44px; display:inline-flex; align-items:center; padding:0 10px;
-}
-.site-nav a:hover{ color:var(--fg) }
-@media (max-width:640px){ .site-nav .opt{ display:none } }
-/* 320 px phones: "Get it" wrapped to two lines and squeezed the wordmark to "PolyBal". */
-.site-nav a{ white-space:nowrap } .site-head .mark{ flex-shrink:0 }
-@media (max-width:359px){ .site-nav a{ padding:0 6px; letter-spacing:.06em } }
-
-/* ---- buttons ---- */
-.btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
-  min-height:48px; min-width:48px; padding:0 22px; cursor:pointer;
-  font:800 15px/1.2 Nunito, system-ui, sans-serif; text-decoration:none;
-  border:0; border-radius:999px; background:var(--hair); color:var(--fg);
-  /* #lbCta's label is "Pass <remote name>: join the closed test". A name at the
-     schema limit (public.scores.name text 3-24) is one unbreakable token that
-     overran the button by 49px at 375px, and body{overflow-x:hidden} clipped it
-     with no scrollbar to recover it. */
-  text-align:center; overflow-wrap:anywhere;
-  transition:transform 90ms cubic-bezier(.45,0,.55,1), background-color 160ms ease, color 160ms ease;
-}
-.btn svg{ width:18px; height:18px; flex:none }
-.btn:active{ transform:scale(.97) }
-.btn-primary{ background:var(--accent); color:#08090C }      /* 11.09:1 */
-.btn-primary:hover{ background:#7CDDEE }
-.btn-ghost{ background:transparent; box-shadow:inset 0 0 0 1px var(--hair-hi); color:var(--fg) }
-.btn-ghost:hover{ box-shadow:inset 0 0 0 1px var(--accent); color:var(--accent) }
-.btn-sm{ min-height:44px; padding:0 16px; font-size:14px }
-.cta-row{ display:flex; gap:12px; flex-wrap:wrap }
-@media (max-width:400px){ .cta-row .btn{ width:100% } }
-
-/* ---- hero ---- */
-.hero{ position:relative; padding:var(--s6) 0 var(--s8); overflow:hidden }
-.hero-bg{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:var(--ground);
-}
-.blob{ position:absolute; width:480px; height:480px; margin:-240px 0 0 -240px; border-radius:50%; filter:blur(80px); opacity:.55; will-change:transform }
-.blob-a{ background:#51586E; left:36%; top:40%; animation:orbA 27s linear infinite }
-.blob-b{ background:#3E4559; left:66%; top:61%; opacity:.5; animation:orbB 31s linear infinite }
-@keyframes orbA{ 0%,100%{transform:translate(0,0)} 25%{transform:translate(30px,-30px)} 50%{transform:translate(0,0)} 75%{transform:translate(-30px,30px)} }
-@keyframes orbB{ 0%,100%{transform:translate(0,0)} 25%{transform:translate(-30px,30px)} 50%{transform:translate(0,0)} 75%{transform:translate(30px,-30px)} }
-.grain{ /* shaders/bg_grain.gdshader, amount 0.015 */
-  position:absolute; inset:0; opacity:.015; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:120px 120px;
-}
-.hero .wrap{ position:relative; z-index:1 }
-.hero-grid{ display:grid; gap:var(--s4); align-items:center }
-/* --low (.5 alpha) is calibrated against the flat --bg. The blurred blobs lift
-   the local ground to ~rgb(50,55,70) under the text column, which drops 11px
-   .eyebrow and 12px .cap.low to 3.3–4.1:1 depending on viewport and animation
-   phase — below the 4.5:1 that applies to text this small. --mid clears it
-   over the blob peak, so nothing inside .hero uses --low. */
-.hero .eyebrow, .hero .cap.low, .stage-cap{ color:var(--mid) }
-.hero h1{ margin:0 0 14px }
-.hero .brandline{ font:500 clamp(18px,3.2vw,24px)/1.25 "Chakra Petch",sans-serif; margin:0 0 10px }
-.hero .sub{ font-size:17px; color:var(--mid); max-width:46ch; margin:0 0 18px }
-.hero .sub-short{ display:none }
-@media (max-width:400px){ .hero .sub-long{ display:none } .hero .sub-short{ display:block } }
-/* Both lines drop a remote leaderboard name into flowing prose; at the 24-char
-   schema limit that is one unbreakable token, so they need to break inside it. */
-.tension,.boss-line{ overflow-wrap:anywhere }
-.tension{ min-height:44px; margin:0 0 18px; padding-top:12px; font-size:15px; color:var(--mid) }
-.tension b{ color:var(--coin); font-family:"Chakra Petch",sans-serif; font-weight:500; font-variant-numeric:tabular-nums }
-.tension .sk{ display:inline-block; width:min(280px,80%); height:14px; border-radius:999px; background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12),rgba(255,255,255,.05)); background-size:200% 100%; animation:shim 1.4s linear infinite }
-@keyframes shim{ to{ background-position:-200% 0 } }
-
-.stage{ position:relative; justify-self:center; width:clamp(240px,72vw,300px) }
-.stage canvas{ display:block; width:100%; height:auto; aspect-ratio:560/740; cursor:pointer; touch-action:manipulation; border-radius:24px }
-.stage canvas:focus-visible{ outline:2px solid var(--fg); outline-offset:4px }
-.stage-hint{ margin:2px 0 0; text-align:center; font:600 12px/1.4 Nunito,sans-serif; color:var(--mid) }
-.stage-pause{
-  position:absolute; right:0; bottom:54px; width:44px; height:44px;
-  display:inline-flex; align-items:center; justify-content:center;
-  border:0; border-radius:999px; cursor:pointer;
-  background:rgba(14,15,20,.92); box-shadow:inset 0 0 0 1px var(--hair-hi); color:var(--fg);
-}
-.stage-pause svg{ width:16px; height:16px }
-.stage-cap{ margin:10px 0 0; text-align:center; font:800 11px/1.4 Nunito,sans-serif; letter-spacing:.14em; text-transform:uppercase; min-height:20px }
-.stage-cap.over{ color:var(--danger); font-family:"Chakra Petch",sans-serif; font-weight:700; letter-spacing:.06em }
-
-/* ---- sheet (leaderboard) ---- */
-.sheet{ --cut:14px; background:var(--hair-hi); box-shadow:0 14px 26px rgba(0,0,0,.55) }
-.sheet::before{ background:var(--sheet) }
-.sheet-in{ padding:24px }
-@media (min-width:768px){ .sheet-in{ padding:32px } }
-
-/* ---- filters ---- */
-.filters{ display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; margin:18px 0 }
-.tabs{ display:flex; gap:8px; flex-wrap:wrap }
-.tab{
-  --cut:7px; min-height:44px; padding:0 16px; display:inline-flex; align-items:center; gap:8px;
-  border:0; cursor:pointer; background:var(--hair); color:var(--mid);
-  font:800 12px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em;
-}
-.tab::before{ background:rgba(14,15,20,.94) }
-.tab .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; opacity:.35 }
-.tab[aria-pressed="true"]{ background:var(--tc); color:var(--fg) }
-.tab[aria-pressed="true"]::before{ background:color-mix(in srgb, var(--tc) 13%, #0E0F14) }
-.tab[aria-pressed="true"] .dot{ background:var(--tc); opacity:1 }
-.field{ display:flex; flex-direction:column; gap:6px }
-.field label{ font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low) }
-.field select,.field input{
-  min-height:44px; padding:0 12px; background:#12131A; color:var(--fg);
-  border:1px solid var(--hair-hi); border-radius:8px;
-  font:500 16px/1 Nunito,sans-serif;
-}
-.chase{ margin-left:auto }
-.chase input{ width:150px; font-variant-numeric:tabular-nums }
-/* 320 px: 150 px left the row 6 px short, so this field dropped a line and hung right. */
-@media (max-width:359px){ .chase input{ width:140px } }
-
-/* ---- leaderboard table ---- */
-.lb-scroll{ overflow-x:auto }
-/* table-layout:fixed, so a 24-char name (public.scores.name allows text 3-24)
-   cannot widen the table past the viewport and push the Score column out of the
-   .lb-scroll region. Fixed layout reads its widths from the FIRST row, which is
-   the thead, so the th widths below must track the td widths. */
-table.lb{ width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0 8px }
-table.lb th{ text-align:left; font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--low); padding:0 12px 8px }
-table.lb th:first-child{ width:52px; padding-left:0 } table.lb th:last-child{ width:96px; padding-right:0 }
-table.lb th.r,table.lb td.score{ text-align:right }
-/* headers sit over their column's content: rank digits are right-set, plates are centred */
-table.lb th:first-child{ text-align:right } table.lb th:nth-child(2){ text-align:center }
-table.lb td{ vertical-align:middle; padding:0 }
-td.rank{
-  width:52px; padding-right:12px; text-align:right;
-  font:800 20px/1 Nunito,sans-serif; font-variant-numeric:tabular-nums; color:var(--low);
-  white-space:nowrap;
-}
-td.rank svg{ width:12px; height:12px; vertical-align:-1px; margin-right:4px }
-td.score{
-  width:96px; padding-left:12px;
-  font:500 26px/1 "Chakra Petch",sans-serif; font-variant-numeric:tabular-nums; color:var(--fg);
-}
-td.plate-cell{ width:100% }
-table.lb td.plate-cell{ padding-left:10px }  /* keeps a framed plate's ring off the rank digit */   /* soaks up the remainder; the two fixed columns hold */
-.deltachip{ display:block; font:800 11px/1.4 Nunito,sans-serif; color:var(--low); font-variant-numeric:tabular-nums }
-
-/* ---- the plate (scripts/ui/name_plate.gd) ---- */
-.plate{
-  position:relative; min-height:68px; padding:10px 18px; border-radius:18px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-  overflow:hidden; transition:transform 160ms ease, box-shadow 160ms ease;
-}
-tr:hover .plate.framed{ transform:translateY(-2px) }
-.plate.framed::before{ /* inner highlight line, 1.5px below the top edge, inset by the radius */
-  content:""; position:absolute; left:18px; right:18px; top:1.5px; height:1px;
-  background:rgba(255,255,255,.16);
-}
-.plate .nm{
-  font-size:21px; line-height:1.05; color:#EDF0F2; font-weight:700;
-  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-.plate .ti{ font-size:14px; line-height:1.2; margin-top:3px; color:var(--accent); font-weight:700 }
-@media (max-width:420px){
-  .plate{ min-height:56px; padding:8px 12px }
-  .plate .nm{ font-size:18px } .plate .ti{ font-size:12px }
-  .plate.framed::before{ left:12px; right:12px }
-  td.score,table.lb th:last-child{ width:88px } td.score{ font-size:22px }
-  td.rank,table.lb th:first-child{ width:42px } td.rank{ font-size:17px }
-}
-/* eleven flair recipes */
-.f-slate  { background:linear-gradient(180deg,#262B38,#12141C); box-shadow:0 0 0 1px rgba(255,255,255,1),0 0 0 3.5px rgba(255,255,255,.06),0 0 14px rgba(255,255,255,.06) }
-.f-neon   { background:linear-gradient(180deg,#102E3C,#0A1217); box-shadow:0 0 0 1px rgba(90,209,230,.95),0 0 0 3.5px rgba(90,209,230,.28),0 0 14px rgba(90,209,230,.28) }
-.f-circuit{ background:linear-gradient(180deg,#0F2117,#08120D); box-shadow:0 0 0 1px rgba(75,216,107,.85),0 0 0 3.5px rgba(75,216,107,.20),0 0 14px rgba(75,216,107,.20) }
-.f-circuit::after{ content:""; position:absolute; left:16px; right:16px; bottom:3.5px; height:2.6px;
-  background:linear-gradient(90deg,rgba(75,216,107,.9) 0 2.6px,rgba(75,216,107,.4) 2.6px calc(100% - 2.6px),rgba(75,216,107,.9) calc(100% - 2.6px) 100%);
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%) }
-.f-frost  { background:linear-gradient(180deg,#2A3C4D,#0D141C); box-shadow:0 0 0 1px rgba(191,232,255,.9),0 0 0 3.5px rgba(191,232,255,.24),0 0 14px rgba(191,232,255,.24) }
-.f-frost::after{ content:""; position:absolute; inset:6px; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cg stroke='%23BFE8FF' stroke-opacity='.55' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M6 1v10M1.7 3.5l8.6 5M10.3 3.5l-8.6 5'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:left top,right top,left bottom,right bottom; background-size:12px 12px }
-.f-gilded { background:linear-gradient(180deg,#382B0F,#170F05); box-shadow:0 0 0 1px rgba(255,214,102,1),0 0 0 3.5px rgba(255,214,102,.26),0 0 0 5px rgba(102,71,15,.9),0 0 14px rgba(255,214,102,.26) }
-.f-ember  { background:linear-gradient(180deg,#2E120A,#421708); box-shadow:0 0 0 1px rgba(255,122,58,.95),0 0 0 3.5px rgba(255,122,58,.26),0 0 14px rgba(255,122,58,.26) }
-.f-ember::after{ content:""; position:absolute; inset:0; pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(255,122,58,.26) 0 1.25px,transparent 1.25px 9px);
-  -webkit-mask-image:linear-gradient(0deg,#000,transparent); mask-image:linear-gradient(0deg,#000,transparent);
-  animation:heat 2.2s linear infinite }
-@keyframes heat{ to{ background-position:0 -9px } }
-.f-holo   { background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35)),
-            linear-gradient(90deg,hsla(0,50%,60%,.26),hsla(60,50%,60%,.26),hsla(120,50%,60%,.26),hsla(180,50%,60%,.26),hsla(240,50%,60%,.26),hsla(300,50%,60%,.26),hsla(360,50%,60%,.26));
-            background-size:auto,300% 100%; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.18),0 0 14px rgba(255,255,255,.18);
-            animation:holo 4.5s linear infinite }
-.f-holo::before{ background:rgba(255,255,255,.22) }
-@keyframes holo{ to{ background-position:0 0,300% 0 } }
-.f-void   { background:radial-gradient(circle at 18% 30%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
-            radial-gradient(circle at 72% 24%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
-            radial-gradient(circle at 55% 74%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),
-            linear-gradient(180deg,#0F0A1F,#05030D);
-            box-shadow:0 0 0 1px rgba(176,140,252,1),0 0 0 3.5px rgba(176,140,252,.24),0 0 14px rgba(176,140,252,.24) }
-.f-bloom  { background:linear-gradient(180deg,#331724,#170A12); box-shadow:0 0 0 1px rgba(245,143,168,.9),0 0 0 3.5px rgba(245,143,168,.24),0 0 14px rgba(245,143,168,.24) }
-.f-bloom::after{ content:""; position:absolute; left:0; top:50%; width:40px; height:56px; transform:translateY(-50%); pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='56' fill='none' stroke='%23F58FA8' stroke-opacity='.55' stroke-width='2'%3E%3Cpath d='M-6 8C10 14 16 26 6 44'/%3E%3Cpath d='M-8 24C4 28 8 36 2 50'/%3E%3C/svg%3E") }
-.f-carbon { background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3.5px),
-            linear-gradient(180deg,#212429,#0F0F14);
-            box-shadow:0 0 0 1px rgba(191,199,217,.85),0 0 0 3.5px rgba(191,199,217,.10),0 0 14px rgba(191,199,217,.10) }
-/* rank 1 gets the game's tier-2 record chrome: near-black behind the plate art,
-   inside an animated tri-gradient frame (scripts/ui/game_over_screen.gd tier 2) */
-tr.boss .plate{ background-color:rgba(15,16,21,.94) }
-tr.boss .plate-wrap{ position:relative; padding:2px; border-radius:20px; overflow:hidden; isolation:isolate }
-tr.boss .plate-wrap::before{
-  content:""; position:absolute; left:-60%; top:-160%; width:220%; height:420%; z-index:0;
-  background:conic-gradient(#5AD1E6,#B48CFF,#FFC24B,#5AD1E6); animation:boss 8s linear infinite;
-}
-tr.boss .plate-wrap .plate{ position:relative; z-index:1 }
-@keyframes boss{ to{ transform:rotate(360deg) } }
-/* ghost row for the chase input */
-tr.ghost .plate{ background:transparent; box-shadow:none; border:2px dashed var(--accent) }
-tr.ghost .nm{ color:var(--accent) }
-tr.ghost .ti{ color:var(--low) }
-
-.lb-status{ margin:14px 0 0; font-size:14px; color:var(--mid); min-height:22px }
-.skel{ height:68px; border-radius:18px; background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.09),rgba(255,255,255,.04)); background-size:200% 100%; animation:shim 1.4s linear infinite }
-.boss-line{ font:500 18px/1.4 "Chakra Petch",sans-serif; color:var(--mid); margin:0 0 12px }
-.boss-line b{ color:var(--coin); font-weight:500 }
-
-/* ---- generic grids ---- */
-.grid{ display:grid; gap:12px; grid-template-columns:1fr }
-@media (min-width:768px){ .grid.g2,.grid.g3,.grid.g4{ grid-template-columns:1fr 1fr } }
-@media (min-width:1024px){ .grid.g3{ grid-template-columns:repeat(3,1fr) } .grid.g4{ grid-template-columns:repeat(4,1fr) } }
-.card{ padding:20px }
-.card h3{ margin:0 0 6px; color:var(--fg) }
-.card p{ margin:0; font-size:15px; color:var(--mid) }
-.card .ico{ display:block; width:22px; height:22px; margin-bottom:12px; color:var(--accent) }
-.card .bar{ display:block; width:26px; height:4px; border-radius:999px; margin-bottom:12px }
-
-/* ---- fall-time bars ---- */
-.falls{ display:flex; align-items:flex-end; justify-content:flex-start; gap:6px; height:110px; margin:24px 0 8px; max-width:520px }
-.falls-legend{ max-width:520px }
-.falls i{ flex:0 1 18px; background:linear-gradient(180deg,var(--accent),rgba(90,209,230,.22)); border-radius:2px 2px 0 0; min-width:6px }
-.falls-legend{ display:flex; justify-content:space-between; font:800 11px/1 Nunito,sans-serif; letter-spacing:.1em; text-transform:uppercase; color:var(--low) }
-
-/* ---- 63 swatches ---- */
-.swatch-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(20px,1fr)); gap:4px; margin-top:14px }
-.swatch-grid i{ display:block; aspect-ratio:1; --cut:5px;
-  clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px) }
-
-/* ---- screenshots ---- */
-.shots{ display:grid; gap:12px; grid-template-columns:repeat(2,1fr) }
-@media (min-width:768px){ .shots{ grid-template-columns:repeat(3,1fr) } }
-@media (min-width:1024px){ .shots{ grid-template-columns:repeat(5,1fr) } }
-.shots img{ width:100%; border-radius:12px; border:1px solid var(--hair) }
-
-/* ---- downloads ---- */
-.dl-grid{ display:grid; gap:12px; grid-template-columns:1fr }
-@media (min-width:768px){ .dl-grid{ grid-template-columns:1fr 1fr } }
-@media (min-width:1024px){ .dl-grid{ grid-template-columns:repeat(3,1fr) } }
-.dl{ padding:20px; display:flex; flex-direction:column; gap:10px }
-.dl.span{ grid-column:1/-1 }
-.dl.span::before{ background:linear-gradient(180deg,rgba(90,209,230,.10),rgba(14,15,20,.94)) }
-.dl-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-.dl-head svg{ width:16px; height:16px; color:var(--accent); flex:none }
-.dl-head h3{ margin:0 }
-.dl-size{ font:500 24px/1 "Chakra Petch",sans-serif; font-variant-numeric:tabular-nums }
-.dl-size span{ font:500 14px/1 Nunito,sans-serif; color:var(--mid); margin-left:8px }
-.dl p{ margin:0; font-size:14px; color:var(--mid) }
-.dl code{ font:500 13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:rgba(255,255,255,.06); padding:2px 6px; border-radius:4px; overflow-wrap:anywhere }
-.dl .btn{ align-self:flex-start; margin-top:auto }
-.chip{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
-  font:800 11px/1 Nunito,sans-serif; text-transform:uppercase; letter-spacing:.1em }
-.chip svg{ width:12px; height:12px }
-.chip-rel{ background:rgba(90,209,230,.16); box-shadow:inset 0 0 0 1px rgba(90,209,230,.55); color:#9BE6F3 }
-.chip-dbg{ background:rgba(255,194,75,.16); box-shadow:inset 0 0 0 1px rgba(255,194,75,.55); color:var(--coin) }
-.chip-na{ background:transparent; border:1px dashed rgba(237,238,242,.35); border-radius:0; color:var(--low) }
-
-/* ---- fair ---- */
-.fair{ display:grid; gap:12px; grid-template-columns:1fr; max-width:900px }
-@media (min-width:720px){ .fair{ grid-template-columns:1fr 1fr } }
-.fair .card p{ font-size:16px }
-
-footer{ border-top:1px solid var(--hair); padding:var(--s4) 0 var(--s6); font-size:14px; color:var(--mid) }
-footer p{ margin:0 0 6px }
-footer a{ color:var(--mid) }
-footer a:hover{ color:var(--accent) }
-footer nav{ display:flex; gap:var(--s3); flex-wrap:wrap; margin-top:10px }
-footer nav a{ min-height:44px; display:inline-flex; align-items:center }
-
-/* ---- scroll reveal: opt-in, so no-JS and print keep every card visible ---- */
-.js .rev{ opacity:0; transform:translateY(12px); transition:opacity 340ms ease-out, transform 340ms ease-out }
-.js .rev.in{ opacity:1; transform:none }
-
-@media (min-width:1280px){
-  .hero-grid{ grid-template-columns:1fr 1fr; min-height:min(560px,88dvh) }
-  .stage{ width:440px }
-  .sheet{ max-width:720px; margin:0 auto }
-}
-@media (min-width:768px) and (max-width:1279px){
-  .wrap{ max-width:720px; padding:0 40px }
-  .stage{ width:360px }
-}
-
-@media (prefers-reduced-motion:reduce){
-  html{ scroll-behavior:auto }
-  *,*::before,*::after{ animation-duration:0s!important; animation-iteration-count:1!important; transition-duration:0s!important }
-  .js .rev{ opacity:1; transform:none }
-}
-</style>
+<link rel="preload" href="fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="home.css">
+<script>
+// This page used to be the PolyBall landing. Old deep links (/#leaderboard, /#mode=1&sides=7)
+// carry on to where that page lives now; this page's own anchors stay here.
+(function () {
+  var h = location.hash.slice(1);
+  if (h && !/^(top|main|work|skills|about|contact)$/.test(h)) location.replace('/games/polyball/' + location.hash);
+})();
+try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
-<a class="skip" href="#top">Skip to main content</a>
-
-<header class="site-head">
-  <div class="wrap">
-    <a class="mark" href="#top">PolyBall</a>
-    <nav class="site-nav" aria-label="Sections">
-      <a href="#leaderboard">Leaderboard</a>
-      <a class="opt" href="#run">How it ends</a>
-      <a class="opt" href="#modes">Modes</a>
-      <a href="#get">Get it</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="Abdallah El Belkasy, back to top">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.5 20.2 7.25v9.5L12 21.5l-8.2-4.75v-9.5z"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
+      <span class="brand-name">Abdallah El Belkasy</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
     </nav>
+    <button class="icon-btn" type="button" id="theme" aria-label="Switch colour theme">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
   </div>
 </header>
 
-<main id="top" tabindex="-1">
+<main id="main">
+  <section class="hero" id="top">
+    <div class="stage" aria-hidden="true">
+      <div class="stage-in">
+        <svg class="poster" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false"><line class="ln" x1="896" y1="579" x2="1130" y2="440"/><line class="ln" x1="936" y1="609" x2="1130" y2="440"/><line class="ln" x1="911" y1="546" x2="1130" y2="440"/><line class="ln" x1="878" y1="462" x2="1130" y2="440"/><line class="ln" x1="887" y1="419" x2="1130" y2="440"/><line class="ln" x1="932" y1="377" x2="1130" y2="440"/><line class="ln" x1="821" y1="302" x2="1130" y2="440"/><line class="ln" x1="885" y1="331" x2="1130" y2="440"/><line class="ln" x1="753" y1="274" x2="1130" y2="440"/><line class="ln" x1="812" y1="330" x2="1130" y2="440"/><line class="ln" x1="830" y1="387" x2="1130" y2="440"/><line class="ln" x1="801" y1="489" x2="1130" y2="440"/><line class="ln" x1="870" y1="510" x2="1130" y2="440"/><line class="ln" x1="779" y1="563" x2="1130" y2="440"/><line class="ln" x1="1427" y1="557" x2="1130" y2="440"/><line class="ln" x1="1425" y1="607" x2="1130" y2="440"/><line class="ln" x1="1399" y1="547" x2="1130" y2="440"/><line class="ln" x1="1406" y1="462" x2="1130" y2="440"/><line class="ln" x1="1470" y1="397" x2="1130" y2="440"/><line class="ln" x1="1465" y1="355" x2="1130" y2="440"/><line class="ln" x1="1410" y1="298" x2="1130" y2="440"/><line class="ln" x1="1444" y1="231" x2="1130" y2="440"/><line class="ln" x1="1406" y1="326" x2="1130" y2="440"/><line class="ln" x1="1423" y1="335" x2="1130" y2="440"/><line class="ln" x1="1316" y1="396" x2="1130" y2="440"/><line class="ln" x1="1279" y1="493" x2="1130" y2="440"/><line class="ln" x1="1410" y1="535" x2="1130" y2="440"/><line class="ln" x1="1396" y1="542" x2="1130" y2="440"/><polygon class="ring beat" points="1130,540 1172,490 1172,390 1130,340 1088,390 1088,490"/><polygon class="ring" points="1161,558 1194,443 1163,326 1099,322 1066,437 1097,554"/><polygon class="ring" points="1130,618 1173,594 1204,529 1216,440 1204,351 1173,286 1130,262 1087,286 1056,351 1044,440 1056,529 1087,594"/><circle class="pk" cx="921" cy="563" r="3.9"/><circle class="pk" cx="1072" cy="475" r="3.3"/><circle class="pk" cx="989" cy="563" r="3.6"/><circle class="pk" cx="1077" cy="486" r="4.9"/><circle class="pk w" cx="959" cy="523" r="4.3"/><circle class="pk" cx="1075" cy="467" r="5.0"/><circle class="pk" cx="955" cy="455" r="4.2"/><circle class="pk w" cx="1038" cy="448" r="3.7"/><circle class="pk w" cx="922" cy="422" r="4.4"/><circle class="pk w" cx="1029" cy="431" r="3.1"/><circle class="pk w" cx="971" cy="390" r="3.6"/><circle class="pk" cx="1093" cy="428" r="4.7"/><circle class="pk" cx="915" cy="344" r="3.5"/><circle class="pk" cx="1071" cy="414" r="4.7"/><circle class="pk w" cx="968" cy="368" r="3.1"/><circle class="pk" cx="1031" cy="396" r="3.7"/><circle class="pk w" cx="846" cy="315" r="3.5"/><circle class="pk" cx="990" cy="378" r="3.9"/><circle class="pk" cx="919" cy="367" r="4.0"/><circle class="pk" cx="1053" cy="413" r="2.6"/><circle class="pk" cx="928" cy="404" r="4.5"/><circle class="pk" cx="1065" cy="429" r="3.5"/><circle class="pk w" cx="842" cy="483" r="2.7"/><circle class="pk w" cx="1045" cy="453" r="2.9"/><circle class="pk w" cx="918" cy="497" r="2.9"/><circle class="pk w" cx="1017" cy="470" r="3.4"/><circle class="pk" cx="816" cy="550" r="2.9"/><circle class="pk" cx="1064" cy="463" r="3.4"/><circle class="pk" cx="1370" cy="535" r="5.0"/><circle class="pk" cx="1253" cy="488" r="3.7"/><circle class="pk" cx="1389" cy="587" r="3.2"/><circle class="pk" cx="1254" cy="510" r="2.9"/><circle class="pk" cx="1370" cy="536" r="2.9"/><circle class="pk" cx="1174" cy="458" r="2.6"/><circle class="pk" cx="1342" cy="457" r="4.2"/><circle class="pk" cx="1173" cy="443" r="3.4"/><circle class="pk" cx="1422" cy="403" r="4.4"/><circle class="pk" cx="1204" cy="431" r="3.1"/><circle class="pk" cx="1363" cy="380" r="4.5"/><circle class="pk" cx="1182" cy="427" r="4.3"/><circle class="pk" cx="1366" cy="320" r="2.6"/><circle class="pk w" cx="1212" cy="398" r="3.2"/><circle class="pk" cx="1392" cy="265" r="3.6"/><circle class="pk" cx="1206" cy="389" r="5.0"/><circle class="pk" cx="1313" cy="365" r="3.1"/><circle class="pk w" cx="1224" cy="401" r="3.0"/><circle class="pk" cx="1348" cy="362" r="3.7"/><circle class="pk" cx="1183" cy="421" r="4.5"/><circle class="pk" cx="1294" cy="401" r="4.5"/><circle class="pk" cx="1177" cy="429" r="3.7"/><circle class="pk" cx="1257" cy="485" r="4.5"/><circle class="pk" cx="1162" cy="451" r="3.5"/><circle class="pk" cx="1354" cy="516" r="2.9"/><circle class="pk w" cx="1176" cy="456" r="2.9"/><circle class="pk w" cx="1309" cy="508" r="4.6"/><circle class="pk" cx="1185" cy="461" r="4.1"/><circle class="node" cx="896" cy="579" r="6"/><circle class="node" cx="936" cy="609" r="6"/><circle class="node" cx="911" cy="546" r="6"/><circle class="node" cx="878" cy="462" r="6"/><circle class="node" cx="887" cy="419" r="6"/><circle class="node" cx="932" cy="377" r="6"/><circle class="node" cx="821" cy="302" r="6"/><circle class="node" cx="885" cy="331" r="6"/><circle class="node" cx="753" cy="274" r="6"/><circle class="node" cx="812" cy="330" r="6"/><circle class="node" cx="830" cy="387" r="6"/><circle class="node" cx="801" cy="489" r="6"/><circle class="node" cx="870" cy="510" r="6"/><circle class="node" cx="779" cy="563" r="6"/><circle class="node" cx="1427" cy="557" r="6"/><circle class="node" cx="1425" cy="607" r="6"/><circle class="node" cx="1399" cy="547" r="6"/><circle class="node" cx="1406" cy="462" r="6"/><circle class="node" cx="1470" cy="397" r="6"/><circle class="node" cx="1465" cy="355" r="6"/><circle class="node" cx="1410" cy="298" r="6"/><circle class="node" cx="1444" cy="231" r="6"/><circle class="node" cx="1406" cy="326" r="6"/><circle class="node" cx="1423" cy="335" r="6"/><circle class="node" cx="1316" cy="396" r="6"/><circle class="node" cx="1279" cy="493" r="6"/><circle class="node" cx="1410" cy="535" r="6"/><circle class="node" cx="1396" cy="542" r="6"/></svg>
+        <canvas id="scene"></canvas>
+      </div>
+    </div>
+    <div class="wrap hero-in">
+      <h1>Abdallah<br>El Belkasy</h1>
+      <p class="lede">I build distributed systems in Rust and C++ that turn <strong>two-hour waits into ten-minute runs</strong>. After hours I make a rhythm game.</p>
+      <div class="cta">
+        <a class="btn primary" href="#work">See the work</a>
+        <a class="btn" href="mailto:abdallahemohmad2002@gmail.com">Email me</a>
+      </div>
+      <p class="status"><span class="dot" aria-hidden="true"></span>Open to systems and backend roles, remote worldwide or relocation with visa</p>
+    </div>
+    <div class="wrap legend">
+      <p id="legend-text">Generators fire packets through a switch to the verifiers, one wave per beat at 120&nbsp;BPM. It is E-Jam and PolyBall in one sketch. <span class="hint">Click or tap anywhere to send a burst.</span></p>
+      <button class="icon-btn" type="button" id="pause" aria-pressed="false" hidden>
+        <svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        <svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+        <span class="sr">Pause animation</span>
+      </button>
+    </div>
+  </section>
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <div class="blob blob-a"></div><div class="blob blob-b"></div><div class="grain"></div>
-  </div>
-  <div class="wrap">
-    <div class="hero-grid">
+  <section class="wrap section" id="work" aria-labelledby="work-h">
+    <h2 id="work-h">Selected work</h2>
+
+    <article class="ejam">
+      <div class="ejam-text">
+        <h3>E-Jam <span class="at">at Siemens EDA</span></h3>
+        <p>A distributed platform for testing network switches. Traffic generators written in Rust and C++ flood the switch from many nodes at once, Apache Kafka carries the results back, and Docker keeps every node reproducible.</p>
+        <ul class="tags" aria-label="Technologies"><li>Rust</li><li>C++</li><li>Apache Kafka</li><li>Docker</li></ul>
+        <a class="more" href="https://github.com/Abdaishere/E-Jam">Read the write-up on GitHub <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      </div>
+      <figure class="cycle" role="img" aria-label="Switch test cycle: over 2 hours before E-Jam, about 10 minutes after.">
+        <figcaption>Switch test cycle</figcaption>
+        <div class="row"><span class="k">Before</span><span class="track"><i class="bar before"></i></span><span class="v">2 h+</span></div>
+        <div class="row"><span class="k">With E-Jam</span><span class="track"><i class="bar after"></i></span><span class="v strong">~10 min</span></div>
+        <p class="note">Bars drawn to scale: 120 minutes against 10.</p>
+      </figure>
+    </article>
+
+    <article class="polyball">
+      <a class="shot" href="/games/polyball/" tabindex="-1" aria-hidden="true"><img src="img/polyball-shot.webp" width="1024" height="576" loading="lazy" decoding="async" alt=""></a>
       <div>
-        <p class="eyebrow">Free on Android · early access</p>
-        <p class="brandline">Every note you hear, you played.</p>
-        <h1>One miss ends the run.</h1>
-        <p class="sub sub-long">Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.</p>
-        <p class="sub sub-short">Match the colour. Miss once and the run is over.</p>
-        <p class="tension" id="tension"><span class="sk" aria-hidden="true"></span></p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
-            Join the closed test
-          </a>
-          <a class="btn btn-ghost" href="#leaderboard">See who you are chasing</a>
-        </div>
-        <p class="cap low" style="margin-top:14px;font-size:12px">Also on Windows, Mac and Linux<span data-play>, or play in your browser</span>.</p>
+        <h3>PolyBall</h3>
+        <p>A rhythm arcade game in Godot 4 that I designed, coded and shipped solo. Rotate the polygon, match the colour, land it on the beat. Playable in the browser and in closed testing on Google Play.</p>
+        <ul class="tags" aria-label="Technologies"><li>Godot 4</li><li>GDScript</li><li>Web + Android</li><li>GitHub Actions</li></ul>
+        <a class="more" href="/polyball/">Play it in your browser <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
+    </article>
 
-      <div class="stage">
-        <canvas id="ring" width="560" height="740" role="application" tabindex="0"
-          aria-roledescription="playable demo"
-          aria-label="Playable demo run. A ball drops toward a seven-sided ring of coloured segments. Press Left or Right arrow, or tap the left or right half, to turn the ring one segment so the ball lands on its own colour. Leave it alone and it plays itself."></canvas>
-        <button class="stage-pause" id="ringToggle" type="button" aria-label="Pause hero animation">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" id="ringIcon"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>
-        </button>
-        <p class="stage-cap" id="ringCap" aria-hidden="true">Live demo run</p>
-        <p class="stage-hint" aria-hidden="true">Tap left or right to take over. Arrow keys work too.</p>
+    <article class="odoo">
+      <h3>Odoo <span class="at">software engineer</span></h3>
+      <div>
+        <p>Backend engineering in Python and PostgreSQL: the data models and business logic behind ERP deployments serving 100+ clients.</p>
+        <ul class="tags" aria-label="Technologies"><li>Python</li><li>PostgreSQL</li><li>Odoo ORM</li></ul>
+        <a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">Details on LinkedIn <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
       </div>
+    </article>
+  </section>
+
+  <section class="wrap section" id="skills" aria-labelledby="skills-h">
+    <h2 id="skills-h">Skills</h2>
+    <dl class="skills">
+      <div><dt>Languages</dt><dd>Rust, C++, Python, SQL, GDScript</dd></div>
+      <div><dt>Systems</dt><dd>Distributed systems, Apache Kafka, Docker, network traffic generation</dd></div>
+      <div><dt>Backend</dt><dd>PostgreSQL, Odoo, API and data-model design</dd></div>
+      <div><dt>Games</dt><dd>Godot 4, web and Android export, CI release pipelines</dd></div>
+    </dl>
+  </section>
+
+  <section class="wrap section" id="about" aria-labelledby="about-h">
+    <h2 id="about-h">About</h2>
+    <div class="about">
+      <p>I like the part of engineering where a number moves: a two-hour test run that becomes ten minutes, a query that stops timing out, a frame that lands on the beat. Most of my work lives close to the machine in Rust and C++, or deep in a Python and PostgreSQL backend.</p>
+      <p>I'm Egyptian, based in Dubai, and studied Computers and Artificial Intelligence at Cairo University (GPA 3.5/4.0, with honours). I'm open to systems and backend roles, remote anywhere or on site with visa sponsorship.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ LEADERBOARD ============ -->
-<section class="section" id="leaderboard">
-  <div class="wrap">
-    <div class="chm sheet"><div class="sheet-in">
-      <p class="eyebrow">Live board</p>
-      <h2>Somebody is already better than you.</h2>
-      <p class="lede" style="margin-top:10px">Real runs, straight from the game.</p>
-
-      <div class="filters">
-        <!-- Toggle buttons, not tabs: there is no panel to control and no arrow-key
-             navigation, so the tab role would promise both and deliver neither. -->
-        <div class="tabs" role="group" aria-label="Game mode">
-          <button class="chm tab" id="tab-0" aria-pressed="true"  style="--tc:var(--m-classic)" data-mode="0"><span class="dot" aria-hidden="true"></span>Classic</button>
-          <button class="chm tab" id="tab-1" aria-pressed="false" style="--tc:var(--m-music)"   data-mode="1"><span class="dot" aria-hidden="true"></span>Music</button>
-          <button class="chm tab" id="tab-2" aria-pressed="false" style="--tc:var(--m-time)"    data-mode="2"><span class="dot" aria-hidden="true"></span>Time</button>
-        </div>
-        <div class="field">
-          <label for="sides">Sides</label>
-          <select id="sides"></select>
-        </div>
-        <div class="field chase">
-          <label for="best">Your best run</label>
-          <input id="best" type="number" inputmode="numeric" min="0" max="999999" step="1" placeholder="0">
-        </div>
-      </div>
-
-      <p class="boss-line" id="bossLine" hidden></p>
-
-      <!-- No tabindex/role: table.lb is table-layout:fixed with both edge columns
-           pinned and the name ellipsised, so scrollWidth always equals clientWidth.
-           A focusable "scrollable region" that cannot scroll is a dead keyboard stop. -->
-      <div class="lb-scroll">
-        <table class="lb">
-          <caption class="vh" id="lbCaption">Top runs from the live PolyBall leaderboard</caption>
-          <thead>
-            <tr><th scope="col" class="r">Rank</th><th scope="col">Player</th><th scope="col" class="r">Score</th></tr>
-          </thead>
-          <tbody id="lbBody"></tbody>
-        </table>
-      </div>
-
-      <noscript><p class="lb-status">The live board and the hero animation both need JavaScript. Everything else on this page works without it.</p></noscript>
-      <!-- tabindex=-1: focus lands here when the button that was focused gets hidden -->
-      <p class="lb-status" id="lbStatus" role="status" aria-atomic="true" tabindex="-1"></p>
-      <div class="cta-row" style="margin-top:14px">
-        <!-- Label is rewritten with the real row count by render() before this is ever shown. -->
-        <button class="btn btn-ghost btn-sm" id="lbMore" type="button" hidden>Show all</button>
-        <button class="btn btn-ghost btn-sm" id="lbRetry" type="button" hidden>Retry</button>
-        <a class="btn btn-primary btn-sm" id="lbCta" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
-      </div>
-      <p class="cap low" style="margin:12px 0 0;font-size:14px">Your best run is saved in this browser only.</p>
-    </div></div>
-  </div>
-</section>
-
-<!-- ============ HOW A RUN ENDS ============ -->
-<section class="section" id="run">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Classic</p>
-      <h2>How a run ends</h2>
-      <p>Match the colour. Keep up. Don't miss.</p>
-    </div>
-    <div class="grid g3">
-      <article class="chm card rev">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5" fill="currentColor" stroke="none"/></svg>
-        <h3>Match the colour</h3>
-        <p>Turn the ring so the ball lands on its own colour.</p>
-      </article>
-      <article class="chm card rev">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-        <h3>It keeps getting faster</h3>
-        <p>Every catch makes the next drop a little quicker. Your first runs start gentle.</p>
-      </article>
-      <article class="chm card rev">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--danger)" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>
-        <h3>One miss</h3>
-        <p>In Classic and the Daily, one wrong colour ends the run. In the other modes it just resets your combo.</p>
-      </article>
-    </div>
-    <div class="falls" id="falls" aria-hidden="true"></div>
-    <div class="falls-legend"><span>1st drop · 2.34s</span><span>after 20 catches · 1.44s</span></div>
-  </div>
-</section>
-
-<!-- ============ MODES ============ -->
-<section class="section" id="modes">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Modes</p>
-      <h2>Four ways to play</h2>
-    </div>
-    <div class="grid g4">
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--m-classic)" aria-hidden="true"></span>
-        <h3 style="color:var(--m-classic)">Classic</h3>
-        <p>The pure loop. Endless, and it only gets faster.</p>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--m-music)" aria-hidden="true"></span>
-        <h3 style="color:var(--m-music)">Music</h3>
-        <p>Perform the song. Balls land on the beat and you play the chord tones.</p>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--m-time)" aria-hidden="true"></span>
-        <h3 style="color:var(--m-time)">Time</h3>
-        <p>Beat the clock. Every clean catch buys back seconds.</p>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--m-zen)" aria-hidden="true"></span>
-        <h3 style="color:var(--m-zen)">Zen</h3>
-        <p>Just flow. No clock, no leaderboard.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CRAFT ============ -->
-<section class="section" id="craft">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">The details</p>
-      <h2>Made with care</h2>
-    </div>
-    <div class="grid g2">
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--c5)" aria-hidden="true"></span>
-        <h3>Sixty-three colours, easy to tell apart</h3>
-        <p>Neighbouring colours always differ in shade as well as hue, and a colour-blind mode adds a shape to every colour.</p>
-        <!-- decorative: the paragraph above states the claim; the grid illustrates it -->
-        <div class="swatch-grid" id="swatches" aria-hidden="true"></div>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--m-music)" aria-hidden="true"></span>
-        <h3>You make the music</h3>
-        <p>Every catch plays a note in key, so each run becomes its own song. Keep a combo going and the bass, arp and lead join in. Sixteen sound themes to choose from.</p>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--c4)" aria-hidden="true"></span>
-        <h3>Fifteen languages</h3>
-        <p>Including Modern Standard and Egyptian Arabic, with a full right-to-left layout.</p>
-      </article>
-      <article class="chm card rev">
-        <span class="bar" style="background:var(--coin)" aria-hidden="true"></span>
-        <h3>Readable on every theme</h3>
-        <p>Text and buttons adjust to whichever background you equip, so everything stays clear.</p>
-      </article>
-    </div>
-    <div class="shots" style="margin-top:12px">
-      <img src="img/phone_01_run_combo.webp" alt="A run in progress, combo building on a multi-sided polygon" width="540" height="960" loading="lazy" decoding="async">
-      <img src="img/phone_02_run_fever.webp" alt="Fever, the arena lit warm gold at a high combo" width="540" height="960" loading="lazy" decoding="async">
-      <img src="img/phone_03_home.webp" alt="The PolyBall home screen with the ring and mode select" width="540" height="960" loading="lazy" decoding="async">
-      <img src="img/phone_04_shop.webp" alt="The cosmetics shop listing plates and segment styles" width="540" height="960" loading="lazy" decoding="async">
-      <img src="img/phone_05_box.webp" alt="Opening a mystery box reward" width="540" height="960" loading="lazy" decoding="async">
-    </div>
-  </div>
-</section>
-
-<!-- ============ DOWNLOADS ============ -->
-<!--
-  HOSTING NOTE — READ BEFORE PUBLISHING.
-  The desktop/APK binaries live in builds/dist/ and MUST NOT be committed anywhere: GitHub
-  Pages publishes web/, and the files are far too large for a repository.
-    1. They are hosted as assets on the v0.9.2 GitHub Release of the PUBLIC site repo
-       Abdaishere/abdaishere.github.io (Abdaishere/PolyBall is private, so its release
-       URLs 404 for visitors). Uploaded 2026-09-19, exported from PolyBall HEAD:
-         PolyBall-Android-arm64-debug.apk   (95,555,682 bytes, 91.1 MB)
-         PolyBall-Windows-x86_64.exe        (117,876,400 bytes, 112.4 MB)
-         PolyBall-Linux-x86_64.x86_64       (82,149,344 bytes, 78.3 MB)
-         PolyBall-macOS-universal.zip       (66,412,210 bytes, 63.3 MB)
-    2. On a new build: upload replacement assets (or a new tag), then update each card's
-       href, its dl-size and the megabytes in its aria-label to the new byte size.
-       Never ship a "Release" chip on an href that 404s; check each URL unauthenticated.
-    3. DONE — the nine-file Godot web export is copied from builds/dist/web/ into
-       web/polyball/ (index.html, index.js, index.wasm, index.pck, index.audio.worklet.js,
-        index.audio.position.worklet.js, index.icon.png, index.png,
-        index.apple-touch-icon.png). All nine are required. That directory is 48 MB,
-       of which index.wasm alone is 39.5 MB, so committing it puts 48 MB in the
-       repository permanently. If you would rather host the browser build from a
-       Release instead, delete web/polyball/ AND change the browser card's chip from
-       chip-rel to chip-na — never ship a "Release" chip on a link that 404s.
--->
-<section class="section" id="get">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Downloads</p>
-      <h2>Get it</h2>
-      <p>Play on your phone, your computer or right here in the browser.</p>
-    </div>
-    <div class="dl-grid">
-
-      <article class="chm dl span rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8a1 1 0 0 0-.6.9v18.6a1 1 0 0 0 .6.9l9.9-10.2L3.6 1.8Zm11.3 8.4 2.9-3-11-6.3 8.1 9.3Zm0 3.6L6.8 23.1l11-6.3-2.9-3.0Zm2.3-1.2 3.1-1.8c.9-.5.9-1.8 0-2.3l-3.1-1.8-3 2.9 3 3Z"/></svg>
-          <h3>Android · Google Play</h3>
-          <span class="chip chip-rel">Recommended</span>
-        </div>
-        <p>The best way to play. Join the test with your Google account, then install from Play and get updates automatically.</p>
-        <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.polyball.game">Join the closed test</a>
-      </article>
-
-      <article class="chm dl rev" data-play>
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
-          <h3>Play in browser</h3>
-        </div>
-        <p class="dl-size">47 MB <span>no install</span></p>
-        <p>Starts right here. Sound comes on with your first tap.</p>
-        <!-- Data disclosure, keep: PostHog events (off in Settings > DATA) and a leaderboard
-             row on a new ranked best, same as the app. No ads, no purchases in this build. -->
-        <p class="low">No ads or purchases. Anonymous usage stats, which you can turn off in Settings.</p>
-        <a class="btn btn-ghost" href="polyball/">Play in browser</a>
-      </article>
-
-      <article class="chm dl rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
-          <h3>Android · APK</h3>
-          <span class="chip chip-dbg">Test build</span>
-        </div>
-        <!-- Debug-signed arm64-v8a build, minSdk 24 (Android 7.0). Signature differs from Play,
-             so it cannot install over the Play build. -->
-        <p class="dl-size">91.1 MB <span>Android 7+ · 64-bit</span></p>
-        <p>For sideloading. It can't install over the Play version, so use Play if you can.</p>
-        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Android-arm64-debug.apk" download aria-label="Download the Android test APK, 91.1 megabytes">Download APK</a>
-      </article>
-
-      <article class="chm dl rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
-          <h3>Windows</h3>
-        </div>
-        <p class="dl-size">112.4 MB <span>64-bit</span></p>
-        <p>No installer, just run it. If Windows warns you, choose More info, then Run anyway.</p>
-        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Windows-x86_64.exe" download aria-label="Download for Windows, 112.4 megabytes">Download for Windows</a>
-      </article>
-
-      <article class="chm dl rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 3.5c0 2-1.5 3-1.5 5.5 0 3-3 4.5-3 7.5 0 2 1.5 3.5 3.5 3.5h8c2 0 3.5-1.5 3.5-3.5 0-3-3-4.5-3-7.5C16.5 6.5 15 5.5 15 3.5a3 3 0 0 0-6 0Z"/><path d="M10 9h.01M14 9h.01"/></svg>
-          <h3>Linux</h3>
-        </div>
-        <p class="dl-size">78.3 MB <span>64-bit</span></p>
-        <p>Make it runnable first: <code>chmod +x PolyBall-Linux-x86_64.x86_64</code></p>
-        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-Linux-x86_64.x86_64" download aria-label="Download for Linux, 78.3 megabytes">Download for Linux</a>
-      </article>
-
-      <article class="chm dl rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
-          <h3>macOS</h3>
-        </div>
-        <!-- Unsigned, unnotarised. Fallback if Open Anyway does not appear:
-             xattr -dr com.apple.quarantine /path/to/PolyBall.app -->
-        <p class="dl-size">63.3 MB <span>Intel and Apple silicon</span></p>
-        <p>If macOS blocks it, go to System Settings › Privacy &amp; Security and choose Open Anyway.</p>
-        <a class="btn btn-ghost" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.2/PolyBall-macOS-universal.zip" download aria-label="Download for macOS, 63.3 megabytes">Download for macOS</a>
-      </article>
-
-      <article class="chm dl na rev">
-        <div class="dl-head">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--low)" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
-          <h3>iOS</h3>
-          <span class="chip chip-na">Coming later</span>
-        </div>
-        <p>Not on iPhone or iPad yet.</p>
-      </article>
-
-    </div>
-    <!-- Binaries are v0.9.2 assets on the public site repo's GitHub Release (the game repo is private). -->
-    <p class="cap low" style="margin-top:18px">All downloads are version 0.9.2.</p>
-  </div>
-</section>
-
-<!-- ============ FAIR (compliance content, preserved) ============ -->
-<section class="section" id="fair">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow">Ads, purchases and data</p>
-      <h2>What it costs</h2>
-    </div>
-    <div class="fair">
-      <article class="chm card">
-        <h3>Free, with ads</h3>
-        <p>Ads show between runs, never during one, plus a banner on the results screen and now and then when you come back to the game. Rewarded ads are always your choice.</p>
-      </article>
-      <article class="chm card">
-        <h3>Nothing sold affects your rank</h3>
-        <p>You can buy Remove Ads, a starter pack, gems or coins, which buy cosmetics and Combo Shields. A run saved by a shield or an ad revive never counts on the leaderboard. Nothing random is sold for money.</p>
-      </article>
-      <article class="chm card">
-        <h3>The daily run stays free</h3>
-        <p>One attempt per day, the same for everyone, and no purchase buys another.</p>
-      </article>
-      <article class="chm card">
-        <h3>Your data stays yours</h3>
-        <p>Your saves and settings stay on your device. A new best sends your score, generated name, plate and title to the leaderboard. Anonymous usage stats can be turned off in Settings &rsaquo; DATA. The <a href="/privacy.html">privacy policy</a> has the full list, and <a href="/delete.html">deleting your leaderboard row</a> takes one email.</p>
-      </article>
-      <article class="chm card">
-        <h3>The board is anonymous</h3>
-        <p>Names on the board are made up by the game, never typed by players.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
+  <section class="wrap section contact" id="contact" aria-labelledby="contact-h">
+    <h2 id="contact-h">Let's talk</h2>
+    <p class="big"><a href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a></p>
+    <ul class="links">
+      <li><a href="https://github.com/Abdaishere">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn</a></li>
+      <li><a href="https://www.youtube.com/@abdaizhere">YouTube</a></li>
+      <li><a href="https://abdaishere.itch.io">itch.io</a></li>
+    </ul>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <p>PolyBall · com.polyball.game · built by <a href="https://github.com/Abdaishere">Abdallah El Belkasy</a></p>
-    <p>Support and privacy questions: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
-    <nav aria-label="Site">
-      <a href="/">Home</a>
-      <a href="/privacy.html">Privacy policy</a>
-      <a href="/delete.html">Delete my data</a>
-      <a href="/press/">Press kit</a>
-    </nav>
-    <p class="low" style="margin-top:10px">v0.9.2 (build 4) on Android · closed testing</p>
-  </div>
+<footer class="wrap foot">
+  <p>© 2026 Abdallah El Belkasy · Dubai</p>
+  <p><a href="/games/polyball/">More about PolyBall</a></p>
 </footer>
 
-<!-- ?v= busts the 10-minute Pages cache (and phone heuristic caches) on every app.js change -->
-<script src="app.js?v=0.9.2-4" defer></script>
+<script type="module">
+const root = document.documentElement;
+document.getElementById('theme').addEventListener('click', () => {
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+});
+
+// E-Jam bars grow once when first seen (CSS keeps them full-size without JS or with reduced motion).
+const cycle = document.querySelector('.cycle');
+new IntersectionObserver(([e], io) => { if (e.isIntersecting) { cycle.classList.add('seen'); io.disconnect(); } }, { threshold: 0.4 }).observe(cycle);
+root.classList.add('js');
+
+// Hero scene: only when motion is welcome, the device is not constrained, and WebGL exists. Otherwise the SVG poster stays.
+const canvas = document.getElementById('scene');
+const stage = canvas.closest('.stage');
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const constrained = navigator.connection?.saveData || (navigator.deviceMemory && navigator.deviceMemory <= 2);
+let sceneApi = null;
+async function boot() {
+  if (sceneApi || calm.matches || constrained) return;
+  const probe = document.createElement('canvas');
+  if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return;
+  try {
+    const { start } = await import('./scene.js');
+    const lowPower = matchMedia('(pointer: coarse)').matches || innerWidth < 720;
+    sceneApi = window.__scene = start(canvas, { lowPower });
+    stage.classList.add('live');
+    pause.hidden = false;
+  } catch (err) { console.warn('Hero scene unavailable, keeping the static poster.', err); }
+}
+function toPoster() { sceneApi?.dispose(); sceneApi = null; stage.classList.remove('live'); pause.hidden = true; }
+const pause = document.getElementById('pause');
+pause.addEventListener('click', () => {
+  const p = pause.getAttribute('aria-pressed') !== 'true';
+  pause.setAttribute('aria-pressed', p);
+  pause.querySelector('.sr').textContent = p ? 'Play animation' : 'Pause animation';
+  sceneApi?.setPaused(p);
+});
+canvas.addEventListener('scene-fallback', toPoster);
+calm.addEventListener('change', () => (calm.matches ? toPoster() : boot()));
+(window.requestIdleCallback || ((f) => setTimeout(f, 200)))(boot);
+</script>
 </body>
 </html>

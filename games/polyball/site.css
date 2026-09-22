@@ -1,0 +1,163 @@
+/* PolyBall site v2 — MOCKUP tokens + components. Not published (lives outside web/).
+   Rules of the system:
+   - 90% ground + ink. Chroma is earned.
+   - Cyan  = something you can press. Nothing else is cyan.
+   - Gold  = the monthly cup (prizes, champions, rank 1). Nothing else is gold.
+   - The five ring colours appear only as the "ring line" hairline and in the ring itself.
+   - Mode colours appear only on mode things. */
+
+@font-face{ font-family:"Chakra Petch"; font-weight:500; font-display:swap; src:url(/fonts/chakra-petch-500.woff2) format("woff2") }
+@font-face{ font-family:"Chakra Petch"; font-weight:700; font-display:swap; src:url(/fonts/chakra-petch-700.woff2) format("woff2") }
+@font-face{ font-family:"Nunito"; font-weight:200 1000; font-display:swap; src:url(/fonts/nunito-var.woff2) format("woff2") }
+
+:root{
+  color-scheme:dark;
+  --ground:#08090C; --raised:#0C0D12; --card:#11131A; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --ink:#EDEEF2; --ink-2:#B4B9C6; --muted:#7C8396;
+  --accent:#5AD1E6; --on-accent:#06222A;
+  --gold:#FFC24B; --violet:#B48CFF; --ok:#5BD6A0; --danger:#FF5A5A;
+  --r-green:#4BD86B; --r-cyan:#3FD0E0; --r-magenta:#F45CD0; --r-yellow:#FFD23F; --r-red:#FF5A5A;
+  --m-classic:#5AD1E6; --m-music:#B06CFF; --m-time:#FFC24B; --m-zen:#5BD6A0;
+  --ring-line:linear-gradient(90deg,var(--r-green),var(--r-cyan),var(--r-magenta),var(--r-yellow),var(--r-red));
+
+  --display:"Chakra Petch","Noto Sans",system-ui,sans-serif;
+  --body:"Nunito","Noto Sans",system-ui,sans-serif;
+  /* type scale */
+  --t-hero:clamp(2.5rem,6vw,5.25rem);   /* 40 → 84 */
+  --t-h2:clamp(1.75rem,3.4vw,2.75rem);  /* 28 → 44 */
+  --t-h3:1.375rem;                       /* 22 */
+  --t-lead:clamp(1.0625rem,1.4vw,1.25rem);
+  --t-body:1.0625rem;                    /* 17 */
+  --t-small:.875rem;                     /* 14 */
+  --t-eyebrow:.75rem;                    /* 12, caps */
+  /* space scale: 4 8 12 16 24 32 48 64 96 128 */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px; --s10:128px;
+  --r-card:20px; --r-ctl:14px; --r-pill:999px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+
+*{ box-sizing:border-box }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100% }
+body{ margin:0; background:var(--ground); color:var(--ink); font:500 var(--t-body)/1.6 var(--body) }
+img,svg,video{ display:block; max-width:100% }
+img{ height:auto }
+a{ color:var(--accent); text-underline-offset:3px }
+h1,h2,h3{ font-family:var(--display); font-weight:700; margin:0; text-wrap:balance }
+h1{ font-size:var(--t-hero); line-height:1.02; letter-spacing:-.015em }
+h2{ font-size:var(--t-h2); line-height:1.1; letter-spacing:-.01em }
+h3{ font-size:var(--t-h3); line-height:1.2 }
+p{ margin:0; text-wrap:pretty }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:6px }
+.vh{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap }
+.skip{ position:absolute; left:-999px } .skip:focus{ left:var(--s4); top:var(--s4); z-index:99; background:var(--accent); color:var(--on-accent); padding:var(--s3) var(--s4); border-radius:var(--r-ctl) }
+
+.wrap{ width:min(1160px,100% - 40px); margin-inline:auto }
+.section{ padding-block:clamp(64px,9vw,128px) }
+.sec-head{ max-width:640px; margin-bottom:var(--s7) }
+.sec-head p.lead{ margin-top:var(--s4) }
+.eyebrow{ font:500 var(--t-eyebrow)/1 var(--display); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:var(--s4) }
+.eyebrow.gold{ color:var(--gold) }
+.lead{ font-size:var(--t-lead); color:var(--ink-2) }
+.small{ font-size:var(--t-small); color:var(--muted) }
+.ring-line{ height:2px; border:0; margin:0; background:var(--ring-line); opacity:.9 }
+
+/* ---- mock ribbon ---- */
+
+/* ---- nav ---- */
+.nav{ position:sticky; top:0; z-index:20; background:rgba(8,9,12,.82); backdrop-filter:blur(14px); border-bottom:1px solid var(--line) }
+.nav .wrap{ display:flex; align-items:center; gap:var(--s5); min-height:64px }
+.nav .brand{ display:flex; align-items:center; min-height:44px }
+.nav .brand img{ height:26px; width:auto }
+.nav ul{ display:flex; gap:var(--s2); list-style:none; margin:0 0 0 auto; padding:0 }
+.nav li a{ display:flex; align-items:center; gap:.3em; min-height:44px; white-space:nowrap; padding:0 14px; border-radius:var(--r-pill); color:var(--ink-2); text-decoration:none; font:500 .9375rem/1.2 var(--display); letter-spacing:.02em }
+.nav li a:hover{ color:var(--ink); background:rgba(255,255,255,.05) }
+.nav li a[aria-current="page"]{ color:var(--ink); background:rgba(255,255,255,.08) }
+.nav li a.cup{ color:var(--gold); background:rgba(255,194,75,.08); box-shadow:inset 0 0 0 1px rgba(255,194,75,.3) }
+.nav li a.cup:hover,.nav li a.cup[aria-current="page"]{ background:rgba(255,194,75,.16) }
+@media (max-width:760px){ .nav ul .opt{ display:none } .nav .btn{ display:none } .nav .wrap{ gap:var(--s2) } .nav li a{ padding:0 12px } }
+
+/* ---- buttons ---- */
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:52px; padding:0 26px; border-radius:var(--r-pill); border:0; cursor:pointer;
+  font:700 1rem/1 var(--display); letter-spacing:.02em; text-decoration:none; transition:transform .18s var(--ease), box-shadow .18s var(--ease), background .18s }
+.btn svg{ width:20px; height:20px; flex:none }
+.btn-primary{ background:var(--accent); color:var(--on-accent); box-shadow:0 0 0 0 rgba(90,209,230,0), 0 10px 30px -10px rgba(90,209,230,.55) }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 0 0 4px rgba(90,209,230,.18), 0 14px 34px -10px rgba(90,209,230,.7) }
+.btn-ghost{ background:rgba(255,255,255,.04); color:var(--ink); box-shadow:inset 0 0 0 1px var(--line-2) }
+.btn-ghost:hover{ background:rgba(255,255,255,.08) }
+.btn-gold{ background:var(--gold); color:#2a1c00 }
+.btn-sm{ min-height:44px; padding:0 18px; font-size:.9375rem }
+.btn:active{ transform:translateY(0) scale(.98) }
+
+/* ---- cards ---- */
+.card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-card); padding:var(--s5) }
+.grid{ display:grid; gap:var(--s4) }
+.g3{ grid-template-columns:repeat(3,1fr) } .g4{ grid-template-columns:repeat(4,1fr) }
+@media (max-width:900px){ .g3,.g4{ grid-template-columns:repeat(2,1fr) } }
+@media (max-width:560px){ .g3,.g4{ grid-template-columns:1fr } }
+
+/* ---- footer ---- */
+.foot{ border-top:1px solid var(--line); padding-block:var(--s7); color:var(--muted); font-size:var(--t-small) }
+.foot .wrap{ display:flex; flex-wrap:wrap; gap:var(--s4) var(--s6); align-items:center }
+.foot nav{ display:flex; flex-wrap:wrap; gap:var(--s2) var(--s5); margin-left:auto }
+.foot a{ color:var(--ink-2); padding-block:12px; display:inline-block }
+
+/* =====================================================================
+   PLAYER CARD — the shared identity unit. Same five fields drive the site
+   and the in-game NamePlate: banner · plate (flair) · font · title · accent.
+   All five are IDs from a whitelist, never free CSS from the wire.
+   ===================================================================== */
+.pcard{ position:relative; isolation:isolate; display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:var(--s4);
+  min-height:76px; padding:10px var(--s4) 10px 10px; border-radius:18px; background:var(--card); border:1px solid var(--line); overflow:hidden;
+  transition:transform .18s var(--ease), border-color .18s }
+.pcard:hover{ transform:translateY(-2px); border-color:var(--line-2) }
+.pcard::before{ content:""; position:absolute; inset:0; z-index:-1; background:var(--banner,none); opacity:.55;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.55) 45%,transparent 85%); mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.55) 45%,transparent 85%) }
+.pcard .rank{ width:44px; text-align:center; font:700 1.125rem/1 var(--display); color:var(--muted) }
+.pcard .who{ min-width:0 }
+.pcard .score{ font:700 1.5rem/1 var(--display); font-variant-numeric:tabular-nums; min-width:72px; text-align:right }
+.pcard .plat{ display:inline-flex; align-items:center; gap:6px; color:var(--muted); font:700 var(--t-eyebrow)/1 var(--display); letter-spacing:.08em; text-transform:uppercase }
+.pcard .plat svg{ width:20px; height:20px }
+@media (max-width:560px){ .pcard{ gap:var(--s2); padding-right:var(--s3) } .pcard .plat span{ display:none } .pcard .rank{ width:32px } .pcard .score{ font-size:1.25rem; min-width:56px } }
+
+.plate{ position:relative; display:inline-flex; flex-direction:column; justify-content:center; max-width:100%; min-height:54px; padding:8px 18px; border-radius:14px }
+.plate .nm{ font:700 1.25rem/1.15 var(--body); color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.plate .ti{ font:700 .8125rem/1.2 var(--body); color:var(--tone,var(--accent)); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+@media (max-width:560px){ .plate{ padding:6px 12px } .plate .nm{ font-size:1.0625rem } }
+/* plate frames (ids match the game's flair ids; values lifted from the live site) */
+.f-slate  { background:linear-gradient(180deg,#262B38,#12141C); box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.06) }
+.f-neon   { background:linear-gradient(180deg,#102E3C,#0A1217); box-shadow:0 0 0 1px rgba(90,209,230,.95),0 0 0 3.5px rgba(90,209,230,.28),0 0 14px rgba(90,209,230,.28) }
+.f-circuit{ background:linear-gradient(180deg,#0F2117,#08120D); box-shadow:0 0 0 1px rgba(75,216,107,.85),0 0 0 3.5px rgba(75,216,107,.20),0 0 14px rgba(75,216,107,.20) }
+.f-frost  { background:linear-gradient(180deg,#2A3C4D,#0D141C); box-shadow:0 0 0 1px rgba(191,232,255,.9),0 0 0 3.5px rgba(191,232,255,.24),0 0 14px rgba(191,232,255,.24) }
+.f-gilded { background:linear-gradient(180deg,#382B0F,#170F05); box-shadow:0 0 0 1px rgba(255,214,102,1),0 0 0 3.5px rgba(255,214,102,.26),0 0 0 5px rgba(102,71,15,.9),0 0 14px rgba(255,214,102,.26) }
+.f-ember  { background:linear-gradient(180deg,#2E120A,#421708); box-shadow:0 0 0 1px rgba(255,122,58,.95),0 0 0 3.5px rgba(255,122,58,.26),0 0 14px rgba(255,122,58,.26) }
+.f-bloom  { background:linear-gradient(180deg,#331724,#170A12); box-shadow:0 0 0 1px rgba(245,143,168,.9),0 0 0 3.5px rgba(245,143,168,.24),0 0 14px rgba(245,143,168,.24) }
+.f-void   { background:radial-gradient(circle at 18% 30%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.4) 0 1px,transparent 1.1px),linear-gradient(180deg,#171028,#07050E); box-shadow:0 0 0 1px rgba(180,140,255,.9),0 0 0 3.5px rgba(180,140,255,.22),0 0 14px rgba(180,140,255,.22) }
+/* banners (NEW cosmetic slot) */
+.b-aurora { --banner:linear-gradient(100deg,#0e5a6b,#3b2a7a 60%,#7a2a6b) }
+.b-sunset { --banner:linear-gradient(100deg,#7a4a0e,#8a2a4a 70%) }
+.b-grid   { --banner:repeating-linear-gradient(0deg,rgba(90,209,230,.22) 0 1px,transparent 1px 14px),repeating-linear-gradient(90deg,rgba(90,209,230,.22) 0 1px,transparent 1px 14px),linear-gradient(90deg,#0b2a33,#0b1220) }
+.b-waves  { --banner:repeating-radial-gradient(circle at 0 120%,rgba(91,214,160,.28) 0 2px,transparent 2px 16px),linear-gradient(90deg,#0d2a20,#0b1220) }
+.b-stripes{ --banner:repeating-linear-gradient(115deg,rgba(244,92,208,.26) 0 10px,transparent 10px 22px),linear-gradient(90deg,#2a0f26,#0b1220) }
+.b-champion{ --banner:linear-gradient(100deg,#7a5a0e,#c9962b 35%,#5a3d08 70%) }
+/* name fonts (ids match the game's font ids) */
+.nf-heavy .nm{ font-weight:900 } .nf-wide .nm{ letter-spacing:.2em; font-size:1.0625rem }
+.nf-chakra .nm,.nf-chakra .ti{ font-family:var(--display) } .nf-slant .nm,.nf-slant .ti{ transform:skewX(-12deg); transform-origin:left }
+/* accent tones for the title line */
+.t-gold{ --tone:var(--gold) } .t-violet{ --tone:var(--violet) } .t-green{ --tone:var(--ok) } .t-red{ --tone:var(--danger) } .t-cyan{ --tone:var(--accent) }
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important }
+}
+
+/* live flair ids the mockup lacked, same art as the old landing */
+.f-holo   { background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35)),
+            linear-gradient(90deg,hsla(0,50%,60%,.26),hsla(60,50%,60%,.26),hsla(120,50%,60%,.26),hsla(180,50%,60%,.26),hsla(240,50%,60%,.26),hsla(300,50%,60%,.26),hsla(360,50%,60%,.26));
+            background-size:auto,300% 100%; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.18),0 0 14px rgba(255,255,255,.18);
+            animation:holo 4.5s linear infinite }
+.f-holo::before{ background:rgba(255,255,255,.22) }
+@keyframes holo{ to{ background-position:0 0,300% 0 } }
+.f-carbon { background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3.5px),
+            linear-gradient(180deg,#212429,#0F0F14);
+            box-shadow:0 0 0 1px rgba(191,199,217,.85),0 0 0 3.5px rgba(191,199,217,.10),0 0 14px rgba(191,199,217,.10) }
+@media (prefers-reduced-motion:reduce){ .f-holo{ animation:none } }

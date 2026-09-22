@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PolyBall leaderboard: who's on top</title>
+<meta name="description" content="The best PolyBall runs in Classic, Music and Time, on every shape from 3 to 63 sides. Live from the game.">
+<link rel="canonical" href="https://abdaishere.com/games/polyball/leaderboard/">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/img/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png?v=2" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
+<meta name="theme-color" content="#08090C">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.com/games/polyball/leaderboard/">
+<meta property="og:site_name" content="PolyBall">
+<meta property="og:title" content="PolyBall leaderboard: who's on top">
+<meta property="og:description" content="The best runs in Classic, Music and Time, live from the game.">
+<meta property="og:image" content="https://abdaishere.com/img/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; base-uri 'none'; form-action 'none'">
+<link rel="preload" href="/fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../site.css">
+<style>
+.cup-hero{ position:relative; overflow:hidden; padding-block:clamp(40px,6vw,80px) var(--s7) }
+.cup-hero::before{ content:""; position:absolute; inset:-40% auto auto -10%; width:80vw; height:60vw; pointer-events:none; background:radial-gradient(closest-side,rgba(255,194,75,.12),transparent 70%) }
+.cup-hero .wrap{ position:relative; display:grid; grid-template-columns:1fr }
+.cup-hero h1{ font-size:clamp(2.25rem,5vw,4.25rem) } .cup-hero h1 span{ color:var(--gold) }
+.cup-hero .lead{ margin-top:var(--s4); max-width:44ch }
+
+
+/* ---- podium ---- */
+.podium{ display:grid; grid-template-columns:1fr 1.15fr 1fr; gap:var(--s4); align-items:end; margin-bottom:var(--s6); list-style:none; padding:0 }
+.pod{ position:relative; isolation:isolate; overflow:hidden; border-radius:24px; border:1px solid var(--line); background:var(--card); padding:var(--s5) var(--s4) var(--s4); text-align:center; display:grid; gap:var(--s3); justify-items:center }
+.pod::before{ content:""; position:absolute; inset:0 0 auto 0; height:96px; z-index:-1; background:var(--banner,linear-gradient(90deg,#151824,#0f1118)); opacity:.75; -webkit-mask-image:linear-gradient(#000,transparent); mask-image:linear-gradient(#000,transparent) }
+.pod .medal{ width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font:700 1.125rem/1 var(--display); background:var(--ground); border:2px solid currentColor; color:var(--ink-2) }
+.pod .score{ font:700 2rem/1 var(--display); font-variant-numeric:tabular-nums }
+.pod .plat{ display:inline-flex; gap:6px; align-items:center; color:var(--muted); font:700 var(--t-eyebrow)/1 var(--display); letter-spacing:.08em; text-transform:uppercase } .pod .plat svg{ width:18px; height:18px }
+.pod.n1{ order:2; padding-block:var(--s7) var(--s5); border-color:rgba(255,194,75,.55); box-shadow:0 20px 60px -30px rgba(255,194,75,.5) } .pod.n1 .medal,.pod.n1 .score{ color:var(--gold) }
+.pod.n2{ order:1 } .pod.n3{ order:3 } .pod.n3 .medal{ color:#CD7F32 }
+/* phones: stacked full tiles took ~780px before rank 4, so the podium becomes three wide rows */
+@media (max-width:760px){
+  .podium{ grid-template-columns:1fr; gap:var(--s2) } .pod.n1,.pod.n2,.pod.n3{ order:0 }
+  .pod,.pod.n1{ grid-template-columns:auto minmax(0,1fr) auto; column-gap:var(--s3); row-gap:6px; align-items:center; justify-items:start; text-align:left; padding:var(--s3) var(--s4) var(--s3) var(--s3) }
+  .pod::before{ inset:0; height:auto; -webkit-mask-image:linear-gradient(90deg,#000,transparent 85%); mask-image:linear-gradient(90deg,#000,transparent 85%) }
+  .pod .medal{ grid-row:1 / span 2 } .pod .plate{ grid-column:2; grid-row:1 } .pod .score{ grid-column:3; grid-row:1; font-size:1.5rem }
+  .pod .plat{ grid-column:3; grid-row:2; justify-self:end } .pod .plat span{ display:none } }
+
+/* ---- controls ---- */
+.controls{ position:sticky; top:64px; z-index:10; background:rgba(8,9,12,.9); backdrop-filter:blur(12px); padding-block:var(--s3); margin-bottom:var(--s4); display:grid; gap:var(--s3); border-bottom:1px solid var(--line) }
+.row{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2) }
+.row .lbl{ font:500 var(--t-eyebrow)/1 var(--display); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); width:84px }
+.chip{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 16px; border-radius:var(--r-pill); border:1px solid var(--line-2); background:transparent; color:var(--ink-2); cursor:pointer; font:700 .9375rem/1 var(--display); transition:background .15s,color .15s,border-color .15s }
+.chip svg{ width:18px; height:18px } .chip .n{ font-weight:500; color:var(--muted); font-variant-numeric:tabular-nums }
+.chip:hover{ color:var(--ink); background:rgba(255,255,255,.05) }
+.chip[aria-pressed="true"]{ background:var(--tc,var(--ink)); border-color:var(--tc,var(--ink)); color:#08090C } .chip[aria-pressed="true"] .n{ color:rgba(8,9,12,.65) }
+select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); border:1px solid var(--line-2); background:var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B4B9C6' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 12px center/18px no-repeat; color:var(--ink); font:700 .9375rem/1 var(--display); appearance:none; cursor:pointer }
+@media (max-width:560px){ .row .lbl{ width:100% } .controls{ position:static } }
+
+.list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--s2) }
+.list .pcard.first{ border-color:rgba(255,194,75,.5) } .list .pcard.first .rank,.list .pcard.first .score{ color:var(--gold) }
+.status{ margin-top:var(--s4); color:var(--muted); font-size:var(--t-small) }
+.empty{ padding:var(--s7) var(--s5); text-align:center; border:1px dashed var(--line-2); border-radius:var(--r-card); color:var(--ink-2) }
+
+
+.rules li{ color:var(--ink-2); margin-bottom:var(--s2) } .rules ul{ padding-left:1.2em; margin:var(--s3) 0 0 }
+.retry{ margin-left:var(--s3) }
+.pod .plat:empty,.pcard .plat:empty{ display:none }
+</style>
+</head>
+<body>
+<a class="skip" href="#board">Skip to the leaderboard</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="PolyBall home"><img src="/brand/lockup-horizontal.svg" alt="PolyBall" height="26"></a>
+    <ul>
+      <li><a class="opt" href="../#trailer">Trailer</a></li>
+      <li><a class="opt" href="../#modes">Modes</a></li>
+      <li><a class="cup" href="./" aria-current="page">Leaderboard</a></li>
+      <li><a href="../#get">Get it</a></li>
+    </ul>
+    <a class="btn btn-primary btn-sm" href="/polyball/">Play now</a>
+  </div>
+</header>
+
+<main>
+<section class="cup-hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow gold">Leaderboard</p>
+      <h1>Who's <span>on top</span></h1>
+      <p class="lead">Every shape keeps its own board, from 3 sides to 63. Pick one, then go take a spot.</p>
+    </div>
+  </div>
+</section>
+<hr class="ring-line">
+
+<section class="section" id="board" style="padding-top:var(--s7)">
+  <div class="wrap">
+    <h2 class="vh">Current standings</h2>
+    <div class="controls" role="group" aria-label="Leaderboard filters">
+      <div class="row"><span class="lbl">Mode</span>
+        <button class="chip" type="button" data-mode="0" aria-pressed="true" style="--tc:var(--m-classic)">Classic</button>
+        <button class="chip" type="button" data-mode="1" aria-pressed="false" style="--tc:var(--m-music)">Music</button>
+        <button class="chip" type="button" data-mode="2" aria-pressed="false" style="--tc:var(--m-time)">Time</button>
+        <label class="vh" for="sides">Sides</label>
+        <select id="sides"></select>
+      </div>
+    </div>
+    <ol class="podium" id="podium" aria-label="Top three"></ol>
+    <ol class="list" id="list" start="4" aria-label="Ranks four and below"></ol>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="section rules" style="padding-top:0">
+  <div class="wrap">
+    <div class="grid g3">
+      <div class="card"><h3>How it works</h3><ul><li>Your best run on each shape is the one that counts.</li><li>Classic, Music and Time each keep their own board. Zen is just for you.</li></ul></div>
+      <div class="card"><h3>Fair play</h3><ul><li>Nothing you buy moves your rank.</li><li>Scores go up when you are back online, if you played without wifi.</li></ul></div>
+      <div class="card"><h3>Your card</h3><ul><li>Your name is made by the game. No typing, no sign-up.</li><li>Your plate, font and title come from what you have equipped.</li></ul></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>PolyBall · made by Abdallah El Belkasy</span>
+    <nav aria-label="Site"><a href="../">Home</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
+  </div>
+</footer>
+
+<script src="../board.js"></script>
+<script src="leaderboard.js"></script>
+</body>
+</html>
