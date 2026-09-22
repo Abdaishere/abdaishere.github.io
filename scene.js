@@ -128,7 +128,7 @@ export function start(canvas, { lowPower = false } = {}) {
     renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    const wide = w / h > 1.25;
+    const wide = w / h > 1.6; // full-bleed banners push the switch right of the copy; framed stages keep it centred
     world.position.x = wide ? 2.7 : 0;
     world.scale.setScalar(wide ? 1 : Math.max(0.55, Math.min(1, (w / h) * 0.95)));
     uniforms.uScale.value = renderer.getPixelRatio() * Math.max(0.8, h / 800) * Math.sqrt(world.scale.x);
@@ -136,7 +136,7 @@ export function start(canvas, { lowPower = false } = {}) {
   const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
 
   // Pointer parallax (mouse + touch via pointer events); click or tap fires a burst.
-  const target = { x: 0, y: 0 }, host = canvas.closest('.hero');
+  const target = { x: 0, y: 0 }, host = canvas.closest('.stage') || canvas.parentElement;
   const onMove = (e) => { target.x = (e.clientX / innerWidth - 0.5) * 2; target.y = (e.clientY / innerHeight - 0.5) * 2; };
   const onDown = (e) => { if (!e.target.closest('a,button')) uniforms.uBurst.value = 0; };
   host.addEventListener('pointermove', onMove, { passive: true });
