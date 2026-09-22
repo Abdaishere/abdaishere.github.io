@@ -29,7 +29,7 @@
   function str(v, max) { return typeof v === 'string' ? v.slice(0, max) : ''; }
   function normalize(j) {
     if (!Array.isArray(j)) throw new Error('bad payload');   // PostgREST errors arrive as a 200 object
-    return j.slice(0, 50).map(function (r) {
+    return j.slice(0, 100).map(function (r) {
       if (!r || typeof r !== 'object') r = {};
       return { name: str(r.name, 24), title: titleOf(str(r.title, 24)), flair: str(r.flair, 16), font: str(r.font, 24), score: Number(r.score) };
     }).filter(function (r) { return r.name && isFinite(r.score); });
@@ -40,7 +40,9 @@
     var k = mode + '|' + sides;
     if (cache[k]) return cache[k];
     var ac = new AbortController(), to = setTimeout(function () { ac.abort(); }, 8000);
-    var p = fetch(URL_BASE + '?select=name,flair,score,title,font&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc&limit=50', {
+    /* Same order as the game (net.gd LB_ORDER): on a tie the earlier submit ranks
+       higher, which is also how the cup's champions view breaks ties. */
+    var p = fetch(URL_BASE + '?select=name,flair,score,title,font&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc,submitted_at.asc&limit=100', {
       headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }, signal: ac.signal
     }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function (j) { clearTimeout(to); return normalize(j); });
