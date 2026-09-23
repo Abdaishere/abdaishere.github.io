@@ -1,13 +1,13 @@
 /* PolyBall leaderboard: live reads + the player card renderer.
-   Reads the live Supabase `scores` table with the public (publishable) key,
-   read-only select, same query shape the old landing used. When the cup
-   migration (supabase/migrations) is applied, point URL_BASE at /rest/v1/board.
+   Reads the live Supabase `board` view (cup migration: this month's top 100
+   with admin plate overrides applied and shadow-banned rows gone) with the
+   public (publishable) key, read-only select, the same query the game sends.
    Every cosmetic field is an id checked against a whitelist, then mapped to a
    class. Nothing from the wire is ever used as CSS or HTML. */
 (function () {
   'use strict';
 
-  var URL_BASE = 'https://osnwwrpkyvcflfcixwmw.supabase.co/rest/v1/scores';
+  var URL_BASE = 'https://osnwwrpkyvcflfcixwmw.supabase.co/rest/v1/board';
   var KEY = 'sb_publishable_LvCJhoJY47Q-FIpaiBswfQ_2qzyx7tW';
   var MODES = ['Classic', 'Music', 'Time'];
 
@@ -31,7 +31,8 @@
     if (!Array.isArray(j)) throw new Error('bad payload');   // PostgREST errors arrive as a 200 object
     return j.slice(0, 100).map(function (r) {
       if (!r || typeof r !== 'object') r = {};
-      return { name: str(r.name, 24), title: titleOf(str(r.title, 24)), flair: str(r.flair, 16), font: str(r.font, 24), score: Number(r.score) };
+      /* title_text is the one admin-written free-text field (profiles.title_text); it wins over the title id */
+      return { name: str(r.name, 24), title: str(r.title_text, 32) || titleOf(str(r.title, 24)), flair: str(r.flair, 16), font: str(r.font, 24), score: Number(r.score) };
     }).filter(function (r) { return r.name && isFinite(r.score); });
   }
 
@@ -42,7 +43,7 @@
     var ac = new AbortController(), to = setTimeout(function () { ac.abort(); }, 8000);
     /* Same order as the game (net.gd LB_ORDER): on a tie the earlier submit ranks
        higher, which is also how the cup's champions view breaks ties. */
-    var p = fetch(URL_BASE + '?select=name,flair,score,title,font&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc,submitted_at.asc&limit=100', {
+    var p = fetch(URL_BASE + '?select=name,flair,score,title,title_text,font&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc,submitted_at.asc&limit=100', {
       headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }, signal: ac.signal
     }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function (j) { clearTimeout(to); return normalize(j); });
