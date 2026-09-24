@@ -17,7 +17,7 @@
     var li = PB.card(row, rank);                       // reuse the card, then re-dress it as a podium tile
     var el = document.createElement('li'); el.className = 'pod n' + rank;
     var md = document.createElement('span'); md.className = 'medal'; md.textContent = rank; md.setAttribute('aria-label', 'Rank ' + rank);
-    el.appendChild(md); el.appendChild(li.querySelector('.plate')); el.appendChild(li.querySelector('.score'));
+    el.appendChild(md); el.appendChild(li.querySelector('.plate')); el.appendChild(li.querySelector('.score')); el.appendChild(li.querySelector('.plat'));
     return el;
   }
   function say(text, retry) {

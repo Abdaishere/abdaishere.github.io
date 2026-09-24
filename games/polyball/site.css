@@ -116,7 +116,12 @@ p{ margin:0; text-wrap:pretty }
 .pcard .who{ min-width:0 }
 .pcard .score{ font:700 1.5rem/1 var(--display); font-variant-numeric:tabular-nums; min-width:72px; text-align:right }
 .pcard .plat{ display:inline-flex; align-items:center; gap:6px; color:var(--muted); font:700 var(--t-eyebrow)/1 var(--display); letter-spacing:.08em; text-transform:uppercase }
-.pcard .plat svg{ width:20px; height:20px }
+/* the glyph carries the whole meaning on a phone (the label is hidden below 560px), so it sits a
+   step brighter than its own caption: 9.4:1 on the card instead of the caption's 4.9:1 */
+.pcard .plat svg{ width:20px; height:20px; color:var(--ink-2) }
+/* rows from a client that never sent a platform render an empty span: collapse it so the
+   card looks exactly as it did before the column existed */
+.pcard .plat:empty{ display:none }
 @media (max-width:560px){ .pcard{ gap:var(--s2); padding-right:var(--s3) } .pcard .plat span{ display:none } .pcard .rank{ width:32px } .pcard .score{ font-size:1.25rem; min-width:56px } }
 
 .plate{ position:relative; display:inline-flex; flex-direction:column; justify-content:center; max-width:100%; min-height:54px; padding:8px 18px; border-radius:14px }
