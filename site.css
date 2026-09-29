@@ -35,6 +35,11 @@
   --signal: light-dark(#9A5A00, #F5A524);   /*  5.2:1      ·  9.6:1 as text */
   --signal-fill: light-dark(#B45309, #F5A524);
   --on-signal: light-dark(#FFFFFF, #0A0B0F);
+  /* A tap off the beat on the home hero, and nothing else: a graphic, never text. Rose rather than
+     orange-red so it does not fold into the amber for a deuteranope, and a lightness gap from the
+     amber in both themes (1.5:1 light, 2.3:1 dark) that survives any colour blindness. 3.5:1 and
+     4.2:1 on the page. */
+  --miss: light-dark(#F43F5E, #E11D48);
   --trace-alpha: 0.6;   /* 0.9 fought the name and the copy for attention (owner, 2026-09-29) */
 
   --display: "Bricolage", "Bricolage Fallback", system-ui, sans-serif;
@@ -52,7 +57,7 @@
 /* No light-dark(): the toggle cannot work, so hide it and serve the light theme rather than a
    half-applied one. */
 @supports not (color: light-dark(#000, #fff)) {
-  :root { --bg: #FAFAF7; --panel: #fff; --line: #E3E3DE; --ink: #141519; --mid: #4B5160; --mut: #5B6270; --signal: #9A5A00; --signal-fill: #B45309; --on-signal: #fff; }
+  :root { --bg: #FAFAF7; --panel: #fff; --line: #E3E3DE; --ink: #141519; --mid: #4B5160; --mut: #5B6270; --signal: #9A5A00; --signal-fill: #B45309; --on-signal: #fff; --miss: #F43F5E; }
   #theme { display: none; }
 }
 /* Registered so getComputedStyle hands the canvas resolved rgb() values instead of the
@@ -61,7 +66,8 @@
 @property --c-mid { syntax: "<color>"; inherits: true; initial-value: #A8ADB8; }
 @property --c-signal { syntax: "<color>"; inherits: true; initial-value: #F5A524; }
 @property --c-bg { syntax: "<color>"; inherits: true; initial-value: #0A0B0F; }
-:root { --c-ink: var(--ink); --c-mid: var(--mid); --c-signal: var(--signal); --c-bg: var(--bg); }
+@property --c-miss { syntax: "<color>"; inherits: true; initial-value: #E11D48; }
+:root { --c-ink: var(--ink); --c-mid: var(--mid); --c-signal: var(--signal); --c-bg: var(--bg); --c-miss: var(--miss); }
 
 /* ---------------------------------------------------------------- base */
 *, *::before, *::after { box-sizing: border-box; }
@@ -121,6 +127,11 @@ html:not(.js) .needs-js { display: none; }
 .status { border-bottom: 1px solid var(--line); }
 .status-in { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; min-height: 2.25rem; align-items: center; padding-block: 0.3rem; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); }
 .status-in span { display: inline-flex; align-items: center; gap: 0.5rem; }
+/* proof.js: this month's best run, read live. Labels muted, numbers in ink, a link like any other. */
+.proof { margin-left: auto; display: inline-block; padding-block: 0.25rem; color: var(--mut); text-underline-offset: 3px; }
+.proof b { font-weight: 500; color: var(--ink); }
+.proof[hidden] { display: none; }
+@media (max-width: 68.74rem) { .proof { display: none !important; } }
 .beat { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); transform: scale(0.75); opacity: 0.6; }
 .beat.on { transform: scale(1); opacity: 1; }
 @media (prefers-reduced-motion: no-preference) { .beat { transition: transform 120ms var(--ease-out), opacity 120ms; } }
@@ -190,6 +201,20 @@ h1 .line { display: block; }
 .readout { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .readout span { color: var(--signal); font-weight: 500; }
 .pause .p-off, .pause[data-paused="true"] .p-on { display: none; }
+/* tap.js: the hero's tap-on-the-beat controls and its line. Gone under reduced motion: no clock. */
+.reads { margin-left: auto; display: grid; justify-items: end; gap: 0.25rem; text-align: right; }
+.streak { font-variant-numeric: tabular-nums; color: var(--mid); }
+.ctl { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
+@media (max-width: 40rem) { .reads, .ctl { margin-left: 0; } .reads { justify-items: start; text-align: left; } }
+.chip { position: absolute; top: 12px; z-index: 1; margin: 0; padding: 4px 8px; background: var(--bg); font: 500 0.75rem/1.4 var(--mono); color: var(--ink); white-space: nowrap; pointer-events: none; opacity: 0; font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--signal); }
+.chip.miss { color: var(--mid); }
+.chip.on { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .chip { transition: opacity 150ms; } }
+.sound i { width: 8px; height: 8px; border: 1px solid currentColor; }
+.sound[aria-pressed="true"] i { background: currentColor; }
+#tap[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .tapctl { display: none !important; } }
 .pause[data-paused="true"] .p-off { display: inline; }
 @media (prefers-reduced-motion: reduce) { .pause { display: none; } }
 
@@ -349,6 +374,28 @@ figure.panel > .cap:first-child { margin: 0 0 1rem; }
 /* Each counter keeps a fixed cell. Without it the numbers widen as they climb and nudge the two
    labels beside them, which is a layout shift even though nothing in the document moves. */
 .tally b { display: inline-block; min-width: 6ch; text-align: right; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+.dnode[aria-disabled="true"] { cursor: not-allowed; }
+
+/* Find throughput (e-jam/probe.js): the figure's lower panel, the same frame continued. Pass and
+   fail differ in side of the line, shape, colour and label, so colour never carries it alone. */
+.probe { display: grid; gap: 0.75rem; border: 1px solid var(--line); border-top: 0; background: var(--panel); padding: 0.9rem; }
+.probe-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; }
+.probe-now, .probe-result { flex: 1 1 20rem; }
+.probe-now { font: 400 0.8125rem/1.5 var(--mono); color: var(--mid); font-variant-numeric: tabular-nums; }
+.probe-now span { white-space: nowrap; }
+.probe-result { font: 500 0.9375rem/1.5 var(--sans); color: var(--ink); }
+.probe-result:empty { display: none; }
+.nline { display: block; width: 100%; height: 112px; overflow: visible; }
+.nline .nl-axis { stroke: var(--mut); stroke-width: 1; }
+.nline .nl-gap { fill: var(--line); }
+.nline .nl-tick, .nline .nl-n { font: 400 11px var(--mono); fill: var(--mut); }
+.nline .nl-n { fill: var(--mid); }
+.nline .nl-pass { fill: var(--signal); }
+.nline .nl-fail { fill: none; stroke: var(--mut); stroke-width: 1; }
+.nline .nl-x { stroke: var(--mut); stroke-width: 1; }
+.nline .nl-cur { fill: var(--panel); stroke: var(--mid); stroke-width: 1.5; }
+.nline .nl-lim { stroke: var(--mut); stroke-width: 1.5; }
+.nline .nl-ans { font: 500 12px var(--mono); fill: var(--signal); }
 @media (max-width: 47.999rem) {
   .model { aspect-ratio: 1 / 1; }
   /* The node labels stay at 10px: at 320 px "Generator" clears the inside of its node box by
@@ -429,12 +476,13 @@ html:not(.js) #traffic { display: none; }
 .site-foot .wrap { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: center; }
 .site-foot nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-left: auto; }
 .site-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+.site-foot .built { flex-basis: 100%; }
 
 /* ---------------------------------------------------------------- print
    A CV or a case study printed from the browser should be a document, not a screenshot of one. */
 @media print {
   :root { --bg: #fff; --panel: #fff; --ink: #000; --mid: #333; --mut: #555; --line: #bbb; --signal: #000; --signal-fill: #000; --on-signal: #fff; }
-  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas { display: none !important; }
+  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas, .chip, .ctl, .streak, .probe-row .btn-plain { display: none !important; }
   /* print the diagram, not the canvas: the still packets and the inner ring come back */
   .model.live .dgram .pk, .model.live .dgram .ring.inner { opacity: 1; }
   .shot.paper { filter: none !important; }   /* paper prints as paper */

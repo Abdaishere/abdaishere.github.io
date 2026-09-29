@@ -66,6 +66,33 @@ if (copy) {
   });
 }
 
+/* ---- the footer's weight line: what this browser actually fetched from this site, compressed.
+       Measured, not written down, so it cannot go stale on the next deploy. Same-origin entries only:
+       a cross-origin file (the leaderboard read, YouTube) reports 0 bytes without a Timing-Allow-Origin
+       header, hence "from this site". encodedBodySize is still reported for a cache hit, so a repeat
+       visit reads the same. It grows when a lazy file arrives (three.js, the loop), which is the point
+       of "so far". Updated at most once a second, never announced. ---- */
+const weight = document.getElementById('weight');
+if (weight && window.PerformanceObserver) {
+  const files = new Map();
+  let queued = 0;
+  const show = () => {
+    queued = 0;
+    let bytes = 0; files.forEach((b) => { bytes += b; });
+    if (!bytes) return;
+    weight.textContent = ` So far this page has loaded ${Math.round(bytes / 1000).toLocaleString('en-GB')} KB from this site, in ${files.size} ${files.size === 1 ? 'file' : 'files'}.`;
+  };
+  const take = (list) => {
+    for (const e of list) {
+      if (!e.name.startsWith(location.origin) || !e.encodedBodySize) continue;
+      files.set(e.name, e.encodedBodySize);
+    }
+    if (!queued) queued = setTimeout(show, 1000);
+  };
+  take(performance.getEntriesByType('navigation'));
+  new PerformanceObserver((l) => take(l.getEntries())).observe({ type: 'resource', buffered: true });
+}
+
 /* ---- the nav marks the section being read. Contact wins whenever it is half in view; on a tall
        screen the closing block never reaches the middle band, so it needs its own observer. ---- */
 const links = new Map([...document.querySelectorAll('.nav a[href^="#"]')].map((a) => [a.hash.slice(1), a]));

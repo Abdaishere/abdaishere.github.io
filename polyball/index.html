@@ -32,10 +32,10 @@
 <meta name="twitter:image" content="https://abdaishere.com/img/og/polyball.png?v=4">
 <meta name="twitter:image:alt" content="PolyBall: Every note you hear, you played. The five-colour neon ring beside it.">
 
-<!-- Everything this page loads: site.css, boot.js, site.js, page.js, board.js, self-hosted woff2,
+<!-- Everything this page loads: site.css, boot.js, site.js, page.js, board.js, proof.js, self-hosted woff2, the gameplay loop,
      one Supabase origin (read-only leaderboard), the game in a same-origin frame, and the trailer
      iframe only after a click. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; frame-src 'self' https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; frame-src 'self' https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'">
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/polyball/",
@@ -59,8 +59,12 @@
 
 /* the play stage: a 9:16 frame holding the poster, then the game itself */
 .stage { position: relative; width: min(100%, 22rem); aspect-ratio: 9 / 16; border: 1px solid var(--line); background: #08090C; overflow: hidden; }
-.stage > img, .stage > iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.stage > img { object-fit: cover; }
+.stage > img, .stage > iframe, .stage > video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.stage > img, .stage > video { object-fit: cover; }
+.stage > video { pointer-events: none; }
+/* caption left, the loop's Pause right: off the footage, where it would pass for a game button */
+.stage-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; width: min(100%, 22rem); }
+.stage-row .pause { flex: none; }
 .play-col { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
 /* The one line on this page written for a hiring manager rather than a player. It is in the first
    screen on purpose, in the game's own tone, and the hairline is what keeps it from reading as
@@ -156,6 +160,7 @@
     <span>Android · browser · desktop</span>
     <span>No sign-up</span>
     <span>Version 0.9.7</span>
+    <a class="proof" id="proof" href="#leaderboard" data-platform hidden></a>
   </div>
 </div>
 
@@ -175,9 +180,11 @@
       </div>
       <div class="aside play-col">
         <div class="stage" id="stage">
-          <img src="/img/phone_03_home.webp" width="540" height="960" fetchpriority="high" decoding="async" alt="PolyBall on a phone: a nine-colour polygon ring with Tap to play across the middle, best score 28, and the shop, daily, play, ranks and awards bar along the bottom.">
+          <img src="loop-poster.webp" width="540" height="960" fetchpriority="high" decoding="async" alt="A Classic run in PolyBall on a phone: score 3, a green ball falling toward a five-sided ring with its colours around the edge.">
         </div>
-        <p class="cap" id="stage-note">Runs in the browser, sound on. <a id="fullscreen" href="/polyball/play/">Open it full screen</a>.</p>
+        <div class="stage-row">
+          <p class="cap" id="stage-note"><span class="loop-note" hidden>Four seconds of a Classic run, recorded in 0.9.7, without its sound. </span>The game itself runs in the browser, sound on. <a id="fullscreen" href="/polyball/play/">Open it full screen</a>.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -390,11 +397,13 @@
   <div class="wrap">
     <span>PolyBall · made by <a href="/">Abdallah El Belkasy</a></span>
     <nav aria-label="Site"><a href="leaderboard/">Leaderboard</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
+    <p class="built">Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
   </div>
 </footer>
 
 <script src="board.js"></script>
 <script type="module" src="/site.js"></script>
 <script type="module" src="page.js"></script>
+<script type="module" src="/proof.js"></script>
 </body>
 </html>

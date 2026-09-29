@@ -28,6 +28,11 @@
  *   const trace = start(glCanvas, { fallback: canvas2d, onBeat });
  *   trace.pause(); trace.resume(); trace.burst(); trace.recolor(); trace.verified(); trace.dispose();
  *
+ * Tap on the beat (tap.js): pass `onTap(ms)` and every press on the hero asks it how to colour the
+ * burst, given the press's signed distance from the nearest beat. It answers 0 (plain), 1 (on the
+ * beat, amber from birth) or 2 (a miss: red, stops dead at the switch, fades, never verified).
+ * trace.offset(timeStamp) and trace.shot(kind) are the same judgement for the keyboard's button.
+ *
  * Also dispatches a `trace-beat` event on the canvas every beat, for anything that wants the clock
  * without owning the trace.
  *
@@ -49,7 +54,12 @@ float bend(float x, float ly, float far) {
   float w = 9.0 * exp(-d * d / 9000.0) * exp(-uAge * 3.5) * sign(ly - uRes.y * 0.5 + 0.001);
   return mix(p + w, 0.5 * (p + w) + uPar, far);                                          // far lanes: half the bend, plus parallax
 }
-vec2 clip(vec2 p) { return vec2(p.x / uRes.x * 2.0 - 1.0, 1.0 - p.y / uRes.y * 2.0); }`;
+vec2 clip(vec2 p) { return vec2(p.x / uRes.x * 2.0 - 1.0, 1.0 - p.y / uRes.y * 2.0); }
+// A tap on the hero is judged (tap.js): kind 1 landed on the beat and is amber from birth, kind 2
+// missed it, stops dead where it meets the switch (or 1.2 s after it was born, whichever is first)
+// and fades out over 240 ms, never stamped. The kind rides in aB.x on top of the alpha: alpha + 2 * kind.
+float kindOf(float a) { return floor(a / 2.0); }
+float dieAt(vec4 aA, vec4 aB) { return min((uSwX - aB.w) / aA.z, 1.2); }`;
 const GLSL_PREC = `#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
 #else
@@ -76,51 +86,61 @@ void main() {
   c += uSign * uGlowW * texture2D(uGlow, vec2(vXY.x / uRes.x, 1.0 - vXY.y / uRes.y)).rgb;   // the afterglow: light in the dark theme, ink in the light one
   gl_FragColor = vec4(clamp(c, 0.0, 1.0), 1.0);
 }`;
+// Where a judged packet is and how much of it is left. A miss (kind 2) freezes at its death point
+// and fades; a hit (kind 1) is amber from birth but is stamped and ringed at the switch like any other.
+const GLSL_KIND = `
+void judged(vec4 aA, vec4 aB, float t, out float kind, out float x1, out float fade) {
+  kind = kindOf(aB.x); x1 = -20.0 + aA.z * t; fade = 1.0;
+  if (kind > 1.5) { float d = dieAt(aA, aB), s = (x1 - aB.w) / aA.z; x1 = min(x1, aB.w + aA.z * d); fade = 1.0 - clamp((s - d) / 0.24, 0.0, 1.0); }
+}`;
 const VS_BODY = `attribute vec2 aUV; attribute vec4 aA; attribute vec4 aB; uniform float uTime, uN;
-varying vec2 vUV; varying float vAlpha, vSeen, vNear;
-${GLSL_BEND}
+varying vec2 vUV; varying float vAlpha, vSeen, vNear, vHot, vMiss;
+${GLSL_BEND}${GLSL_KIND}
 void main() {
-  float t = uTime - aA.x, far = aB.y;
-  float x1 = -20.0 + aA.z * t;
-  float k = clamp((x1 - uSwX) / aA.z, 0.0, 1.0);                                          // seconds since verification, 0..1
-  float x0 = x1 - aA.w - 70.0 * (1.0 - exp(-k * 3.0));                                     // phosphor: the tail stretches after the switch
-  if (t < 0.0 || x0 > uRes.x + 20.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vNear = 0.0; return; }
+  float t = uTime - aA.x, far = aB.y, kind, x1, fade;
+  judged(aA, aB, t, kind, x1, fade);
+  float k = kind > 1.5 ? 0.0 : clamp((x1 - uSwX) / aA.z, 0.0, 1.0);                       // seconds since verification, 0..1
+  float x0 = x1 - aA.w * fade - 70.0 * (1.0 - exp(-k * 3.0));                               // phosphor: the tail stretches after the switch; a dying miss's tail catches up with its head
+  if (t < 0.0 || x0 > uRes.x + 20.0 || fade <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vNear = 0.0; vHot = 0.0; vMiss = 0.0; return; }
   float ly = (aA.y + 0.5 - 0.5 * far) * uRes.y / uN;
   float x = mix(x0, x1, aUV.x);
   float y = ly + bend(x, ly, far) + aB.z * exp(-max(0.0, x - aB.w) / 160.0) + aUV.y * mix(1.6, 1.1, far);   // aB.z: born off-lane under the pointer, eases on
   gl_Position = vec4(clip(vec2(x, y)), 0.0, 1.0);
-  vUV = aUV; vAlpha = aB.x * mix(1.0, 0.4, far); vSeen = step(uSwX, x1); vNear = near(vec2(x, y));
+  vSeen = kind > 1.5 ? 0.0 : step(uSwX, x1);
+  vUV = aUV; vAlpha = (aB.x - 2.0 * kind) * mix(1.0, 0.4, far) * fade; vNear = near(vec2(x, y));
+  vHot = max(vSeen, step(0.5, kind) * (1.0 - step(1.5, kind))); vMiss = step(1.5, kind);
 }`;
-const FS_BODY = GLSL_PREC + `varying vec2 vUV; varying float vAlpha, vSeen, vNear; uniform vec3 uInk, uSig, uBg; uniform float uToGlow;
+const FS_BODY = GLSL_PREC + `varying vec2 vUV; varying float vAlpha, vSeen, vNear, vHot, vMiss; uniform vec3 uInk, uSig, uBg, uMiss; uniform float uToGlow;
 void main() {
   float core = 1.0 - smoothstep(0.5, 0.9, abs(vUV.y));
-  float a = core * (0.18 + 0.82 * vUV.x * vUV.x) * vAlpha * mix(0.8, 0.95, vSeen) * (1.0 + 0.4 * vNear);   // tail: bright at the head, brighter under the probe
-  vec3 c = mix(uInk, uSig, vSeen);
+  float a = core * (0.18 + 0.82 * vUV.x * vUV.x) * vAlpha * mix(0.8, 0.95, max(vHot, vMiss)) * (1.0 + 0.4 * vNear);   // tail: bright at the head, brighter under the probe
+  vec3 c = mix(mix(uInk, uSig, vHot), uMiss, vMiss);
   gl_FragColor = vec4(mix(c, abs(c - uBg) * (0.7 + 0.5 * vNear), uToGlow), min(a, 1.0));
 }`;
 const VS_HEAD = `attribute vec2 aUV; attribute vec4 aA; attribute vec4 aB; uniform float uTime, uN;
-varying vec2 vUV; varying float vAlpha, vSeen, vK, vHalf, vNear;
-${GLSL_BEND}
+varying vec2 vUV; varying float vAlpha, vSeen, vK, vHalf, vNear, vHot, vMiss;
+${GLSL_BEND}${GLSL_KIND}
 void main() {
-  float t = uTime - aA.x, far = aB.y;
-  float x1 = -20.0 + aA.z * t;
-  if (t < 0.0 || x1 - aA.w > uRes.x + 20.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vK = 1.0; vHalf = 1.0; vNear = 0.0; return; }
+  float t = uTime - aA.x, far = aB.y, kind, x1, fade;
+  judged(aA, aB, t, kind, x1, fade);
+  if (t < 0.0 || x1 - aA.w > uRes.x + 20.0 || fade <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vK = 1.0; vHalf = 1.0; vNear = 0.0; vHot = 0.0; vMiss = 0.0; return; }
   float ly = (aA.y + 0.5 - 0.5 * far) * uRes.y / uN;
   float y = ly + bend(x1, ly, far) + aB.z * exp(-max(0.0, x1 - aB.w) / 160.0);
-  vSeen = step(uSwX, x1);
+  vSeen = kind > 1.5 ? 0.0 : step(uSwX, x1);
   vK = clamp((x1 - uSwX) / aA.z / 0.28, 0.0, 1.0);                                      // verification ring, 0..1 over 280 ms
   float ring = (vSeen > 0.5 && vK < 1.0) ? 5.0 + 16.0 * vK : 0.0;
-  vHalf = max(ring, 12.0) * mix(1.0, 0.7, far);
+  vHalf = max(ring, 12.0) * mix(1.0, 0.7, far) * fade;                                  // a miss shrinks to nothing as it fades
   gl_Position = vec4(clip(vec2(x1, y) + aUV * vHalf), 0.0, 1.0);
-  vUV = aUV; vAlpha = aB.x * mix(1.0, 0.4, far); vNear = near(vec2(x1, y));
+  vUV = aUV; vAlpha = (aB.x - 2.0 * kind) * mix(1.0, 0.4, far) * fade; vNear = near(vec2(x1, y));
+  vHot = max(vSeen, step(0.5, kind) * (1.0 - step(1.5, kind))); vMiss = step(1.5, kind);
 }`;
-const FS_HEAD = GLSL_PREC + `varying vec2 vUV; varying float vAlpha, vSeen, vK, vHalf, vNear; uniform vec3 uInk, uSig, uBg; uniform float uAdd, uToGlow;
+const FS_HEAD = GLSL_PREC + `varying vec2 vUV; varying float vAlpha, vSeen, vK, vHalf, vNear, vHot, vMiss; uniform vec3 uInk, uSig, uBg, uMiss; uniform float uAdd, uToGlow;
 void main() {
   float d = length(vUV) * vHalf;
   float dot = (1.0 - smoothstep(2.4, 3.4, d)) * (1.0 - uToGlow);                       // the dot itself never persists (it would bead the trail)
   float ring = (vSeen > 0.5 && vK < 1.0) ? (1.0 - smoothstep(0.5, 1.8, abs(d - (3.0 + 16.0 * vK)))) * (1.0 - vK) * 0.9 : 0.0;
-  float glow = exp(-d * d / 50.0) * mix(0.12, 0.32, vSeen) * (0.5 + 0.5 * uAdd) * (1.0 + vNear);   // bloom, wider in the additive dark theme, doubled under the probe
-  vec3 c = mix(uInk, uSig, vSeen);
+  float glow = exp(-d * d / 50.0) * mix(0.12, 0.32, vHot) * (1.0 - vMiss) * (0.5 + 0.5 * uAdd) * (1.0 + vNear);   // bloom, wider in the additive dark theme, doubled under the probe; a miss gets none
+  vec3 c = mix(mix(uInk, uSig, vHot), uMiss, vMiss);
   gl_FragColor = vec4(mix(c, abs(c - uBg) * (0.7 + 0.5 * vNear), uToGlow), min((max(dot, ring) + glow) * vAlpha, 1.0));
 }`;
 // dst *= 1 - k, and the phosphor holds twice as long under the probe
@@ -128,12 +148,12 @@ const FS_DECAY = GLSL_PREC + `varying vec2 vXY; uniform float uK;
 ${GLSL_BEND}
 void main() { gl_FragColor = vec4(0.0, 0.0, 0.0, uK * (1.0 - 0.5 * near(vXY))); }`;
 
-function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2, persist = true, verified: verified0 = 0 } = {}) {
+function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, onTap, dprCap = 2, persist = true, verified: verified0 = 0 } = {}) {
   // preserveDrawingBuffer only for the reduced-motion still, so the one frame stays readable (and testable) after it is drawn
   const gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: calm.matches });
   const ext = gl && gl.getExtension('ANGLE_instanced_arrays');
   if (!gl || !ext) return null;
-  const CAP = 512, N_UNI = ['uRes', 'uPtr', 'uPtrW', 'uSwX', 'uAge', 'uPar', 'uTime', 'uN', 'uFlash', 'uAdd', 'uBg', 'uMid', 'uInk', 'uSig', 'uSign', 'uGlowW', 'uGlow', 'uToGlow', 'uK'];
+  const CAP = 512, N_UNI = ['uRes', 'uPtr', 'uPtrW', 'uSwX', 'uAge', 'uPar', 'uTime', 'uN', 'uFlash', 'uAdd', 'uBg', 'uMid', 'uInk', 'uSig', 'uSign', 'uGlowW', 'uGlow', 'uToGlow', 'uK', 'uMiss'];
   const mk = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
   const prog = (vs, fs) => {
     const p = gl.createProgram(); gl.attachShader(p, mk(gl.VERTEX_SHADER, vs)); gl.attachShader(p, mk(gl.FRAGMENT_SHADER, fs));
@@ -165,11 +185,11 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   // The probe: where the pointer is (px,py follow tx,ty on a spring) and how much it counts (w eases 0..1 in and
   // out, so the lanes notice the pointer arriving and let go when it leaves instead of snapping). `held` while pressed.
   let tx = 0, ty = 0, px = 0, py = 0, w = 0, wT = 0, held = false;
-  let col = { bg: [0, 0, 0], mid: [0, 0, 0], ink: [0, 0, 0], sig: [0, 0, 0] }, additive = true;
+  let col = { bg: [0, 0, 0], mid: [0, 0, 0], ink: [0, 0, 0], sig: [0, 0, 0], miss: [0, 0, 0] }, additive = true;
   const rgb = (s) => { const m = s.match(/[\d.]+/g) || [0, 0, 0]; return [m[0] / 255, m[1] / 255, m[2] / 255]; };
   const recolor = () => {
     const cs = getComputedStyle(root), g = (n) => rgb(cs.getPropertyValue(n));
-    col = { bg: g('--c-bg'), mid: g('--c-mid'), ink: g('--c-ink'), sig: g('--c-signal') };
+    col = { bg: g('--c-bg'), mid: g('--c-mid'), ink: g('--c-ink'), sig: g('--c-signal'), miss: g('--c-miss') };
     additive = 0.2126 * col.bg[0] + 0.7152 * col.bg[1] + 0.0722 * col.bg[2] < 0.5;
   };
   const size = () => {
@@ -183,7 +203,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   // spawn: `far` packets run slower and dimmer on the lanes between the near ones; `pre` scatters them mid-flight;
   // `at` = [x, y] starts them right under the pointer, heads on it, and lets them ease onto the nearest lane
   // over the next ~160 px (the click burst and the held pump)
-  const spawn = (count, far, pre, at) => {
+  const spawn = (count, far, pre, at, kind = 0) => {
     const sp = H / N;
     for (let i = 0; i < count && live < CAP - 1; i++) {
       let s = cursor; while (inst[s * 8] < 1e8) s = (s + 1) % CAP;
@@ -193,7 +213,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
       const x = at ? at[0] - rnd(0, 10) : 0;
       const t0 = at ? time - (x + 20) / v : pre ? time - rnd(0, (W + 40) / v) : time + rnd(0, 0.18);
       const dy = at ? at[1] + rnd(-3, 3) - (lane + 0.5 - 0.5 * far) * sp : 0;
-      inst.set([t0, lane, v, rnd(24, 90) * (far ? 0.7 : 1), rnd(0.6, 1), far, dy, x], s * 8);
+      inst.set([t0, lane, v, rnd(24, 90) * (far ? 0.7 : 1), rnd(0.6, 1) + 2 * kind, far, dy, x], s * 8);
       seen[s] = 0; live++; dirty = true;
     }
   };
@@ -201,6 +221,10 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
     for (let i = 0; i < CAP; i++) {
       const o = i * 8, t0 = inst[o]; if (t0 > 1e8) continue;
       const x1 = -20 + inst[o + 2] * (time - t0);
+      if (inst[o + 4] >= 4) { // a miss: never verified, gone 240 ms after it stops (the shader's dieAt)
+        if ((x1 - inst[o + 7]) / inst[o + 2] > Math.min((switchX - inst[o + 7]) / inst[o + 2], 1.2) + 0.25) { inst[o] = 1e9; live--; dirty = true; }
+        continue;
+      }
       if (!seen[i] && x1 >= switchX) { seen[i] = 1; verified++; }
       if (x1 - inst[o + 3] > W + 20) { inst[o] = 1e9; live--; dirty = true; }
     }
@@ -209,7 +233,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
     gl.useProgram(P.p); const u = P.u;
     gl.uniform2f(u.uRes, W, H); gl.uniform2f(u.uPtr, px, py); gl.uniform1f(u.uPtrW, w); gl.uniform1f(u.uSwX, switchX); gl.uniform1f(u.uAge, age); gl.uniform1f(u.uPar, par);
     gl.uniform1f(u.uTime, time); gl.uniform1f(u.uN, N); gl.uniform1f(u.uFlash, flash); gl.uniform1f(u.uAdd, additive ? 1 : 0);
-    gl.uniform3fv(u.uBg, col.bg); gl.uniform3fv(u.uMid, col.mid); gl.uniform3fv(u.uInk, col.ink); gl.uniform3fv(u.uSig, col.sig);
+    gl.uniform3fv(u.uBg, col.bg); gl.uniform3fv(u.uMid, col.mid); gl.uniform3fv(u.uInk, col.ink); gl.uniform3fv(u.uSig, col.sig); gl.uniform3fv(u.uMiss, col.miss);
     gl.uniform1f(u.uSign, additive ? 1 : -1); gl.uniform1f(u.uGlowW, persist ? (additive ? 0.7 : 0.45) : 0); gl.uniform1i(u.uGlow, 0);
   };
   const geom = (b) => { gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); };
@@ -239,8 +263,16 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   let io = null, paused = false, lost = false, raf = 0, last = 0, onScreen = true, beatIdx = 0, tBeat = 0, trickle = 0, pump = 0;
   const ro = new ResizeObserver(() => { size(); if (still) { inst.fill(1e9); live = 0; spawn(seedCount(), 0, true); spawn(seedCount() - 4, 1, true); sweep(); draw(0); } });
   ro.observe(canvas);
+  // Signed distance in ms from the nearest beat of this clock (late is positive), for an event
+  // stamped `ts`: the beat time at the last frame plus the time since it. Judged against the clock
+  // the flash is drawn from, so "on the beat" means on the beat the reader saw.
+  const offset = (ts) => { const t = tBeat + Math.max(0, Math.min(100, ts - (last || ts))), ph = t % beatMs; return ph > beatMs / 2 ? ph - beatMs : ph; };
+  // A burst from `at`: kind 0 is today's press, 1 landed on the beat, 2 missed it. A miss does not
+  // flash the switch: nothing got through.
+  const shot = (kind, at) => { spawn(W < 720 ? 6 : 10, 0, false, at, kind); spawn(4, 1, false, at, kind); if (kind !== 2) { flash = 1; age = 0; } };
   const api = {
     pause() { paused = true; }, resume() { paused = false; go(); }, burst() { spawn(8, 0); spawn(4, 1); flash = 1; age = 0; go(); },
+    offset, shot: (kind, at = [W * 0.2, H * 0.5]) => { shot(kind, at); go(); },
     recolor: () => { recolor(); if (still) { clearGlow(); draw(0); } }, paused: () => paused, verified: () => verified, mode: 'webgl',
     lose() { gl.getExtension('WEBGL_lose_context')?.loseContext(); }, // test hook: forces the context-loss path
     dispose() { paused = true; ro.disconnect(); io?.disconnect(); if (raf) cancelAnimationFrame(raf); raf = 0; },
@@ -250,7 +282,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
 
   if (still) { // static frame: packets mid-flight, nothing moves, no clock
     spawn(seedCount(), 0, true); spawn(seedCount() - 4, 1, true); sweep(); draw(0);
-    api.pause = api.resume = api.burst = () => {}; api.paused = () => true;
+    api.pause = api.resume = api.burst = api.shot = () => {}; api.paused = () => true;
     return api;
   }
   const frame = (now) => {
@@ -286,7 +318,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   host.addEventListener('pointerdown', (e) => {
     if (e.target.closest('a, button') || e.button > 0) return;
     at(e); if (w < 0.05) { px = tx; py = ty; } wT = 1; held = true;
-    spawn(W < 720 ? 6 : 10, 0, false, [tx, ty]); spawn(4, 1, false, [tx, ty]); flash = 1; age = 0;
+    shot(onTap?.(offset(e.timeStamp)) || 0, [tx, ty]);
   }, { passive: true });
   const release = (e) => { held = false; if (e.pointerType !== 'mouse') wT = 0; };   // a finger lifting is a pointer leaving
   host.addEventListener('pointerup', release); host.addEventListener('pointercancel', release);
@@ -297,13 +329,13 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
 /* ---------- the trace, 2D fallback ----------
    Canvas 2D, same drawing without the phosphor. Takes over when WebGL is missing, blocked, fails to
    compile, or the context is lost. */
-function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified: verified0 = 0 } = {}) {
+function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, onTap, verified: verified0 = 0 } = {}) {
   const ctx = canvas.getContext('2d');
   let W = 0, H = 0, dpr = 1, lanes = [], packets = [], ticks = [], px = -1e9, py = -1e9, switchX = 0, flash = 0, verified = verified0, trickle = 0;
   let col = {};
   const recolor = () => {
     const cs = getComputedStyle(root);
-    col = { mid: cs.getPropertyValue('--c-mid').trim(), ink: cs.getPropertyValue('--c-ink').trim(), sig: cs.getPropertyValue('--c-signal').trim() };
+    col = { mid: cs.getPropertyValue('--c-mid').trim(), ink: cs.getPropertyValue('--c-ink').trim(), sig: cs.getPropertyValue('--c-signal').trim(), miss: cs.getPropertyValue('--c-miss').trim() };
   };
   const size = () => {
     const r = canvas.getBoundingClientRect();
@@ -316,11 +348,13 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     switchX = W < 720 ? W * 0.84 : W * 0.62;
   };
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const spawn = (count, at) => { // `at` = [x, y]: start right under the pointer, then ease onto its nearest lane
+  // `kind`: 0 plain, 1 on the beat (amber from birth), 2 a miss (stops at the switch or after 1.2 s, fades in 240 ms, never counted)
+  const spawn = (count, at, kind = 0) => { // `at` = [x, y]: start right under the pointer, then ease onto its nearest lane
     for (let i = 0; i < count && packets.length < 400; i++) {
       const lane = at ? lanes[Math.min(lanes.length - 1, Math.max(0, Math.round(at[1] / (H / lanes.length) - 0.5)))] : lanes[Math.floor(Math.random() * lanes.length)];
       const x = at ? at[0] - rnd(0, 10) : rnd(-90, -20);
-      packets.push({ lane, x, sx: x, dy: at ? at[1] + rnd(-3, 3) - lane.y : 0, len: rnd(24, 90), v: rnd(240, 420), a: rnd(0.6, 1), seen: false });
+      const v = rnd(240, 420);
+      packets.push({ lane, x, sx: x, dy: at ? at[1] + rnd(-3, 3) - lane.y : 0, len: rnd(24, 90), v, a: rnd(0.6, 1), seen: false, kind, die: Math.min((switchX - x) / v, 1.2), age: 0 });
     }
   };
   // lane bend: a spring toward the pointer, strongest right under it, max 24 px
@@ -343,14 +377,17 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     ctx.beginPath(); ctx.moveTo(switchX, 0); ctx.lineTo(switchX, H); ctx.stroke();
     ctx.lineWidth = 2.5;
     for (const p of packets) {
-      p.x += p.v * dt;
-      if (!p.seen && p.x >= switchX) { p.seen = true; verified++; ticks.push({ x: switchX, y: yAt(switchX, p.lane, p), t: 0 }); }
-      const x0 = p.x - p.len, x1 = p.x;
-      ctx.strokeStyle = p.seen ? col.sig : col.ink; ctx.globalAlpha = p.a * (p.seen ? 0.95 : 0.8);
+      p.age += dt;
+      let fade = 1;
+      if (p.kind === 2) { fade = 1 - Math.min(1, Math.max(0, (p.age - p.die) / 0.24)); if (p.age < p.die) p.x += p.v * dt; }
+      else p.x += p.v * dt;
+      if (p.kind !== 2 && !p.seen && p.x >= switchX) { p.seen = true; verified++; ticks.push({ x: switchX, y: yAt(switchX, p.lane, p), t: 0 }); }
+      const x0 = p.x - p.len * fade, x1 = p.x;
+      ctx.strokeStyle = p.kind === 2 ? col.miss : p.seen || p.kind === 1 ? col.sig : col.ink; ctx.globalAlpha = p.a * fade * (p.seen || p.kind ? 0.95 : 0.8);
       ctx.beginPath(); ctx.moveTo(x0, yAt(x0, p.lane, p)); ctx.lineTo((x0 + x1) / 2, yAt((x0 + x1) / 2, p.lane, p)); ctx.lineTo(x1, yAt(x1, p.lane, p)); ctx.stroke();
-      ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(x1, yAt(x1, p.lane, p), 3, 0, 6.28); ctx.fill();
+      ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(x1, yAt(x1, p.lane, p), 3 * fade, 0, 6.28); ctx.fill();
     }
-    packets = packets.filter((p) => p.x - p.len < W + 10);
+    packets = packets.filter((p) => p.x - p.len < W + 10 && (p.kind !== 2 || p.age < p.die + 0.24));
     for (const t of ticks) { // verification tick: a ring that blooms and fades in 280 ms
       t.t += dt; const k = Math.min(1, t.t / 0.28);
       ctx.globalAlpha = (1 - k) * 0.9; ctx.strokeStyle = col.sig; ctx.lineWidth = 1.5;
@@ -393,12 +430,14 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
   const at = (e) => { const r = canvas.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; };
   host.addEventListener('pointermove', at, { passive: true });
   host.addEventListener('pointerleave', () => { px = py = -1e9; held = false; });
-  host.addEventListener('pointerdown', (e) => { if (e.target.closest('a, button') || e.button > 0) return; at(e); held = true; spawn(W < 720 ? 6 : 10, [px, py]); flash = 1; }, { passive: true });
+  const offset = (ts) => { const t = tBeat + Math.max(0, Math.min(100, ts - (last || ts))), ph = t % beatMs; return ph > beatMs / 2 ? ph - beatMs : ph; };
+  const shot = (kind, at) => { spawn(W < 720 ? 6 : 10, at, kind); if (kind !== 2) flash = 1; };
+  host.addEventListener('pointerdown', (e) => { if (e.target.closest('a, button') || e.button > 0) return; at(e); held = true; shot(onTap?.(offset(e.timeStamp)) || 0, [px, py]); }, { passive: true });
   const release = () => { held = false; }; host.addEventListener('pointerup', release); host.addEventListener('pointercancel', release);
   spawn(24); for (const p of packets) p.x = rnd(0, W); go();
   return {
     pause() { paused = true; }, resume() { paused = false; go(); }, burst() { spawn(8); flash = 1; },
-    recolor, dispose() { paused = true; ro.disconnect(); io.disconnect(); }, paused: () => paused, verified: () => verified, mode: '2d',
+    offset, shot: (kind, at = [W * 0.2, H * 0.5]) => { shot(kind, at); go(); }, recolor, dispose() { paused = true; ro.disconnect(); io.disconnect(); }, paused: () => paused, verified: () => verified, mode: '2d',
   };
 }
 
@@ -437,6 +476,7 @@ export function start(canvas, opts = {}) {
   host.addEventListener('contextmenu', (e) => { if (coarse.matches && !calm.matches && !e.target.closest('a, button, input, textarea')) e.preventDefault(); });
   return {
     pause: () => impl.pause(), resume: () => impl.resume(), burst: () => impl.burst(), recolor: () => impl.recolor(),
+    offset: (ts) => impl.offset?.(ts) ?? 0, shot: (kind, at) => impl.shot?.(kind, at),
     dispose: () => impl.dispose(), paused: () => impl.paused(), verified: () => impl.verified(),
     lose: () => impl.lose?.(), get mode() { return impl.mode; },
   };

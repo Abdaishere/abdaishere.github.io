@@ -12,8 +12,8 @@
  * Nothing loads or sounds until the first press, which is also what browsers require.
  */
 const BEAT = 0.6, BAR = BEAT * 4, SWING = 0.07 * BEAT;
-const CHORDS = ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'E7'];
-const CHORD_MIDI = [
+export const CHORDS = ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'E7'];
+export const CHORD_MIDI = [
   [69, 72, 76, 67, 71], [65, 69, 72, 76, 67], [60, 64, 67, 71, 74], [67, 71, 74, 76, 69],
   [69, 72, 76, 67, 71], [65, 69, 72, 76, 67], [60, 64, 67, 71, 74], [64, 68, 71, 74, 66],
 ];
@@ -21,7 +21,7 @@ const BASS_MIDI = [45, 41, 48, 43, 45, 41, 48, 40];
 const LEAD_CALL = [0, 2, 1, -1, 3, 2, -1, 4], LEAD_ANSWER = [4, 2, 3, -1, 1, -1, 0, -1];
 const GATES = { bass: 2, arp: 5, lead: 8 };
 // [wave, frequency multiple, detune cents, amp, decay multiplier], as in sfx.gd
-const CHIME = { parts: [['sine', 1, 0, 1], ['sine', 2, 0, 0.28], ['sine', 4, 0, 0.08]], attack: 0.012, tau: 0.32, amp: 0.36 };
+export const CHIME = { parts: [['sine', 1, 0, 1], ['sine', 2, 0, 0.28], ['sine', 4, 0, 0.08]], attack: 0.012, tau: 0.32, amp: 0.36 };
 const BASS = { parts: [['triangle', 1, 0, 1], ['sine', 0.5, 0, 0.4]], attack: 0.012, tau: 0.16, amp: 0.5 };
 const ARP = { ...CHIME, tau: 0.18, amp: 0.3, attack: 0.01 };
 const LEAD = { ...CHIME, amp: 0.32 };
@@ -30,27 +30,29 @@ const DB = { note: -8, bass: -7, arp: -10, lead: -7 };
 const hz = (m) => 440 * 2 ** ((m - 69) / 12);
 const lin = (db) => 10 ** (db / 20);
 
+/** One note in one of sfx.gd's voices, into `bus`: voicer(ac, bus)(CHIME, 69, ac.currentTime, -8).
+ *  Also used by the home hero's Sound toggle (tap.js). */
+export const voicer = (ac, bus) => function voice(recipe, midi, when, db) {
+  const g = ac.createGain(), end = when + Math.min(recipe.tau * 5 + recipe.attack, 2.2);
+  g.gain.setValueAtTime(0, when);
+  g.gain.linearRampToValueAtTime(recipe.amp * lin(db), when + recipe.attack);
+  g.gain.setTargetAtTime(0, when + recipe.attack, recipe.tau);
+  g.connect(bus);
+  for (const [wave, mul, cents, amp] of recipe.parts) {
+    const o = ac.createOscillator(), a = ac.createGain();
+    o.type = wave === 'saw' ? 'sawtooth' : wave;
+    o.frequency.value = hz(midi) * mul; o.detune.value = cents + (Math.random() * 20 - 10);   // the game's ±10 cent humanise
+    a.gain.value = amp;
+    o.connect(a).connect(g); o.start(when); o.stop(end);
+  }
+  setTimeout(() => g.disconnect(), (end - ac.currentTime) * 1000 + 100);
+};
+
 export function band(root) {
   const keys = [...root.querySelectorAll('.band-key')];
   const out = { streak: root.querySelector('#band-streak'), chord: root.querySelector('#band-chord') };
   const layerEls = Object.fromEntries([...root.querySelectorAll('[data-layer]')].map((e) => [e.dataset.layer, e]));
-  let ac = null, bus = null, meter = null, t0 = 0, streak = 0, lastHit = -1e9, timer = 0, next8 = 0, arpStep = 0;
-
-  function voice(recipe, midi, when, db) {
-    const g = ac.createGain(), end = when + Math.min(recipe.tau * 5 + recipe.attack, 2.2);
-    g.gain.setValueAtTime(0, when);
-    g.gain.linearRampToValueAtTime(recipe.amp * lin(db), when + recipe.attack);
-    g.gain.setTargetAtTime(0, when + recipe.attack, recipe.tau);
-    g.connect(bus);
-    for (const [wave, mul, cents, amp] of recipe.parts) {
-      const o = ac.createOscillator(), a = ac.createGain();
-      o.type = wave === 'saw' ? 'sawtooth' : wave;
-      o.frequency.value = hz(midi) * mul; o.detune.value = cents + (Math.random() * 20 - 10);   // the game's ±10 cent humanise
-      a.gain.value = amp;
-      o.connect(a).connect(g); o.start(when); o.stop(end);
-    }
-    setTimeout(() => g.disconnect(), (end - ac.currentTime) * 1000 + 100);
-  }
+  let ac = null, bus = null, meter = null, voice = null, t0 = 0, streak = 0, lastHit = -1e9, timer = 0, next8 = 0, arpStep = 0;
 
   const chordAt = (t) => Math.floor(Math.max(0, t - t0) / BAR) % 8;
   const on = (layer) => streak >= GATES[layer];
@@ -88,6 +90,7 @@ export function band(root) {
       bus = ac.createGain(); bus.gain.value = 0.8;
       meter = ac.createAnalyser(); meter.fftSize = 1024;
       bus.connect(comp).connect(meter).connect(ac.destination);
+      voice = voicer(ac, bus);
     }
     if (ac.state === 'suspended') ac.resume();
     const now = ac.currentTime;

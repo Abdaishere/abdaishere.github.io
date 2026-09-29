@@ -159,8 +159,17 @@
           <canvas id="scene" aria-hidden="true"></canvas>
           <p class="tally" aria-hidden="true"><span class="wide-only">In this drawing, since you arrived</span><span><b id="c-sent">0</b> sent</span><span><b id="c-ok">0</b> verified</span><span><b id="c-lost">0</b> lost</span></p>
         </div>
+        <div class="probe needs-js" id="probe">
+          <div class="probe-row">
+            <p class="probe-now" id="probe-now">RFC 2544 throughput: the fastest send rate at which nothing is lost.</p>
+            <p class="probe-result" id="probe-result" role="status"></p>
+            <button class="btn-plain" type="button" id="probe-run">Find throughput</button>
+          </div>
+          <svg class="nline" id="nline" aria-hidden="true" focusable="false"></svg>
+          <p class="cap" id="probe-note" hidden></p>
+        </div>
         <figcaption class="fig-row">
-          <p class="cap" id="traffic-cap"><b>Fig. 05</b> &#183; E&#8209;Jam with the traffic on. Generator nodes on the left fire packets down their own stream to the switch under test, and the switch forwards each one to the verifier that is expecting it. Every packet turns amber for the instant it is inside the switch. That amber is the stamp the verifier prices the delay from. Not every frame comes out the far side, and the tally is what notices, which is the whole reason a frame carries a sequence number. The layout and the counters describe this drawing, not a measured run.<span class="needs-js"> The nodes are buttons. Turn a generator off and its streams stop: nothing more is sent, so nothing on those lanes can be lost. Turn a verifier off and the stream still crosses the switch, but nobody checks the far end, so every frame on it counts as lost. Add or remove generators and verifiers with the buttons under the figure. There is always a stream for every node: one generator sends to every verifier, and one verifier checks every generator.<span class="live-only"> Click anywhere else on the figure to send a burst.</span></span></p>
+          <p class="cap" id="traffic-cap"><b>Fig. 05</b> &#183; E&#8209;Jam with the traffic on. Generator nodes on the left fire packets down their own stream to the switch under test, and the switch forwards each one to the verifier that is expecting it. Every packet turns amber for the instant it is inside the switch. That amber is the stamp the verifier prices the delay from. Not every frame comes out the far side, and the tally is what notices, which is the whole reason a frame carries a sequence number. The layout and the counters describe this drawing, not a measured run.<span class="needs-js"> The nodes are buttons. Turn a generator off and its streams stop: nothing more is sent, so nothing on those lanes can be lost. Turn a verifier off and the stream still crosses the switch, but nobody checks the far end, so every frame on it counts as lost. Add or remove generators and verifiers with the buttons under the figure. There is always a stream for every node: one generator sends to every verifier, and one verifier checks every generator.<span class="live-only"> Click anywhere else on the figure to send a burst.</span> Find throughput runs the RFC 2544 throughput test on this drawing: a binary search on the send rate, starting at line rate, for the fastest rate that loses nothing, then one longer final trial at that rate. The switch gets a hidden limit for every run and says what it was at the end. During the test the drawing's random loss is off, so only that limit drops frames, and the nodes are locked while it runs.</span></p>
           <div class="fleet needs-js" role="group" aria-label="Fig. 05 devices">
             <span class="fleet-row"><span class="fleet-name" id="n-gen-l">Generators</span><button class="btn-plain" type="button" data-kind="gen" data-d="-1" aria-label="Remove a generator">&#8722;</button><output id="n-gen" aria-labelledby="n-gen-l">4</output><button class="btn-plain" type="button" data-kind="gen" data-d="1" aria-label="Add a generator">+</button></span>
             <span class="fleet-row"><span class="fleet-name" id="n-ver-l">Verifiers</span><button class="btn-plain" type="button" data-kind="ver" data-d="-1" aria-label="Remove a verifier">&#8722;</button><output id="n-ver" aria-labelledby="n-ver-l">4</output><button class="btn-plain" type="button" data-kind="ver" data-d="1" aria-label="Add a verifier">+</button></span>
@@ -306,7 +315,7 @@
     </div>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
-      <p>Hand-written HTML and CSS. No framework, no trackers.</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
     </div>
   </div>
 </footer>
@@ -347,7 +356,7 @@ if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__trace = tra
  * is fetched until the figure is near the viewport, and nothing at all on a device asking for
  * reduced motion, saving data, short of memory, or without a WebGL context. Those keep the still
  * diagram, which is the whole point of drawing it first. */
-import { draw, applyState, variant, freshState, fit, LAYOUT } from './diagram.js';
+import { draw, applyState, variant, freshState, fit, topology, LAYOUT } from './diagram.js';
 
 const model = document.querySelector('#traffic .model');
 const dgram = model.querySelector('.dgram');
@@ -370,14 +379,16 @@ const state = freshState(key);
 const fleet = document.querySelector('#traffic .fleet');
 // The device counts: 1 to the layout's max of each. Buttons at a limit say so with aria-disabled rather
 // than disabled, so a keyboard reader pressing + to the top keeps their focus.
+let locked = false;   // while the throughput test runs, the switchboard holds still
 const fleetCounts = () => {
   for (const kind of ['gen', 'ver']) {
     document.getElementById('n-' + kind).textContent = state[kind].length;
     for (const b of fleet.querySelectorAll(`[data-kind="${kind}"]`)) {
       const n = state[kind].length + +b.dataset.d;
-      b.setAttribute('aria-disabled', String(n < 1 || n > LAYOUT[key].max));
+      b.setAttribute('aria-disabled', String(locked || n < 1 || n > LAYOUT[key].max));
     }
   }
+  for (const b of dlabels.querySelectorAll('.dnode')) b.setAttribute('aria-disabled', String(locked));
 };
 const apply = () => { applyState(dgram, dlabels, key, state); sceneApi?.setState(state); fleetCounts(); };
 // A node added or removed moves every lane, so the diagram is redrawn. The moving scene rebuilds
@@ -387,7 +398,7 @@ redraw();
 
 model.addEventListener('click', (e) => {
   const b = e.target.closest('.dnode');
-  if (!b) return;
+  if (!b || locked) return;
   state[b.dataset.kind][+b.dataset.s] = b.getAttribute('aria-pressed') === 'false';
   apply();
 });
@@ -454,6 +465,20 @@ matchMedia('(min-width: 48rem)').addEventListener('change', () => {
 });
 
 new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) boot(); }, { rootMargin: '200px 0px' }).observe(model);
+
+/* ---- Find throughput: RFC 2544's throughput search, run on this drawing (probe.js) ---- */
+import { probe } from './probe.js';
+const tester = probe(document.getElementById('probe'), {
+  scene: () => sceneApi,
+  // streams that are sending, and how many of those nobody verifies
+  feed: () => {
+    const on = topology(LAYOUT[key], state).streams.filter((s) => state.gen[s.g]);
+    return { sending: on.length, blind: on.filter((s) => !state.ver[s.v]).length };
+  },
+  lock: (on) => { locked = on; fleetCounts(); },
+  paused: () => scenePause.dataset.paused === 'true',
+});
+if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__probe = tester; // gate hook
 </script>
 </body>
 </html>

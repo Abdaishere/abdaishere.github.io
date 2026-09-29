@@ -37,22 +37,36 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
                        // once every few seconds, not measured: no drop rate for E-Jam exists.
   let perStream = lowPower ? 70 : 150;
 
+  /* The throughput test (probe.js) drives the switch through `test`: while it runs, the offered
+   * rate thins the traffic (a packet flies only if its own share u is under the rate), the switch
+   * forwards up to its hidden limit, and every packet with u between the limit and the rate is
+   * dropped where it meets the outer ring: it stops there, is never stamped amber, and fades to
+   * muted in 200 ms. The ambient 1.8% loss is off for the test, or no trial could ever pass. */
+  const test = { on: false, rate: 1, limit: 1 };
   const uniforms = {
     uTime: { value: 0 }, uBurst: { value: 9 }, uScale: { value: 1 },
+    uTest: { value: 0 }, uRate: { value: 1 }, uLimit: { value: 1 }, uEdge: { value: L.sw.r[2] },
     uCold: { value: new THREE.Color() }, uWarm: { value: new THREE.Color() },
   };
   const material = new THREE.ShaderMaterial({
     uniforms, transparent: true, depthWrite: false,
     vertexShader: `
-      attribute vec3 aMid; attribute vec3 aEnd; attribute vec4 aData; // phase, size, dropped, spare
+      attribute vec3 aMid; attribute vec3 aEnd; attribute vec4 aData; // phase, size, dropped, u (the test's share)
       attribute vec2 aOn;                                             // generator live, verifier live
-      uniform float uTime, uBurst, uScale; varying float vAlpha; varying float vWarm;
+      uniform float uTime, uBurst, uScale, uTest, uRate, uLimit, uEdge; varying float vAlpha; varying float vWarm;
       void main() {
         float t = fract(uTime / ${CYCLE.toFixed(1)} + aData.x);
-        vec3 p = t < 0.5 ? mix(position, aMid, t * 2.0) : mix(aMid, aEnd, (t - 0.5) * 2.0);
-        float pass = exp(-70.0 * (t - 0.5) * (t - 0.5));          // 1.0 while inside the switch
+        // under test: over the limit means dropped at the outer ring, at tEdge of the trip
+        float cut = uTest * step(uLimit, aData.w) * step(aData.w, uRate);
+        float tEdge = 0.5 - 0.5 * clamp(uEdge / max(length(position - aMid), 1.0), 0.0, 1.0);
+        float tt = mix(t, min(t, tEdge), cut);
+        vec3 p = tt < 0.5 ? mix(position, aMid, tt * 2.0) : mix(aMid, aEnd, (tt - 0.5) * 2.0);
+        float pass = exp(-70.0 * (tt - 0.5) * (tt - 0.5)) * (1.0 - cut);   // 1.0 while inside the switch; a cut frame never gets there
         float fade = smoothstep(0.0, 0.05, t) * smoothstep(1.0, 0.95, t);
-        float alive = 1.0 - aData.z * smoothstep(0.47, 0.55, t);  // a dropped frame never leaves
+        float drop = mix(aData.z, 0.0, uTest);                    // the ambient loss, off during a test
+        float alive = (1.0 - drop * smoothstep(0.47, 0.55, t))   // a dropped frame never leaves
+          * (1.0 - cut * smoothstep(tEdge, tEdge + 0.1, t))       // a cut one fades out at the ring in 200 ms (0.1 of a 2 s trip)
+          * mix(1.0, step(aData.w, uRate), uTest);                // and a frame above the offered rate was never sent
         // No verifier on the far end: the packet still crosses, then goes out unaccounted for
         // rather than landing. Nothing catches it, which is what the tally is about to say.
         float tail = mix(smoothstep(1.0, 0.8, t), 1.0, aOn.y);
@@ -101,7 +115,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
         d += lost;
         // phases quantised to quarter cycles so the traffic still pulses on the beat, with enough
         // scatter that a lane reads as a stream of frames rather than four marching blocks
-        data.set([((rnd() * 4) | 0) / 4 + (rnd() - 0.5) * 0.17, 3.4 + rnd() * 3.2, lost, 0], i * 4);
+        data.set([((rnd() * 4) | 0) / 4 + (rnd() - 0.5) * 0.17, 3.4 + rnd() * 3.2, lost, (k + 0.5) / n], i * 4);   // u spread evenly, so a rate shows exactly its share
         on[i * 2] = gOn; on[i * 2 + 1] = vOn;
       }
       nPer.push(n); dPer.push(d);
@@ -193,7 +207,13 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   const onDown = (e) => { if (!e.target.closest('a,button')) uniforms.uBurst.value = 0; };
   host.addEventListener('pointerdown', onDown, { passive: true });
 
-  const api = { fps: 0, state: 'running', packets: perStream * nPer.length, paused: false, setPaused, setState, dispose, counts: () => counts(),
+  // probe.js: setTest({ rate, limit }) as fractions of line rate, or setTest(null) to end the test
+  function setTest(t) {
+    test.on = !!t; if (t) { test.rate = t.rate; test.limit = t.limit; }
+    uniforms.uTest.value = test.on ? 1 : 0; uniforms.uRate.value = test.rate; uniforms.uLimit.value = test.limit;
+    if (!raf) renderer.render(scene, camera);
+  }
+  const api = { fps: 0, state: 'running', packets: perStream * nPer.length, paused: false, setPaused, setState, setTest, dispose, counts: () => counts(),
     streams: () => ({ n: nPer.slice(), d: dPer.slice(), g: gOf.slice(), v: vOf.slice() }) };  // per-stream packets and drops, for the gate
 
   /* What the verifiers have checked, counted off the same clock the packets fly on rather than by
@@ -218,8 +238,10 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
     const laps = dt / CYCLE;
     for (let s = 0; s < nPer.length; s++) {
       if (!state.gen[gOf[s]]) continue;
-      if (state.ver[vOf[s]]) { seen.lost += dPer[s] * laps; seen.verified += (nPer[s] - dPer[s]) * laps; }
-      else seen.lost += nPer[s] * laps;
+      // under test: rate x packets sent, whatever is over the limit lost at the switch
+      const sent = test.on ? nPer[s] * test.rate : nPer[s], lost = test.on ? nPer[s] * Math.max(0, test.rate - test.limit) : dPer[s];
+      if (state.ver[vOf[s]]) { seen.lost += lost * laps; seen.verified += (sent - lost) * laps; }
+      else seen.lost += sent * laps;
     }
   }
   const counts = () => {

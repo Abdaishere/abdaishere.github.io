@@ -25,7 +25,48 @@ const stage = document.getElementById('stage');
 const play = document.getElementById('play');
 const coarse = matchMedia('(pointer: coarse)').matches;
 
+/* ---- the loop: four silent seconds of a real run over the poster, which is its first frame ----
+ * Nothing is fetched until the stage is near the screen, and nothing at all under reduced motion,
+ * Save-Data or a 2G connection: those keep the still. It plays muted and inline, so every browser
+ * lets it start on its own; it is decorative (the poster's alt says what it shows), so the video is
+ * hidden from assistive tech and takes no taps. A loop that keeps going runs past five seconds, so
+ * it gets a Pause (WCAG 2.2.2), and it stops by itself off screen. */
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const net = navigator.connection;
+const lean = net?.saveData || /(^|-)2g$/.test(net?.effectiveType || '');
+if (stage && !calm && !lean && 'IntersectionObserver' in window) {
+  let v = null, held = false;
+  const near = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) { v?.pause(); return; }
+    if (v) { if (!held && v.isConnected) v.play().catch(() => {}); return; }
+    v = document.createElement('video');
+    v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+    v.poster = stage.querySelector('img').src;
+    for (const [src, type] of [['loop.webm', 'video/webm'], ['loop.mp4', 'video/mp4']]) {
+      const s = document.createElement('source'); s.src = src; s.type = type; v.appendChild(s);
+    }
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'btn-plain pause';
+    btn.innerHTML = '<span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> the gameplay loop</span>';
+    btn.addEventListener('click', () => {
+      held = btn.dataset.paused !== 'true';
+      btn.dataset.paused = String(held);
+      held ? v.pause() : v.play().catch(() => {});
+    });
+    // Only once it is really playing: a video that never starts leaves the poster and no stray button.
+    v.addEventListener('playing', () => {
+      if (!btn.isConnected && v.isConnected) { document.querySelector('.stage-row').appendChild(btn); document.querySelector('.loop-note').hidden = false; }
+    }, { once: true });
+    stage.appendChild(v);
+  }, { rootMargin: '300px 0px' });
+  near.observe(stage);
+  if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__loop = () => v; // gate hook
+}
+
 function embed() {
+  document.querySelector('.loop-note')?.setAttribute('hidden', '');
+  document.querySelector('.stage-row .pause')?.remove();
   const f = document.createElement('iframe');
   f.src = '/polyball/play/';
   f.title = 'PolyBall, playable';

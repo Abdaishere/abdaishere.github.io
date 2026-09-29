@@ -71,6 +71,7 @@
     <span>120 BPM <i class="beat" id="beat" aria-hidden="true"></i></span>
     <span>Open to Rust · systems · backend</span>
     <span>Remote, or relocation with a visa</span>
+    <a class="proof" id="proof" href="/polyball/#leaderboard" data-lead="PolyBall this month: best " hidden></a>
   </div>
 </div>
 
@@ -107,10 +108,19 @@
     </div>
 
     <div class="wrap fig-row knock">
-      <p class="cap"><b>Fig. 01</b> · Traffic generators fire packets through a switch to the verifiers, one burst per beat at 120 BPM. What my test bench does, on my game's clock.<span class="needs-js"> The pointer bends the lanes and brightens the traffic under it. Click or tap to send a burst from there. Hold, and one goes on every beat.</span></p>
-      <p class="cap readout needs-js" aria-hidden="true"><span id="verified">0</span> packets verified since you arrived</p>
-      <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
+      <p class="cap"><b>Fig. 01</b> · Traffic generators fire packets through a switch to the verifiers, one burst per beat at 120 BPM. What my test bench does, on my game's clock.<span class="needs-js"> The pointer bends the lanes and brightens the traffic under it. Click or tap to send a burst from there. Hold, and one goes on every beat.</span><span class="needs-js tapctl"> Tap on the beat and the burst goes out amber. Miss, and it dies red at the switch. PolyBall's own window: 60 ms either side.</span></p>
+      <div class="reads">
+        <p class="cap readout needs-js" aria-hidden="true"><span id="verified">0</span> packets verified since you arrived</p>
+        <p class="cap streak tapctl" id="streak" aria-hidden="true" hidden></p>
+      </div>
+      <span class="sr" id="tap-status" role="status"></span>
+      <div class="ctl">
+        <button class="btn-plain needs-js tapctl" type="button" id="tap">Tap on the beat</button>
+        <button class="btn-plain needs-js tapctl sound" type="button" id="sound" aria-pressed="false">Sound <i aria-hidden="true"></i></button>
+        <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
+      </div>
     </div>
+    <p class="chip tapctl" id="chip" aria-hidden="true" hidden></p>
   </section>
 
   <section class="sec" id="work" aria-labelledby="work-h">
@@ -348,26 +358,31 @@
     </ul>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
-      <p>Hand-written HTML and CSS. No framework, no trackers.</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
     </div>
   </div>
 </footer>
 
 <script type="module" src="/site.js"></script>
+<script type="module" src="/proof.js"></script>
 <script type="module">
 import { start } from '/trace.js';
 import { counters, reveal } from '/measure.js';
+import { taps } from '/tap.js';
 
 counters();
 reveal();
 
 // One clock drives everything that moves: the trace fires the beat, the status dot follows it, and
-// Pause stops both (WCAG 2.2.2).
+// Pause stops both (WCAG 2.2.2). Taps are judged against the same clock.
+const $ = (id) => document.getElementById(id);
+const tapper = taps({ tap: $('tap'), sound: $('sound'), line: $('streak'), status: $('tap-status'), chip: $('chip') });
 const beat = document.getElementById('beat');
 let phase = false;
 const trace = start(document.getElementById('trace'), {
   fallback: document.getElementById('trace2d'),
   onBeat: () => { phase = !phase; beat.classList.toggle('on', phase); },
+  onTap: tapper.onTap,
 });
 document.addEventListener('theme-change', () => trace.recolor());
 
@@ -377,11 +392,12 @@ pause.addEventListener('click', () => {
   pause.dataset.paused = String(p);
   p ? trace.pause() : trace.resume();
 });
+tapper.bind(trace, pause);
 
 const verified = document.getElementById('verified');
 setInterval(() => { verified.textContent = trace.verified().toLocaleString('en-GB'); }, 250);
 
-if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__trace = trace; // gate hook
+if (['localhost', '127.0.0.1'].includes(location.hostname)) { window.__trace = trace; window.__taps = tapper; } // gate hooks
 </script>
 </body>
 </html>
