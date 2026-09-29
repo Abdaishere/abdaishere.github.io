@@ -130,6 +130,13 @@ html:not(.js) .needs-js { display: none; }
 /* Set by trace.js for as long as a press on the hero lasts: dragging to play with the trace was
    painting a selection across the name. */
 .hero.pressing { -webkit-user-select: none; user-select: none; }
+/* On a touchscreen every long press on the hero is a hold on the trace, and Android answers a long
+   press with word selection and its Copy/Search bar no matter what a pointer class says by then.
+   So touch heroes are simply not selectable. Links keep their own long-press menu. */
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  .hero { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .hero a { -webkit-touch-callout: default; }
+}
 .hero.tall { min-height: calc(100svh - var(--head) - 2.25rem); }
 /* An inner page keeps the trace as atmosphere, not as the event: fewer lanes, dimmer, and the
    first section starts inside the first screen. */
@@ -310,6 +317,14 @@ figure.panel > .cap:first-child { margin: 0 0 1rem; }
   transition: color var(--t), border-color var(--t), background-color var(--t), opacity var(--t);
 }
 .dnode:hover { color: var(--ink); border-color: var(--ink); }
+/* Fig. 05's device counters: how many generators and verifiers the drawing has. */
+.fleet { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; }
+.fleet-row { display: inline-flex; align-items: center; gap: 0.4rem; }
+.fleet-name { font: 500 0.6875rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); margin-right: 0.2rem; }
+.fleet output { min-width: 2ch; text-align: center; font: 500 0.9375rem/1 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.fleet .btn-plain { width: 44px; padding: 0; font-size: 1rem; letter-spacing: 0; }
+.fleet .btn-plain[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
+.fleet .btn-plain[aria-disabled="true"]:hover { color: var(--mid); border-color: var(--line); }
 /* The burst belongs to the moving model. The still diagram has none, so its caption stops offering one. */
 #traffic:not(:has(.model.live)) .live-only { display: none; }
 /* Off has to read as off, not as dimmer: the box empties out to the figure's own background, the

@@ -37,6 +37,7 @@
 
 const root = document.documentElement;
 const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const coarse = matchMedia('(pointer: coarse)');
 
 const GLSL_BEND = `
 uniform vec2 uRes, uPtr; uniform float uSwX, uAge, uPar, uPtrW;
@@ -86,7 +87,7 @@ void main() {
   if (t < 0.0 || x0 > uRes.x + 20.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vNear = 0.0; return; }
   float ly = (aA.y + 0.5 - 0.5 * far) * uRes.y / uN;
   float x = mix(x0, x1, aUV.x);
-  float y = ly + bend(x, ly, far) + aUV.y * mix(1.6, 1.1, far);
+  float y = ly + bend(x, ly, far) + aB.z * exp(-max(0.0, x - aB.w) / 160.0) + aUV.y * mix(1.6, 1.1, far);   // aB.z: born off-lane under the pointer, eases on
   gl_Position = vec4(clip(vec2(x, y)), 0.0, 1.0);
   vUV = aUV; vAlpha = aB.x * mix(1.0, 0.4, far); vSeen = step(uSwX, x1); vNear = near(vec2(x, y));
 }`;
@@ -105,7 +106,7 @@ void main() {
   float x1 = -20.0 + aA.z * t;
   if (t < 0.0 || x1 - aA.w > uRes.x + 20.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vUV = vec2(0.0); vAlpha = 0.0; vSeen = 0.0; vK = 1.0; vHalf = 1.0; vNear = 0.0; return; }
   float ly = (aA.y + 0.5 - 0.5 * far) * uRes.y / uN;
-  float y = ly + bend(x1, ly, far);
+  float y = ly + bend(x1, ly, far) + aB.z * exp(-max(0.0, x1 - aB.w) / 160.0);
   vSeen = step(uSwX, x1);
   vK = clamp((x1 - uSwX) / aA.z / 0.28, 0.0, 1.0);                                      // verification ring, 0..1 over 280 ms
   float ring = (vSeen > 0.5 && vK < 1.0) ? 5.0 + 16.0 * vK : 0.0;
@@ -180,7 +181,8 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   };
   const rnd = (a, b) => a + Math.random() * (b - a);
   // spawn: `far` packets run slower and dimmer on the lanes between the near ones; `pre` scatters them mid-flight;
-  // `at` = [x, y] starts them under the pointer on its nearest lane (the click burst and the held pump)
+  // `at` = [x, y] starts them right under the pointer, heads on it, and lets them ease onto the nearest lane
+  // over the next ~160 px (the click burst and the held pump)
   const spawn = (count, far, pre, at) => {
     const sp = H / N;
     for (let i = 0; i < count && live < CAP - 1; i++) {
@@ -188,8 +190,10 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
       cursor = (s + 1) % CAP;
       const v = far ? rnd(140, 240) : rnd(240, 420);
       const lane = at ? Math.min(N - 1, Math.max(far ? 1 : 0, Math.round(at[1] / sp - (far ? 0 : 0.5)))) : far ? 1 + Math.floor(Math.random() * (N - 1)) : Math.floor(Math.random() * N);
-      const t0 = at ? time - (at[0] + 20 - rnd(0, 60)) / v : pre ? time - rnd(0, (W + 40) / v) : time + rnd(0, 0.18);
-      inst.set([t0, lane, v, rnd(24, 90) * (far ? 0.7 : 1), rnd(0.6, 1), far, 0, 0], s * 8);
+      const x = at ? at[0] - rnd(0, 10) : 0;
+      const t0 = at ? time - (x + 20) / v : pre ? time - rnd(0, (W + 40) / v) : time + rnd(0, 0.18);
+      const dy = at ? at[1] + rnd(-3, 3) - (lane + 0.5 - 0.5 * far) * sp : 0;
+      inst.set([t0, lane, v, rnd(24, 90) * (far ? 0.7 : 1), rnd(0.6, 1), far, dy, x], s * 8);
       seen[s] = 0; live++; dirty = true;
     }
   };
@@ -232,7 +236,7 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
   recolor(); size();
   const still = calm.matches;
   const seedCount = () => Math.max(6, Math.round(N * 2));
-  let io = null, paused = false, lost = false, raf = 0, last = 0, onScreen = true, beatIdx = 0, tBeat = 0, trickle = 0;
+  let io = null, paused = false, lost = false, raf = 0, last = 0, onScreen = true, beatIdx = 0, tBeat = 0, trickle = 0, pump = 0;
   const ro = new ResizeObserver(() => { size(); if (still) { inst.fill(1e9); live = 0; spawn(seedCount(), 0, true); spawn(seedCount() - 4, 1, true); sweep(); draw(0); } });
   ro.observe(canvas);
   const api = {
@@ -258,8 +262,9 @@ function startGL(canvas, { beatMs = 500, lanes = 12, onBeat, onLost, dprCap = 2,
     const idx = Math.floor(tBeat / beatMs);
     if (idx !== beatIdx) {
       beatIdx = idx; flash = 1; age = 0; spawn(W < 720 ? 4 : 8, 0); spawn(W < 720 ? 3 : 6, 1); onBeat?.();
-      if (held) { spawn(3, 0, false, [tx, ty]); spawn(2, 1, false, [tx, ty]); }   // held: the pump fires on the beat, from under the pointer
+      if (held) { spawn(3, 0, false, [tx, ty]); spawn(2, 1, false, [tx, ty]); }   // held: a bigger shot on the beat
     }
+    if (held) { pump += dt; while (pump > 0.07) { pump -= 0.07; spawn(1, 0, false, [tx, ty]); } }   // and a steady stream from under the pointer between beats
     trickle += dt; if (trickle > 0.09) { trickle = 0; spawn(1, 0); spawn(1, 1); } // steady background traffic between bursts
     flash = Math.max(0, flash - dt / 0.3);
     const k = Math.min(1, dt * 12);
@@ -311,10 +316,11 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     switchX = W < 720 ? W * 0.84 : W * 0.62;
   };
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const spawn = (count, at) => { // `at` = [x, y]: start under the pointer on its nearest lane
+  const spawn = (count, at) => { // `at` = [x, y]: start right under the pointer, then ease onto its nearest lane
     for (let i = 0; i < count && packets.length < 400; i++) {
       const lane = at ? lanes[Math.min(lanes.length - 1, Math.max(0, Math.round(at[1] / (H / lanes.length) - 0.5)))] : lanes[Math.floor(Math.random() * lanes.length)];
-      packets.push({ lane, x: at ? at[0] - rnd(0, 60) : rnd(-90, -20), len: rnd(24, 90), v: rnd(240, 420), a: rnd(0.6, 1), seen: false });
+      const x = at ? at[0] - rnd(0, 10) : rnd(-90, -20);
+      packets.push({ lane, x, sx: x, dy: at ? at[1] + rnd(-3, 3) - lane.y : 0, len: rnd(24, 90), v: rnd(240, 420), a: rnd(0.6, 1), seen: false });
     }
   };
   // lane bend: a spring toward the pointer, strongest right under it, max 24 px
@@ -322,7 +328,7 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     const dx = (x - px) / 220, g = Math.exp(-dx * dx);
     return Math.max(-24, Math.min(24, (py - lane.y) * 0.15)) * g;
   };
-  const yAt = (x, lane) => lane.y + bend(x, lane);
+  const yAt = (x, lane, p) => lane.y + bend(x, lane) + (p && p.dy ? p.dy * Math.exp(-Math.max(0, x - p.sx) / 160) : 0);
   const draw = (dt) => {
     ctx.clearRect(0, 0, W, H);
     ctx.lineCap = 'round';
@@ -338,11 +344,11 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     ctx.lineWidth = 2.5;
     for (const p of packets) {
       p.x += p.v * dt;
-      if (!p.seen && p.x >= switchX) { p.seen = true; verified++; ticks.push({ x: switchX, y: yAt(switchX, p.lane), t: 0 }); }
+      if (!p.seen && p.x >= switchX) { p.seen = true; verified++; ticks.push({ x: switchX, y: yAt(switchX, p.lane, p), t: 0 }); }
       const x0 = p.x - p.len, x1 = p.x;
       ctx.strokeStyle = p.seen ? col.sig : col.ink; ctx.globalAlpha = p.a * (p.seen ? 0.95 : 0.8);
-      ctx.beginPath(); ctx.moveTo(x0, yAt(x0, p.lane)); ctx.lineTo((x0 + x1) / 2, yAt((x0 + x1) / 2, p.lane)); ctx.lineTo(x1, yAt(x1, p.lane)); ctx.stroke();
-      ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(x1, yAt(x1, p.lane), 3, 0, 6.28); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x0, yAt(x0, p.lane, p)); ctx.lineTo((x0 + x1) / 2, yAt((x0 + x1) / 2, p.lane, p)); ctx.lineTo(x1, yAt(x1, p.lane, p)); ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(x1, yAt(x1, p.lane, p), 3, 0, 6.28); ctx.fill();
     }
     packets = packets.filter((p) => p.x - p.len < W + 10);
     for (const t of ticks) { // verification tick: a ring that blooms and fades in 280 ms
@@ -365,7 +371,7 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     return { pause() {}, resume() {}, burst() {}, recolor: () => { recolor(); draw(0); }, dispose() { ro.disconnect(); }, paused: () => true, verified: () => verified0 + packets.filter((p) => p.seen).length, mode: '2d' };
   }
 
-  let raf = 0, last = 0, paused = false, onScreen = true, beatIdx = 0, tBeat = 0;
+  let raf = 0, last = 0, paused = false, onScreen = true, beatIdx = 0, tBeat = 0, held = false, pump = 0;
   const frame = (now) => {
     raf = 0;
     if (paused || !onScreen || document.hidden) { last = 0; return; }
@@ -374,6 +380,7 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
     const idx = Math.floor(tBeat / beatMs);
     if (idx !== beatIdx) { beatIdx = idx; flash = 1; spawn(W < 720 ? 4 : 8); onBeat?.(); }
     trickle += dt; if (trickle > 0.09) { trickle = 0; spawn(1); }
+    if (held) { pump += dt; while (pump > 0.07) { pump -= 0.07; spawn(1, [px, py]); } }   // held: a steady stream from under the pointer
     flash = Math.max(0, flash - dt / 0.3);
     draw(dt);
     raf = requestAnimationFrame(frame);
@@ -385,8 +392,9 @@ function start2D(canvas, { beatMs = 500, lanes: laneCount = 12, onBeat, verified
   const host = canvas.parentElement; // the section, not the canvas: see startGL
   const at = (e) => { const r = canvas.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; };
   host.addEventListener('pointermove', at, { passive: true });
-  host.addEventListener('pointerleave', () => { px = py = -1e9; });
-  host.addEventListener('pointerdown', (e) => { if (e.target.closest('a, button') || e.button > 0) return; at(e); spawn(W < 720 ? 6 : 10, [px, py]); flash = 1; }, { passive: true });
+  host.addEventListener('pointerleave', () => { px = py = -1e9; held = false; });
+  host.addEventListener('pointerdown', (e) => { if (e.target.closest('a, button') || e.button > 0) return; at(e); held = true; spawn(W < 720 ? 6 : 10, [px, py]); flash = 1; }, { passive: true });
+  const release = () => { held = false; }; host.addEventListener('pointerup', release); host.addEventListener('pointercancel', release);
   spawn(24); for (const p of packets) p.x = rnd(0, W); go();
   return {
     pause() { paused = true; }, resume() { paused = false; go(); }, burst() { spawn(8); flash = 1; },
@@ -422,6 +430,11 @@ export function start(canvas, opts = {}) {
     host.classList.add('pressing');
   }, { passive: true });
   addEventListener('pointerup', unpress); addEventListener('pointercancel', unpress);
+  // Belt and braces for touch: Android starts its long-press word selection after the pointer has
+  // already been cancelled, so the class alone is gone by then. The CSS keeps touch heroes
+  // unselectable; these catch whatever still slips through on a press.
+  host.addEventListener('selectstart', (e) => { if (host.classList.contains('pressing') || coarse.matches && !calm.matches) e.preventDefault(); });
+  host.addEventListener('contextmenu', (e) => { if (coarse.matches && !calm.matches && !e.target.closest('a, button, input, textarea')) e.preventDefault(); });
   return {
     pause: () => impl.pause(), resume: () => impl.resume(), burst: () => impl.burst(), recolor: () => impl.recolor(),
     dispose: () => impl.dispose(), paused: () => impl.paused(), verified: () => impl.verified(),

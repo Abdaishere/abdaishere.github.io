@@ -160,7 +160,11 @@
           <p class="tally" aria-hidden="true"><span class="wide-only">In this drawing, since you arrived</span><span><b id="c-sent">0</b> sent</span><span><b id="c-ok">0</b> verified</span><span><b id="c-lost">0</b> lost</span></p>
         </div>
         <figcaption class="fig-row">
-          <p class="cap" id="traffic-cap"><b>Fig. 05</b> &#183; E&#8209;Jam with the traffic on. Generator nodes on the left fire packets down their own stream to the switch under test, and the switch forwards each one to the verifier that is expecting it. Every packet turns amber for the instant it is inside the switch. That amber is the stamp the verifier prices the delay from. Not every frame comes out the far side, and the tally is what notices, which is the whole reason a frame carries a sequence number. The layout and the counters describe this drawing, not a measured run.<span class="needs-js"> The nodes are buttons. Turn a generator off and its stream stops: nothing more is sent, so nothing on that lane can be lost. Turn a verifier off and the stream still crosses the switch, but nobody checks the far end, so every frame on it counts as lost.<span class="live-only"> Click anywhere else on the figure to send a burst.</span></span></p>
+          <p class="cap" id="traffic-cap"><b>Fig. 05</b> &#183; E&#8209;Jam with the traffic on. Generator nodes on the left fire packets down their own stream to the switch under test, and the switch forwards each one to the verifier that is expecting it. Every packet turns amber for the instant it is inside the switch. That amber is the stamp the verifier prices the delay from. Not every frame comes out the far side, and the tally is what notices, which is the whole reason a frame carries a sequence number. The layout and the counters describe this drawing, not a measured run.<span class="needs-js"> The nodes are buttons. Turn a generator off and its stream stops: nothing more is sent, so nothing on that lane can be lost. Turn a verifier off and the stream still crosses the switch, but nobody checks the far end, so every frame on it counts as lost. Add or remove generators and verifiers with the buttons under the figure. Each generator owns one stream, so with fewer verifiers than generators some verifiers check more than one.<span class="live-only"> Click anywhere else on the figure to send a burst.</span></span></p>
+          <div class="fleet needs-js" role="group" aria-label="Fig. 05 devices">
+            <span class="fleet-row"><span class="fleet-name" id="n-gen-l">Generators</span><button class="btn-plain" type="button" data-kind="gen" data-d="-1" aria-label="Remove a generator">&#8722;</button><output id="n-gen" aria-labelledby="n-gen-l">4</output><button class="btn-plain" type="button" data-kind="gen" data-d="1" aria-label="Add a generator">+</button></span>
+            <span class="fleet-row"><span class="fleet-name" id="n-ver-l">Verifiers</span><button class="btn-plain" type="button" data-kind="ver" data-d="-1" aria-label="Remove a verifier">&#8722;</button><output id="n-ver" aria-labelledby="n-ver-l">4</output><button class="btn-plain" type="button" data-kind="ver" data-d="1" aria-label="Add a verifier">+</button></span>
+          </div>
           <button class="btn-plain pause needs-js reserved" type="button" id="scene-pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> the model</span></button>
         </figcaption>
       </figure>
@@ -343,7 +347,7 @@ if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__trace = tra
  * is fetched until the figure is near the viewport, and nothing at all on a device asking for
  * reduced motion, saving data, short of memory, or without a WebGL context. Those keep the still
  * diagram, which is the whole point of drawing it first. */
-import { draw, applyState, variant, freshState } from './diagram.js';
+import { draw, applyState, variant, freshState, fit, LAYOUT } from './diagram.js';
 
 const model = document.querySelector('#traffic .model');
 const dgram = model.querySelector('.dgram');
@@ -361,18 +365,38 @@ let sceneApi = null, booting = false, gaveUp = false, onScreen = false, shown = 
 /* Which nodes the reader has left switched on. It lives here, not in the scene, because it has to
  * outlive the scene: the figure is redrawn at the breakpoint, three.js may never load at all, and
  * the still diagram answers to the same switchboard the moving one does. */
-const state = freshState();
-const apply = () => { applyState(dgram, dlabels, key, state); sceneApi?.setState(state); };
-
 let key = variant();
-draw(dgram, dlabels, key, { frozen: true });
-apply();
+const state = freshState(key);
+const fleet = document.querySelector('#traffic .fleet');
+// The device counts: 1 to the layout's max of each. Buttons at a limit say so with aria-disabled rather
+// than disabled, so a keyboard reader pressing + to the top keeps their focus.
+const fleetCounts = () => {
+  for (const kind of ['gen', 'ver']) {
+    document.getElementById('n-' + kind).textContent = state[kind].length;
+    for (const b of fleet.querySelectorAll(`[data-kind="${kind}"]`)) {
+      const n = state[kind].length + +b.dataset.d;
+      b.setAttribute('aria-disabled', String(n < 1 || n > LAYOUT[key].max));
+    }
+  }
+};
+const apply = () => { applyState(dgram, dlabels, key, state); sceneApi?.setState(state); fleetCounts(); };
+// A node added or removed moves every lane, so the diagram is redrawn. The moving scene rebuilds
+// its own geometry off the same state and keeps its clock and its tally.
+const redraw = () => { draw(dgram, dlabels, key, state, { frozen: true }); apply(); };
+redraw();
 
 model.addEventListener('click', (e) => {
   const b = e.target.closest('.dnode');
   if (!b) return;
   state[b.dataset.kind][+b.dataset.s] = b.getAttribute('aria-pressed') === 'false';
   apply();
+});
+fleet.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-kind]');
+  if (!b || b.getAttribute('aria-disabled') === 'true') return;
+  const list = state[b.dataset.kind];
+  if (+b.dataset.d > 0) list.push(true); else list.pop();
+  redraw();
 });
 
 async function boot() {
@@ -424,8 +448,8 @@ matchMedia('(min-width: 48rem)').addEventListener('change', () => {
   const wasLive = !!sceneApi;
   sceneApi?.dispose(); sceneApi = null; window.__scene = null;
   model.classList.remove('live');
-  draw(dgram, dlabels, key, { frozen: true });
-  apply();                                   // the reader's switches outlive the redraw
+  fit(state, key);
+  redraw();                                  // the reader's switches outlive the redraw
   if (wasLive) boot();
 });
 

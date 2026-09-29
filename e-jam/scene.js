@@ -19,12 +19,12 @@
  * exactly, so a packet at rest sits on its lane to the pixel.
  */
 import * as THREE from '/vendor/three.module.min.js';
-import { LAYOUT, stream, prng, freshState } from './diagram.js';
+import { LAYOUT, topology, prng, freshState } from './diagram.js';
 
 const BEAT = 0.5;        // seconds per beat, 120 BPM, the same clock as the rest of the site
 const CYCLE = 4 * BEAT;  // a packet's whole trip, so one wave crosses the switch every beat
 
-export function start(canvas, { lowPower = false, key = 'wide', onCount = null, state = freshState(), from = null } = {}) {
+export function start(canvas, { lowPower = false, key = 'wide', onCount = null, state = freshState(key), from = null } = {}) {
   const L = LAYOUT[key];
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: true, powerPreference: 'low-power' });
   let dprCap = lowPower ? 1.5 : 1.75;
@@ -77,18 +77,20 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   // How many packets each stream carries and how many of those this switch will not forward.
   // Per stream, not one global figure, so the loss a reader sees is the loss of the streams that
   // are actually running.
-  let nPer = [], dPer = [], onAttr = null;
+  let nPer = [], dPer = [], vOf = [], onAttr = null, shape = '';
   function build(n) {
-    const total = n * L.rows.length;
+    const T = topology(L, state);
+    shape = state.gen.length + 'x' + state.ver.length; vOf = T.streams.map((g) => g.v);
+    const total = n * T.streams.length;
     const pos = new Float32Array(total * 3), mid = new Float32Array(total * 3), end = new Float32Array(total * 3), data = new Float32Array(total * 4);
     const on = new Float32Array(total * 2);
     const rnd = prng(20260928);
     const spread = L.h * 0.03, put = (arr, i, v) => { arr[i * 3] = v.x; arr[i * 3 + 1] = v.y; arr[i * 3 + 2] = 0; };
     nPer = []; dPer = [];
     let i = 0;
-    L.rows.forEach((_, s) => {
-      const g = stream(L, s), a = up(g.a), b = up(g.b), c = up(g.c);
-      const gOn = state.gen[s] ? 1 : 0, vOn = state.ver[s] ? 1 : 0;
+    T.streams.forEach((g, s) => {
+      const a = up(g.a), b = up(g.b), c = up(g.c);
+      const gOn = state.gen[s] ? 1 : 0, vOn = state.ver[g.v] ? 1 : 0;
       let d = 0;
       for (let k = 0; k < n; k++, i++) {
         const off = (rnd() - 0.5) * spread, offB = (rnd() - 0.5) * spread;
@@ -120,13 +122,19 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
    * place: a reader turning a generator off is stopping a stream, not resetting the figure. */
   function setState(next) {
     state = next;
-    const a = onAttr.array;
-    let i = 0;
-    L.rows.forEach((_, s) => {
-      const g = state.gen[s] ? 1 : 0, v = state.ver[s] ? 1 : 0;
-      for (let k = 0; k < nPer[s]; k++, i++) { a[i * 2] = g; a[i * 2 + 1] = v; }
-    });
-    onAttr.needsUpdate = true;
+    // A node added or removed changes the lanes themselves: rebuild the geometry. Phases come off
+    // the same seed and the clock keeps running, so the traffic carries on rather than restarting.
+    if (state.gen.length + 'x' + state.ver.length !== shape) {
+      points.geometry.dispose(); points.geometry = build(perStream); api.packets = perStream * nPer.length;
+    } else {
+      const a = onAttr.array;
+      let i = 0;
+      nPer.forEach((n, s) => {
+        const g = state.gen[s] ? 1 : 0, v = state.ver[vOf[s]] ? 1 : 0;
+        for (let k = 0; k < n; k++, i++) { a[i * 2] = g; a[i * 2 + 1] = v; }
+      });
+      onAttr.needsUpdate = true;
+    }
     if (!raf) renderer.render(scene, camera);   // the figure is paused or off screen: show it anyway
   }
   const points = new THREE.Points(build(perStream), material);
@@ -185,8 +193,8 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   const onDown = (e) => { if (!e.target.closest('a,button')) uniforms.uBurst.value = 0; };
   host.addEventListener('pointerdown', onDown, { passive: true });
 
-  const api = { fps: 0, state: 'running', packets: perStream * L.rows.length, paused: false, setPaused, setState, dispose, counts: () => counts(),
-    streams: () => ({ n: nPer.slice(), d: dPer.slice() }) };  // per-stream packets and drops, for the gate
+  const api = { fps: 0, state: 'running', packets: perStream * nPer.length, paused: false, setPaused, setState, dispose, counts: () => counts(),
+    streams: () => ({ n: nPer.slice(), d: dPer.slice(), v: vOf.slice() }) };  // per-stream packets and drops, for the gate
 
   /* What the verifiers have checked, counted off the same clock the packets fly on rather than by
    * watching them: every packet completes exactly one trip per cycle, so the arithmetic is exact
@@ -208,9 +216,9 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   const seen = { lost: Math.max(0, from?.lost || 0), verified: Math.max(0, from?.verified || 0) };
   function tally(dt) {
     const laps = dt / CYCLE;
-    for (let s = 0; s < L.rows.length; s++) {
+    for (let s = 0; s < nPer.length; s++) {
       if (!state.gen[s]) continue;
-      if (state.ver[s]) { seen.lost += dPer[s] * laps; seen.verified += (nPer[s] - dPer[s]) * laps; }
+      if (state.ver[vOf[s]]) { seen.lost += dPer[s] * laps; seen.verified += (nPer[s] - dPer[s]) * laps; }
       else seen.lost += nPer[s] * laps;
     }
   }
@@ -246,7 +254,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
       if (!slow && strikes > 1) strikes = 1;     // only consecutive slow windows count toward giving up
       if (slow) {
         strikes++;
-        if (strikes === 1) { dprCap = 1; perStream = Math.round(perStream / 2); points.geometry.dispose(); points.geometry = build(perStream); api.packets = perStream * L.rows.length; resize(); }
+        if (strikes === 1) { dprCap = 1; perStream = Math.round(perStream / 2); points.geometry.dispose(); points.geometry = build(perStream); api.packets = perStream * nPer.length; resize(); }
         else if (strikes >= 3) { api.state = 'fallback'; canvas.dispatchEvent(new CustomEvent('scene-fallback', { bubbles: true })); dispose(); return; }
       }
       frames = 0; acc = 0;
