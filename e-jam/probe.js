@@ -84,7 +84,8 @@ export function probe(root, { scene, feed, lock, paused }) {
   function finishTrial() {
     const c = t.cur, f = feed(), sent = Math.round(f.sending * PER * (c.rate / 100) * (c.final ? FINAL : TRIAL));
     const over = Math.max(0, c.rate - t.limit) / c.rate, share = f.sending ? f.blind / f.sending : 0;
-    const lost = Math.round(sent * (share + (1 - share) * over));
+    // rounded up: a rate even a hair over the limit loses at least one frame, so it can never pass
+    const lost = Math.ceil(sent * (share + (1 - share) * over));
     const tr = { ...c, pass: lost === 0, lost };
     t.trials.push(tr);
     say(...head(c), `${lost.toLocaleString('en-GB')} lost`, tr.pass ? 'pass' : 'fail');

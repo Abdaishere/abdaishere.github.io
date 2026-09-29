@@ -68,7 +68,6 @@
 <div class="status">
   <div class="wrap status-in">
     <span>Dubai <span class="clock needs-js">--:--</span></span>
-    <span>120 BPM <i class="beat" id="beat" aria-hidden="true"></i></span>
     <span>Open to Rust · systems · backend</span>
     <span>Remote, or relocation with a visa</span>
     <a class="proof" id="proof" href="/polyball/#leaderboard" data-lead="PolyBall this month: best " hidden></a>
@@ -83,6 +82,15 @@
 
       <div class="copy knock">
         <p class="claim">I make slow systems fast.</p>
+        <div class="beatcard needs-js" id="beatcard" role="group" aria-label="Tap on the beat, 120 BPM">
+          <div class="bc-top">
+            <p class="bc-bpm"><span class="bc-pulse" aria-hidden="true"><svg viewBox="0 0 28 28" focusable="false"><circle class="bc-dot" cx="14" cy="14" r="5"/><circle class="bc-fill" cx="14" cy="14" r="5"/></svg><canvas class="bc-ring"></canvas></span>120 BPM</p>
+            <button class="btn-plain sound tapctl" type="button" id="sound" aria-pressed="false">Sound <i aria-hidden="true"></i></button>
+          </div>
+          <button class="btn-plain tapctl" type="button" id="tap">Tap on the beat</button>
+          <p class="bc-say tapctl" id="streak" aria-hidden="true"></p>
+          <p class="bc-calm">Motion is off, so the beat is too.</p>
+        </div>
         <p class="lede">Software engineer in Dubai. I build the software that tests network switches, the backends behind business software, and one rhythm game, on my own, from the synthesiser up.</p>
         <div class="cta">
           <a class="btn primary" href="#work">See the work</a>
@@ -109,18 +117,10 @@
 
     <div class="wrap fig-row knock">
       <p class="cap"><b>Fig. 01</b> · Traffic generators fire packets through a switch to the verifiers, one burst per beat at 120 BPM. What my test bench does, on my game's clock.<span class="needs-js"> The pointer bends the lanes and brightens the traffic under it. Click or tap to send a burst from there. Hold, and one goes on every beat.</span><span class="needs-js tapctl"> Tap on the beat and the burst goes out amber. Miss, and it dies red at the switch. PolyBall's own window: 60 ms either side.</span></p>
-      <div class="reads">
-        <p class="cap readout needs-js" aria-hidden="true"><span id="verified">0</span> packets verified since you arrived</p>
-        <p class="cap streak tapctl" id="streak" aria-hidden="true" hidden></p>
-      </div>
+      <p class="cap readout needs-js" aria-hidden="true"><span id="verified">0</span> packets verified since you arrived</p>
       <span class="sr" id="tap-status" role="status"></span>
-      <div class="ctl">
-        <button class="btn-plain needs-js tapctl" type="button" id="tap">Tap on the beat</button>
-        <button class="btn-plain needs-js tapctl sound" type="button" id="sound" aria-pressed="false">Sound <i aria-hidden="true"></i></button>
-        <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
-      </div>
+      <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
     </div>
-    <p class="chip tapctl" id="chip" aria-hidden="true" hidden></p>
   </section>
 
   <section class="sec" id="work" aria-labelledby="work-h">
@@ -373,15 +373,12 @@ import { taps } from '/tap.js';
 counters();
 reveal();
 
-// One clock drives everything that moves: the trace fires the beat, the status dot follows it, and
-// Pause stops both (WCAG 2.2.2). Taps are judged against the same clock.
+// One clock drives everything that moves: the trace fires the beat, the beat card's pulse reads the
+// same clock, and Pause stops both (WCAG 2.2.2). Taps are judged against it too.
 const $ = (id) => document.getElementById(id);
-const tapper = taps({ tap: $('tap'), sound: $('sound'), line: $('streak'), status: $('tap-status'), chip: $('chip') });
-const beat = document.getElementById('beat');
-let phase = false;
+const tapper = taps({ card: $('beatcard'), tap: $('tap'), sound: $('sound'), line: $('streak'), status: $('tap-status') });
 const trace = start(document.getElementById('trace'), {
   fallback: document.getElementById('trace2d'),
-  onBeat: () => { phase = !phase; beat.classList.toggle('on', phase); },
   onTap: tapper.onTap,
 });
 document.addEventListener('theme-change', () => trace.recolor());

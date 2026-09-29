@@ -201,20 +201,44 @@ h1 .line { display: block; }
 .readout { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .readout span { color: var(--signal); font-weight: 500; }
 .pause .p-off, .pause[data-paused="true"] .p-on { display: none; }
-/* tap.js: the hero's tap-on-the-beat controls and its line. Gone under reduced motion: no clock. */
-.reads { margin-left: auto; display: grid; justify-items: end; gap: 0.25rem; text-align: right; }
-.streak { font-variant-numeric: tabular-nums; color: var(--mid); }
-.ctl { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
-@media (max-width: 40rem) { .reads, .ctl { margin-left: 0; } .reads { justify-items: start; text-align: left; } }
-.chip { position: absolute; top: 12px; z-index: 1; margin: 0; padding: 4px 8px; background: var(--bg); font: 500 0.75rem/1.4 var(--mono); color: var(--ink); white-space: nowrap; pointer-events: none; opacity: 0; font-variant-numeric: tabular-nums; }
-.chip b { font-weight: 500; color: var(--signal); }
-.chip.miss { color: var(--mid); }
-.chip.on { opacity: 1; }
-@media (prefers-reduced-motion: no-preference) { .chip { transition: opacity 150ms; } }
+/* tap.js: the beat card. In the page flow after the claim (phones, tablets, and the focus order
+   everywhere); from 80rem it lifts into the hero's free top-right corner, right of "Abdallah"
+   (68.5% of the width) and above "El Belkasy" (77%). Narrower, the second line runs in under a
+   15rem card, so it stays in the flow. The copy block drops its position there so the card is
+   placed against the hero. */
+.beatcard { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); background: var(--panel); max-width: 22rem; }
+.bc-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; }
+.bc-bpm { display: flex; align-items: center; gap: 10px; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; color: var(--mid); }
+.bc-pulse { position: relative; width: 28px; height: 28px; flex: none; }
+.bc-pulse > * { position: absolute; inset: 0; width: 28px; height: 28px; }
+.bc-ring { color: var(--mut); }
+.bc-dot { fill: var(--line); }
+.bc-fill { fill: var(--signal); opacity: 0; }
+.beatcard #tap { width: 100%; }
+.bc-say { min-height: 2.8em; font: 400 0.75rem/1.4 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.bc-say b { font-weight: 500; color: var(--signal); }
+.bc-say .bc-off, .bc-say .bc-miss { color: var(--mid); }
+.bc-say .bc-line { display: block; }
+.bc-calm { display: none; font: 400 0.75rem/1.4 var(--mono); color: var(--mid); }
+.beatcard.held .bc-ring { visibility: hidden; }
+.beatcard.held .bc-dot { fill: var(--mut); }
 .sound i { width: 8px; height: 8px; border: 1px solid currentColor; }
 .sound[aria-pressed="true"] i { background: currentColor; }
 #tap[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
-@media (prefers-reduced-motion: reduce) { .tapctl { display: none !important; } }
+@media (max-width: 40rem) { .beatcard #tap { min-height: 48px; } .beatcard { max-width: none; } }
+@media (min-width: 80rem) {
+  .hero .copy.knock { position: static; }
+  .beatcard { position: absolute; top: 20px; right: max(var(--pad), (100% - 84rem) / 2); width: 15rem; }
+}
+/* Reduced motion: the card stays, still: a muted dot, the tempo, and why nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .tapctl, .bc-ring { display: none !important; }
+  .bc-dot { fill: var(--mut); }
+  /* nothing to press, so one line: the dot, the tempo, and why it is still */
+  .beatcard { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+  .bc-top { min-height: 0; }
+  .bc-calm { display: block; }
+}
 .pause[data-paused="true"] .p-off { display: inline; }
 @media (prefers-reduced-motion: reduce) { .pause { display: none; } }
 
@@ -482,7 +506,7 @@ html:not(.js) #traffic { display: none; }
    A CV or a case study printed from the browser should be a document, not a screenshot of one. */
 @media print {
   :root { --bg: #fff; --panel: #fff; --ink: #000; --mid: #333; --mut: #555; --line: #bbb; --signal: #000; --signal-fill: #000; --on-signal: #fff; }
-  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas, .chip, .ctl, .streak, .probe-row .btn-plain { display: none !important; }
+  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas, .beatcard, .probe-row .btn-plain { display: none !important; }
   /* print the diagram, not the canvas: the still packets and the inner ring come back */
   .model.live .dgram .pk, .model.live .dgram .ring.inner { opacity: 1; }
   .shot.paper { filter: none !important; }   /* paper prints as paper */
