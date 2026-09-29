@@ -35,7 +35,7 @@
   --signal: light-dark(#9A5A00, #F5A524);   /*  5.2:1      ·  9.6:1 as text */
   --signal-fill: light-dark(#B45309, #F5A524);
   --on-signal: light-dark(#FFFFFF, #0A0B0F);
-  --trace-alpha: 0.9;
+  --trace-alpha: 0.6;   /* 0.9 fought the name and the copy for attention (owner, 2026-09-29) */
 
   --display: "Bricolage", "Bricolage Fallback", system-ui, sans-serif;
   --sans: "Plex Sans", "Plex Fallback", system-ui, sans-serif;
@@ -194,7 +194,9 @@ h1 .line { display: block; }
 @media (prefers-reduced-motion: reduce) { .pause { display: none; } }
 
 @media (min-width: 53.75rem) {
-  .copy { grid-column: 1 / 8; }
+  /* The claim starts level with the first number beside it, so "I make slow systems fast" reads
+     as the headline of the evidence on the right rather than a footnote under it. */
+  .copy { grid-column: 1 / 8; align-self: start; }
   .ledger.in-hero { grid-column: 8 / -1; grid-template-columns: 1fr; border-top: 0; border-left: 1px solid var(--line); padding: 0 0 0 var(--gap); gap: 1.25rem; }
   .ledger.in-hero .m dd { font-size: clamp(2.25rem, 3.6vw, 4rem); }
 }
