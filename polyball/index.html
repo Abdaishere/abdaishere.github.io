@@ -1,314 +1,400 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-		<title>PolyBall</title>
-		<style>
-html, body, #canvas {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PolyBall: every note you hear, you played</title>
+<meta name="description" content="Drop the ball on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run. Free, in the browser or on Android.">
+<!-- Canonical host: abdaishere.com (GitHub Pages custom domain, web/CNAME). abdaishere.github.io
+     301s here. Change canonical, og:url, og:image and the JSON-LD url together. -->
+<link rel="canonical" href="https://abdaishere.com/polyball/">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/img/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-32.png?v=2" type="image/png" sizes="32x32">
+<link rel="icon" href="/img/favicon-192.png?v=2" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.com/polyball/">
+<meta property="og:site_name" content="PolyBall">
+<meta property="og:title" content="PolyBall: one miss ends the run">
+<meta property="og:description" content="Drop the ball on its own colour. Every catch makes the next one faster. One miss, and only one way back.">
+<!-- Absolute, not relative: every scraper (Facebook, Slack, Discord, X, LinkedIn) silently drops a
+     relative og:image. PNG, not WebP: Facebook and LinkedIn do not render a WebP og:image. -->
+<meta property="og:image" content="https://abdaishere.com/img/og/polyball.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PolyBall: the five-colour neon ring, the wordmark, the line Every note you hear, you played. One miss ends the run. Free on Android, play in your browser.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/polyball.png">
+<meta name="twitter:image:alt" content="PolyBall: the five-colour neon ring and the line Every note you hear, you played.">
 
-body {
-	color: white;
-	background-color: black;
-	overflow: hidden;
-	touch-action: none;
-}
+<!-- Everything this page loads: site.css, boot.js, site.js, page.js, board.js, self-hosted woff2,
+     one Supabase origin (read-only leaderboard), the game in a same-origin frame, and the trailer
+     iframe only after a click. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; frame-src 'self' https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'">
 
-#canvas {
-	display: block;
-}
-
-#canvas:focus {
-	outline: none;
-}
-
-#status, #status-splash, #status-progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-}
-
-#status, #status-splash {
-	top: 0;
-	bottom: 0;
-}
-
-#status {
-	background-color: #08090c;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	visibility: hidden;
-}
-
-#status-splash {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto;
-}
-
-#status-splash.show-image--false {
-	display: none;
-}
-
-#status-splash.fullsize--true {
-	height: 100%;
-	width: 100%;
-	object-fit: contain;
-}
-
-#status-splash.use-filter--false {
-	image-rendering: pixelated;
-}
-
-#status-progress, #status-notice {
-	display: none;
-}
-
-#status-progress {
-	bottom: 10%;
-	width: 50%;
-	margin: 0 auto;
-}
-
-#status-notice {
-	background-color: #5b3943;
-	border-radius: 0.5rem;
-	border: 1px solid #9b3943;
-	color: #e0e0e0;
-	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
-	line-height: 1.3;
-	margin: 0 2rem;
-	overflow: hidden;
-	padding: 1rem;
-	text-align: center;
-	z-index: 1;
-}
-		</style>
-		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
-<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-<!-- Share card for links to /polyball/ (tools/make_og.py). Single-quoted attributes: this whole block is one cfg string. -->
-<meta name='description' content='Play PolyBall in your browser. Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run.'>
-<meta property='og:type' content='website'>
-<meta property='og:url' content='https://abdaishere.com/polyball/'>
-<meta property='og:site_name' content='PolyBall'>
-<meta property='og:title' content='Play PolyBall in your browser'>
-<meta property='og:description' content='Drop the ball on its own colour. Every catch makes the next one faster. One miss ends the run. No download.'>
-<meta property='og:image' content='https://abdaishere.com/img/og/play.png'>
-<meta property='og:image:type' content='image/png'>
-<meta property='og:image:width' content='1200'>
-<meta property='og:image:height' content='630'>
-<meta property='og:image:alt' content='PolyBall: the five-colour neon ring and the line Play in your browser. Drop the ball on its own colour. One miss ends the run.'>
-<meta name='twitter:card' content='summary_large_image'>
-<meta name='twitter:image' content='https://abdaishere.com/img/og/play.png'>
-<script>
-// Godot's web Sample playback fakes loops: on 'ended' it starts a new source (a gap)
-// from the FIRST play()'s offset, so the looping bed drifted and clicked every 19.2 s.
-// The bed is the only looping sound and the only buffer over 10 s: loop it natively.
-window.AudioBufferSourceNode && (() => {
-	const start = AudioBufferSourceNode.prototype.start;
-	AudioBufferSourceNode.prototype.start = function (when = 0, offset = 0, ...rest) {
-		if (this.buffer && this.buffer.duration > 10) {
-			this.loop = true;
-			offset %= this.buffer.duration;
-		}
-		return start.call(this, when, offset, ...rest);
-	};
-})();
-// iOS Safari plays a WebAudio-only page in the AMBIENT audio session, which the
-// hardware ringer switch silences, and its AudioContext only resumes inside a real
-// gesture handler. Track every context; on each tap resume it synchronously and keep
-// a silent looping audio element playing, which promotes the page to a media session
-// the ringer switch no longer mutes. Everything here is guarded: on a browser that
-// never needed it, the element simply plays silence.
-try {
-	const AC = window.AudioContext || window.webkitAudioContext;
-	if (AC) {
-		const ctxs = [];
-		class TrackedAudioContext extends AC {
-			constructor(...args) {
-				super(...args);
-				ctxs.push(this);
-			}
-		}
-		window.AudioContext = TrackedAudioContext;
-		if (window.webkitAudioContext) {
-			window.webkitAudioContext = TrackedAudioContext;
-		}
-		// 0.5 s of 8-bit silence, built here so the shim carries no base64 payload.
-		const silentUrl = () => {
-			const rate = 8000, frames = rate / 2, b = new Uint8Array(44 + frames);
-			const view = new DataView(b.buffer);
-			const tag = (off, s) => {
-				for (let i = 0; i < s.length; i++) b[off + i] = s.charCodeAt(i);
-			};
-			tag(0, 'RIFF');
-			view.setUint32(4, 36 + frames, true);
-			tag(8, 'WAVEfmt ');
-			view.setUint32(16, 16, true);
-			view.setUint16(20, 1, true);
-			view.setUint16(22, 1, true);
-			view.setUint32(24, rate, true);
-			view.setUint32(28, rate, true);
-			view.setUint16(32, 1, true);
-			view.setUint16(34, 8, true);
-			tag(36, 'data');
-			view.setUint32(40, frames, true);
-			b.fill(128, 44);
-			return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
-		};
-		let el = null;
-		const kick = () => {
-			try {
-				for (const c of ctxs) {
-					if (c.state !== 'running') c.resume();
-				}
-				if (el === null) {
-					el = new Audio(silentUrl());
-					el.loop = true;
-					el.setAttribute('playsinline', '');
-				}
-				if (el.paused) el.play().catch(() => {});
-			} catch (err) { /* never break the game over audio */ }
-		};
-		for (const type of ['touchend', 'pointerup', 'mouseup', 'click', 'keydown']) {
-			window.addEventListener(type, kick, { capture: true });
-		}
-		// Read from the console (or the /audio-test.html page) when diagnosing.
-		window.polyballAudioState = () => ({
-			contexts: ctxs.map((c) => c.state + ' @' + c.sampleRate),
-			silentLoop: el !== null && !el.paused,
-		});
-	}
-} catch (err) { /* no audio fix, but the game still boots */ }
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/polyball/",
+"description":"A colour-matching arcade game. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
+"image":"https://abdaishere.com/img/og/polyball.png","genre":["Arcade","Casual","Music"],
+"gamePlatform":["Android","Web browser","Windows","macOS","Linux"],"applicationCategory":"GameApplication",
+"playMode":"SinglePlayer","inLanguage":"en",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"author":{"@type":"Person","name":"Abdallah El Belkasy"}}
 </script>
-	</head>
-	<body>
-		<canvas id="canvas">
-			Your browser does not support the canvas tag.
-		</canvas>
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<style>
+/* The one page that gets more than one accent: this is the game's home, and the ring is its mark.
+   The five colours come from web/brand/ and the game's own theme. */
+:root { --r-green: #4BD86B; --r-cyan: #3FD0E0; --r-magenta: #F45CD0; --r-yellow: #FFD23F; --r-red: #FF5A5A; --gold: light-dark(#8A5E00, #FFC24B); }
+.ring-line { height: 2px; border: 0; margin: 0; background: linear-gradient(90deg, var(--r-green), var(--r-cyan), var(--r-magenta), var(--r-yellow), var(--r-red)); }
+.wordmark { width: min(100%, 26rem); height: auto; }
 
-		<noscript>
-			Your browser does not support JavaScript.
-		</noscript>
+/* the play stage: a 9:16 frame holding the poster, then the game itself */
+.stage { position: relative; width: min(100%, 22rem); aspect-ratio: 9 / 16; border: 1px solid var(--line); background: #08090C; overflow: hidden; }
+.stage > img, .stage > iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.stage > img { object-fit: cover; }
+.play-col { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+/* The one line on this page written for a hiring manager rather than a player. It is in the first
+   screen on purpose, in the game's own tone, and the hairline is what keeps it from reading as
+   more marketing copy. */
+.engineer { max-width: 52ch; padding-top: 0.9rem; border-top: 1px solid var(--line); font: 500 0.75rem/1.7 var(--mono); letter-spacing: 0.02em; color: var(--mut); }
+.engineer a { color: var(--signal); white-space: nowrap; }
 
-		<div id="status">
-			<img id="status-splash" class="show-image--false fullsize--true use-filter--true" src="index.png" alt="">
-			<progress id="status-progress"></progress>
-			<div id="status-notice"></div>
-		</div>
+/* trailer: click to load, so nothing is requested from YouTube until asked */
+.trailer { position: relative; display: block; width: min(100%, 60rem); aspect-ratio: 16 / 9; padding: 0; border: 1px solid var(--line); background: #000; cursor: pointer; overflow: hidden; }
+.trailer img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: opacity var(--t); }
+.trailer:hover img { opacity: 1; }
+.trailer .play-mark { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; background: var(--signal-fill); color: var(--on-signal); display: grid; place-items: center; }
+.trailer .play-mark svg { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; }
+.trailer .len { position: absolute; left: 0.75rem; bottom: 0.75rem; padding: 0.35rem 0.6rem; background: rgba(0, 0, 0, 0.72); color: #fff; font: 500 0.75rem/1 var(--mono); }
 
-		<script src="index.js"></script>
-		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":9866264,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
-const GODOT_THREADS_ENABLED = false;
-const engine = new Engine(GODOT_CONFIG);
+.rail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+.rail figure { margin: 0; }
+.rail img { width: 100%; height: auto; border: 1px solid var(--line); }
+.rail figcaption { margin-top: 0.5rem; font: 400 0.75rem/1.5 var(--mono); color: var(--mut); }
+@media (max-width: 40rem) { .rail { grid-template-columns: repeat(3, minmax(0, 1fr)); } .rail figure:nth-child(n+4) { display: none; } }
 
-(function () {
-	const statusOverlay = document.getElementById('status');
-	const statusProgress = document.getElementById('status-progress');
-	const statusNotice = document.getElementById('status-notice');
+.modes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.modes > div { border-top: 3px solid var(--mc); padding-top: 0.85rem; }
+.modes h3 { font: 700 1.25rem/1.2 var(--display); letter-spacing: -0.01em; }
+.modes p { margin-top: 0.35rem; color: var(--mid); }
+@media (max-width: 53.75rem) { .modes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 30rem) { .modes { grid-template-columns: 1fr; } }
 
-	let initializing = true;
-	let statusMode = '';
+/* the cup teaser's player cards, in v3 tokens. The plate cosmetics (flair frames, name fonts)
+   stay on /polyball/leaderboard/, which keeps the game's own dark palette. */
+#cupTop { display: grid; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.pcard { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; border: 1px solid var(--line); padding: 0.75rem 1rem; }
+.pcard.first { border-color: var(--gold); }
+.pcard .rank { width: 1.75rem; text-align: center; font: 700 1.125rem/1 var(--mono); color: var(--mut); }
+.pcard.first .rank, .pcard.first .score { color: var(--gold); }
+.pcard .nm { font: 600 1.0625rem/1.2 var(--sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pcard .ti { font: 500 0.75rem/1.4 var(--mono); color: var(--mut); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pcard .score { font: 700 1.375rem/1 var(--display); font-variant-numeric: tabular-nums; }
+.pcard .plat { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--mut); font: 500 0.6875rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.pcard .plat svg { width: 18px; height: 18px; }
+.pcard .plat:empty { display: none; }
+@media (max-width: 40rem) { .pcard { gap: 0.5rem; } .pcard .plat span { display: none; } }
 
-	function setStatusMode(mode) {
-		if (statusMode === mode || !initializing) {
-			return;
-		}
-		if (mode === 'hidden') {
-			statusOverlay.remove();
-			initializing = false;
-			return;
-		}
-		statusOverlay.style.visibility = 'visible';
-		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
-		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
-		statusMode = mode;
-	}
+/* the band: the game's note engine in miniature (band.js). Keys are the five ring colours with dark
+   numerals, which clear 6.9:1 on the palest of them in either theme. */
+.band { margin: 0; display: grid; gap: 1rem; border: 1px solid var(--line); background: var(--panel); padding: clamp(1rem, 3vw, 1.5rem); }
+.band-keys { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.5rem; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.band-key { aspect-ratio: 1; min-height: 44px; border: 0; background: var(--k); color: #0A0B0F; font: 700 1.25rem/1 var(--display); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.band-key:active { filter: brightness(1.15); }
+@media (prefers-reduced-motion: no-preference) {
+  .band-key.hit { animation: band-hit 260ms var(--ease-out); }
+  @keyframes band-hit { from { transform: scale(0.9); } to { transform: none; } }
+}
+.band-read { display: flex; gap: 1.5rem; margin: 0; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); }
+.band-read b { color: var(--ink); font-variant-numeric: tabular-nums; text-transform: none; }   /* Am, not AM: case is the chord quality */
+.band-layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.band-layers li { border: 1px dashed var(--line); padding: 0.5rem 0.6rem; font: 600 0.875rem/1.2 var(--sans); color: var(--mut); transition: color var(--t), border-color var(--t); }
+.band-layers li span { display: block; font: 400 0.6875rem/1.4 var(--mono); }
+/* in = playing: solid border and full ink, so it does not rest on colour alone */
+.band-layers li.in { border-style: solid; border-color: var(--signal); color: var(--ink); }
 
-	function setStatusNotice(text) {
-		while (statusNotice.lastChild) {
-			statusNotice.removeChild(statusNotice.lastChild);
-		}
-		const lines = text.split('\n');
-		lines.forEach((line) => {
-			statusNotice.appendChild(document.createTextNode(line));
-			statusNotice.appendChild(document.createElement('br'));
-		});
-	}
+.dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--gap); }
+.dl-card { display: flex; align-items: center; gap: 1rem; border: 1px solid var(--line); padding: 1rem; color: inherit; text-decoration: none; min-height: 88px; transition: border-color var(--t); }
+.dl-card:hover { border-color: var(--ink); }
+.dl-card svg { width: 28px; height: 28px; flex: none; color: var(--mid); }
+.dl-card b { display: block; font: 600 1.0625rem/1.25 var(--sans); }
+.dl-card span { font: 400 0.75rem/1.5 var(--mono); color: var(--mut); }
+</style>
+<script src="/boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
 
-	function displayFailureNotice(err) {
-		console.error(err);
-		if (err instanceof Error) {
-			setStatusNotice(err.message);
-		} else if (typeof err === 'string') {
-			setStatusNotice(err);
-		} else {
-			setStatusNotice('An unknown error occurred.');
-		}
-		setStatusMode('notice');
-		initializing = false;
-	}
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top"><img src="/brand/wordmark-ring.svg" alt="PolyBall" width="103" height="30"></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#trailer">Trailer</a>
+      <a href="#modes">Modes</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#get">Get it</a>
+      <a href="#built">How it's built</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
 
-	const missing = Engine.getMissingFeatures({
-		threads: GODOT_THREADS_ENABLED,
-	});
+<main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span>Free to play</span>
+    <span>Android · browser · desktop</span>
+    <span>No sign-up</span>
+    <span>Version 0.9.6</span>
+  </div>
+</div>
 
-	if (missing.length !== 0) {
-		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
-			let serviceWorkerRegistrationPromise;
-			try {
-				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
-			} catch (err) {
-				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
-			}
-			// There's a chance that installing the service worker would fix the issue
-			Promise.race([
-				serviceWorkerRegistrationPromise.then((registration) => {
-					if (registration != null) {
-						return Promise.reject(new Error('Service worker already exists.'));
-					}
-					return registration;
-				}).then(() => engine.installServiceWorker()),
-				// For some reason, `getRegistration()` can stall
-				new Promise((resolve) => {
-					setTimeout(() => resolve(), 2000);
-				}),
-			]).then(() => {
-				// Reload if there was no error.
-				window.location.reload();
-			}).catch((err) => {
-				console.error('Error while registering service worker:', err);
-			});
-		} else {
-			// Display the message as usual
-			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
-			displayFailureNotice(missingMsg + missing.join('\n'));
-		}
-	} else {
-		setStatusMode('progress');
-		engine.startGame({
-			'onProgress': function (current, total) {
-				if (current > 0 && total > 0) {
-					statusProgress.value = current;
-					statusProgress.max = total;
-				} else {
-					statusProgress.removeAttribute('value');
-					statusProgress.removeAttribute('max');
-				}
-			},
-		}).then(() => {
-			setStatusMode('hidden');
-		}, displayFailureNotice);
-	}
-}());
-		</script>
-	</body>
+  <section class="hero" id="top" aria-labelledby="pb-h">
+    <div class="wrap split">
+      <div class="story copy">
+        <img class="wordmark" src="/brand/wordmark-ring.svg" alt="PolyBall" width="592" height="172">
+        <h1 id="pb-h" class="claim">Every note you hear, you played.</h1>
+        <p class="lede">Catch the ball on its colour and the music builds, one note at a time. One miss ends the run.</p>
+        <div class="cta">
+          <a class="btn primary" id="play" href="/polyball/play/">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Play in your browser</a>
+          <a class="btn" href="https://play.google.com/apps/testing/com.polyball.game">Get it on Android</a>
+        </div>
+        <p class="cap">Also on <a href="#get">Windows, Mac and Linux</a>, and on <a href="https://abdaishere.itch.io">itch.io</a>. Nothing to install to try it.</p>
+        <p class="engineer">Made by one person. Every note synthesised at runtime, 15 languages, six build targets from one CI run. <a href="#built">How it's built →</a></p>
+      </div>
+      <div class="aside play-col">
+        <div class="stage" id="stage">
+          <img src="/img/phone_03_home.webp" width="540" height="960" fetchpriority="high" decoding="async" alt="PolyBall on a phone: a nine-colour polygon ring with Tap to play across the middle, best score 28, and the shop, daily, play, ranks and awards bar along the bottom.">
+        </div>
+        <p class="cap" id="stage-note">Runs in the browser, sound on. <a id="fullscreen" href="/polyball/play/">Open it full screen</a>.</p>
+      </div>
+    </div>
+  </section>
+  <hr class="ring-line">
+
+  <section class="sec" id="hook" aria-labelledby="hook-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">The sound</p>
+        <h2 id="hook-h">You are the band</h2>
+        <p class="lede">PolyBall ships with no music files at all. Every sound you hear came from how you played.</p>
+      </div>
+      <div class="split">
+        <div class="story">
+          <section class="block">
+            <h3>Every catch is a note</h3>
+            <p class="prose">Land the ball on its colour and you hear it. That was you.</p>
+          </section>
+          <section class="block">
+            <h3>Keep your streak and the band joins in</h3>
+            <p class="prose">First the bass. Then the harmony. Hit Fever and the whole thing takes off.</p>
+          </section>
+          <section class="block">
+            <h3>One miss and it all stops</h3>
+            <p class="prose">Silence. Then you tap play again, because that song was getting good.</p>
+          </section>
+        </div>
+        <div class="aside">
+          <figure class="band needs-js" id="band" aria-labelledby="band-cap">
+            <div class="band-keys" role="group" aria-label="The five colours">
+              <button class="band-key" type="button" data-i="0" style="--k: var(--r-green)" aria-label="Colour 1, the root of the chord">1</button>
+              <button class="band-key" type="button" data-i="1" style="--k: var(--r-cyan)" aria-label="Colour 2, the third">2</button>
+              <button class="band-key" type="button" data-i="2" style="--k: var(--r-magenta)" aria-label="Colour 3, the fifth">3</button>
+              <button class="band-key" type="button" data-i="3" style="--k: var(--r-yellow)" aria-label="Colour 4, the seventh">4</button>
+              <button class="band-key" type="button" data-i="4" style="--k: var(--r-red)" aria-label="Colour 5, the ninth">5</button>
+            </div>
+            <p class="band-read"><span>Chord <b id="band-chord">Am</b></span><span>Streak <b id="band-streak">0</b></span></p>
+            <ol class="band-layers">
+              <li data-layer="bass">Bass <span>at 2</span></li>
+              <li data-layer="arp">Arpeggio <span>at 5</span></li>
+              <li data-layer="lead">Lead <span>at 8</span></li>
+            </ol>
+            <figcaption class="cap" id="band-cap">Play it here, sound on. Each colour is a note of the chord underneath, so one key plays a different note as the chords go round. Keep tapping and the bass, then the arpeggio, then the lead come in, at the same streaks as in the game. Stop for two beats and it all stops, which is what a miss does. The chords, tempo and gates are copied from the game's source.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="trailer" aria-labelledby="trailer-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">Trailer</p>
+        <h2 id="trailer-h">See it in twenty seconds</h2>
+      </div>
+      <button class="trailer" type="button" id="trailerBtn" aria-label="Play the PolyBall trailer, 21 seconds, with sound">
+        <img src="trailer-poster.webp" alt="" loading="lazy" width="1280" height="720">
+        <span class="play-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="len">0:21 · with sound</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="sec" id="look" aria-labelledby="look-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">A quick look</p>
+        <h2 id="look-h">Five screens, before you press play</h2>
+      </div>
+      <div class="rail">
+        <figure><img src="/img/phone_01_run_combo.webp" alt="A run in progress with a growing streak" loading="lazy" width="1080" height="1920"><figcaption>Catch, catch, catch. The streak builds.</figcaption></figure>
+        <figure><img src="/img/phone_02_run_fever.webp" alt="Fever mode with the screen washed in gold" loading="lazy" width="1080" height="1920"><figcaption>Fever, when the whole screen turns gold</figcaption></figure>
+        <figure><img src="/img/phone_03_home.webp" alt="The home screen" loading="lazy" width="1080" height="1920"><figcaption>Three sides, or sixty-three</figcaption></figure>
+        <figure><img src="/img/phone_04_shop.webp" alt="The shop with balls, trails and plates" loading="lazy" width="1080" height="1920"><figcaption>Spend what you earned</figcaption></figure>
+        <figure><img src="/img/phone_05_box.webp" alt="Opening a mystery box" loading="lazy" width="1080" height="1920"><figcaption>Boxes open with coins, never cash</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="modes" aria-labelledby="modes-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">Modes</p>
+        <h2 id="modes-h">Four ways to play</h2>
+      </div>
+      <div class="modes">
+        <div style="--mc:var(--r-cyan)"><h3>Classic</h3><p>The pure loop. Endless, and it only gets faster.</p></div>
+        <div style="--mc:var(--r-magenta)"><h3>Music</h3><p>Perform the song. Balls land on the beat.</p></div>
+        <div style="--mc:var(--r-yellow)"><h3>Time</h3><p>Beat the clock. Clean catches buy back seconds.</p></div>
+        <div style="--mc:var(--r-green)"><h3>Zen</h3><p>No clock, no score, and no way to lose.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="leaderboard" aria-labelledby="lb-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">Leaderboard</p>
+        <h2 id="lb-h">Who's on top</h2>
+        <p class="lede">The best Classic runs on five sides, live from the game. Beat one and your name goes up here.</p>
+      </div>
+      <div class="split">
+        <div class="story">
+          <ol id="cupTop" aria-label="Current top three" aria-busy="true"></ol>
+          <p class="links"><a class="btn" href="leaderboard/">See the full leaderboard</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="get" aria-labelledby="get-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">Get it</p>
+        <h2 id="get-h">Play anywhere. It's free.</h2>
+        <p class="lede">Android is the best way to play, and the browser build needs nothing at all. Desktop builds are version 0.9.6.</p>
+      </div>
+      <div class="dl-grid">
+        <a class="dl-card" href="https://play.google.com/apps/testing/com.polyball.game">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.2 9.4h11.6v7.2a1.2 1.2 0 0 1-1.2 1.2h-1v2.9a1.3 1.3 0 0 1-2.6 0v-2.9h-2v2.9a1.3 1.3 0 0 1-2.6 0v-2.9h-1a1.2 1.2 0 0 1-1.2-1.2V9.4Zm-3 0a1.3 1.3 0 0 1 1.3 1.3v4.2a1.3 1.3 0 0 1-2.6 0v-4.2A1.3 1.3 0 0 1 3.2 9.4Zm17.6 0a1.3 1.3 0 0 1 1.3 1.3v4.2a1.3 1.3 0 0 1-2.6 0v-4.2a1.3 1.3 0 0 1 1.3-1.3ZM6.3 8.4c.2-1.9 1.3-3.5 3-4.5l-1.1-1.6a.4.4 0 0 1 .7-.5l1.2 1.7a6.9 6.9 0 0 1 3.8 0l1.2-1.7a.4.4 0 0 1 .7.5l-1.1 1.6c1.7 1 2.8 2.6 3 4.5H6.3Zm3.1-2.6a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4Zm5.2 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4Z"/></svg>
+          <div><b>Android</b><span>Join the closed test on Google Play</span></div></a>
+        <a class="dl-card" href="/polyball/play/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+          <div><b>Browser</b><span>Nothing to install · 47 MB</span></div></a>
+        <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.6/PolyBall-Windows-x86_64.exe" download>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
+          <div><b>Windows</b><span>Just run it · 113.5 MB</span></div></a>
+        <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.6/PolyBall-macOS-universal.zip" download>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
+          <div><b>Mac</b><span>Apple and Intel · 64.4 MB</span></div></a>
+        <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.6/PolyBall-Linux-x86_64.x86_64" download>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c-2.1 0-3.5 1.6-3.5 3.8v2.2c0 1-.5 1.8-1.2 2.7-1.2 1.6-2.3 3.2-2.3 5.3 0 1.1.4 2 1 2.7l-.7 1.4c-.3.6 0 1.2.6 1.3l2.2.4c.4.5 1 .8 1.7.8h4.4c.7 0 1.3-.3 1.7-.8l2.2-.4c.6-.1.9-.7.6-1.3l-.7-1.4c.6-.7 1-1.6 1-2.7 0-2.1-1.1-3.7-2.3-5.3-.7-.9-1.2-1.7-1.2-2.7V6c0-2.2-1.4-3.8-3.5-3.8Zm-1.7 3.3c.5 0 .9.5.9 1.2s-.4 1.2-.9 1.2-.9-.5-.9-1.2.4-1.2.9-1.2Zm3.4 0c.5 0 .9.5.9 1.2s-.4 1.2-.9 1.2-.9-.5-.9-1.2.4-1.2.9-1.2ZM12 8.6c.9 0 1.7.5 1.7 1s-.8 1.1-1.7 1.1-1.7-.6-1.7-1.1.8-1 1.7-1Z"/></svg>
+          <div><b>Linux</b><span>64-bit · 79.4 MB</span></div></a>
+        <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.9.6/PolyBall-Android-arm64-debug.apk" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+          <div><b>Android APK</b><span>The test build, sideloaded · 92.2 MB</span></div></a>
+      </div>
+      <p class="cap spaced">iPhone and iPad are coming later. The browser version works there today.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="built" aria-labelledby="built-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">How it's built</p>
+        <h2 id="built-h">One person, six platforms, no music files</h2>
+        <p class="lede">The engineering, for anyone who wants to look. Nothing below is rounded in my favour.</p>
+      </div>
+      <div class="split">
+        <div class="story">
+          <section class="block">
+            <h3>The game plays every note itself</h3>
+            <p class="prose">No audio files ship with PolyBall. There is a synthesiser instead: sixteen additive voices with physically modelled partials, colour mapped to chord degree across an eight-bar progression, and bass, arpeggio and lead performed note by note on a swung grid. That is why the soundtrack can only be the run you just played.</p>
+          </section>
+          <section class="block">
+            <h3>One person cannot test six platforms by hand</h3>
+            <p class="prose">So nobody does. Continuous integration builds macOS, the iOS simulator, an iOS device, Linux, Web and Windows from one run, and gameplay bots play twenty-four runs a pass with deliberate mistakes injected, so the economy numbers that come out the other end look like a real player's rather than a perfect one's.</p>
+          </section>
+          <section class="block">
+            <h3>The difficulty curve came from real thumbs</h3>
+            <p class="prose">Opt-in telemetry records each move as a line of JSON under an anonymous rotating install id, partial runs included. That data re-derived the curve as a reaction budget instead of a guess, which removed the deaths that were caused by an impossible deadline rather than a mistake, all the way from three sides up to sixty-three.</p>
+          </section>
+          <section class="block">
+            <h3>It plays in Arabic the way Arabic reads</h3>
+            <p class="prose">Fifteen locales, including Modern Standard and Egyptian Arabic, with right-to-left layout and bidirectional share text both covered by automated tests rather than a spot check before release.</p>
+          </section>
+          <section class="block">
+            <h3>The browser build was silent on every phone</h3>
+            <p class="prose">And nobody had noticed. Creating an audio bus at runtime disconnects the master bus from the speakers on the web export, which is an engine bug, not a game one. The fix was to stop creating buses after boot. On top of that, iOS mutes web audio when the physical ringer switch is off, so the shell now nudges the context back awake. Both were found by a check that measures the real signal reaching the output, because counting buffers had said everything was fine.</p>
+          </section>
+          <ul role="list" class="tags" aria-label="Technologies"><li>Godot 4</li><li>GDScript</li><li>GitHub Actions</li><li>Supabase</li></ul>
+        </div>
+        <div class="aside">
+          <dl class="ledger flat" aria-label="PolyBall measurements">
+            <div class="m">
+              <dt>Where the closed test is open to players today.</dt>
+              <dd><b class="num" data-from="0" data-to="177" data-dec="0">177</b><span class="unit">countries</span><cite><a href="https://play.google.com/apps/testing/com.polyball.game">Google Play</a></cite></dd>
+            </div>
+            <div class="m">
+              <dt>Dead payload cut out of every export.</dt>
+              <dd><b class="num">−32</b><span class="unit">MB</span><cite>CV · PolyBall</cite></dd>
+            </div>
+            <div class="m">
+              <dt>Fonts in every export, after static subsetting.</dt>
+              <dd><span class="from">40 MB</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="40" data-to="1.5" data-dec="1">1.5</b><span class="unit">MB</span><cite>CV · PolyBall</cite></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="fair" aria-labelledby="fair-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">Fair play</p>
+        <h2 id="fair-h">What the game does with your data</h2>
+      </div>
+      <dl class="rows">
+        <div><dt>Free, and fair</dt><dd>Ads sit between runs, never during one. Nothing you buy changes your rank.</dd></div>
+        <div><dt>Plays offline</dt><dd>No wifi needed to play. The leaderboard catches up when you are back online.</dd></div>
+        <div><dt>No account</dt><dd>The game gives you a name. No sign-up, no email, no typing.</dd></div>
+        <div><dt>Your data</dt><dd><a href="/privacy.html">Privacy policy</a> · <a href="/delete.html">Delete my data</a> · <a href="/press/">Press kit</a></dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>PolyBall · made by <a href="/">Abdallah El Belkasy</a></span>
+    <nav aria-label="Site"><a href="leaderboard/">Leaderboard</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
+  </div>
+</footer>
+
+<script src="board.js"></script>
+<script type="module" src="/site.js"></script>
+<script type="module" src="page.js"></script>
+</body>
 </html>
-

@@ -1,10 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /polyball/
+Disallow: /polyball/play/
 Disallow: /play/
 
-# Link-preview crawlers honour robots.txt too; without these a shared /polyball/ link
+# Link-preview crawlers honour robots.txt too; without these a shared /polyball/play/ link
 # gets no card on X or LinkedIn. Search engines above still skip the raw game build.
+# /polyball/ itself is the project page and is indexable: only the 48 MB export below it is not.
 User-agent: Twitterbot
 Allow: /
 

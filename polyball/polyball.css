@@ -1,4 +1,6 @@
-/* PolyBall site v2 — MOCKUP tokens + components. Not published (lives outside web/).
+/* PolyBall's own dark palette and components. Since the v3 rebuild this styles one page,
+   /polyball/leaderboard/, which keeps the game's look rather than the site's; the project page at
+   /polyball/ is on the site shell (/site.css) with the five ring colours scoped into it.
    Rules of the system:
    - 90% ground + ink. Chroma is earned.
    - Cyan  = something you can press. Nothing else is cyan.
@@ -102,7 +104,7 @@ p{ margin:0; text-wrap:pretty }
 .foot a{ color:var(--ink-2); padding-block:12px; display:inline-block }
 
 /* =====================================================================
-   PLAYER CARD — the shared identity unit. Same five fields drive the site
+   PLAYER CARD: the shared identity unit. Same five fields drive the site
    and the in-game NamePlate: banner · plate (flair) · font · title · accent.
    All five are IDs from a whitelist, never free CSS from the wire.
    ===================================================================== */

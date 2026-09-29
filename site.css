@@ -1,0 +1,430 @@
+/* abdaishere.com v3, "Signal".
+   One stylesheet for /, /e-jam/, /polyball/ and /cv/. The organising idea: the site is an
+   instrument panel. Every claim is a measurement with a unit and a source, set in the same
+   primitive (.m). Type runs at poster scale, the grid is 12 columns of hairlines, and the only
+   thing that moves is the trace behind the hero.
+
+   Rules of the system:
+   - One accent (--signal, amber). It marks the beat, links, focus and nothing else.
+     The PolyBall page adds the game's five ring colours, scoped to that page.
+   - Hairlines separate. No shadows, no gradients, no rounded cards.
+   - Mono is for data: numbers, units, labels, captions, the status line. Never for prose.
+   - Every contrast pair below was measured with the WCAG formula, not guessed. */
+
+/* ---------------------------------------------------------------- fonts
+   Already subset and self-hosted (40 MB of variable fonts -> 1.5 MB, the same pass that shrank
+   the game's exports). Not Google Fonts: loading from Google sends every visitor's IP to Google
+   (LG Munich 3 O 17493/20). The fallback metrics are measured from the real files, so the swap
+   does not move a single line. */
+@font-face { font-family: "Bricolage"; src: url(/fonts/bricolage-var.woff2) format("woff2"); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: "Plex Sans"; src: url(/fonts/plex-sans-var.woff2) format("woff2"); font-weight: 100 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url(/fonts/jetbrains-mono-var.woff2) format("woff2"); font-weight: 100 800; font-display: optional; }
+@font-face { font-family: "Bricolage Fallback"; src: local("Arial Black"), local("Arial-Black"); size-adjust: 90%; ascent-override: 93%; descent-override: 27%; line-gap-override: 0%; }
+@font-face { font-family: "Plex Fallback"; src: local("Arial"); size-adjust: 101.5%; ascent-override: 102.5%; descent-override: 27.5%; line-gap-override: 0%; }
+@font-face { font-family: "Mono Fallback"; src: local("Consolas"); size-adjust: 109%; ascent-override: 102%; descent-override: 30%; line-gap-override: 0%; }
+
+/* ---------------------------------------------------------------- tokens */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#FAFAF7, #0A0B0F);
+  --panel: light-dark(#FFFFFF, #111318);
+  --line: light-dark(#E3E3DE, #23262E);
+  --ink: light-dark(#141519, #F4F4F0);      /* 17.5:1 light · 17.8:1 dark */
+  --mid: light-dark(#4B5160, #A8ADB8);      /*  7.6:1      ·  8.7:1 */
+  --mut: light-dark(#5B6270, #8B919E);      /*  5.9:1      ·  6.2:1 */
+  --signal: light-dark(#9A5A00, #F5A524);   /*  5.2:1      ·  9.6:1 as text */
+  --signal-fill: light-dark(#B45309, #F5A524);
+  --on-signal: light-dark(#FFFFFF, #0A0B0F);
+  --trace-alpha: 0.9;
+
+  --display: "Bricolage", "Bricolage Fallback", system-ui, sans-serif;
+  --sans: "Plex Sans", "Plex Fallback", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "Mono Fallback", ui-monospace, Consolas, monospace;
+
+  --pad: clamp(1rem, 4vw, 3rem);
+  --gap: clamp(1rem, 2.5vw, 2rem);
+  --head: 3.75rem;
+  --t: 140ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+/* No light-dark(): the toggle cannot work, so hide it and serve the light theme rather than a
+   half-applied one. */
+@supports not (color: light-dark(#000, #fff)) {
+  :root { --bg: #FAFAF7; --panel: #fff; --line: #E3E3DE; --ink: #141519; --mid: #4B5160; --mut: #5B6270; --signal: #9A5A00; --signal-fill: #B45309; --on-signal: #fff; }
+  #theme { display: none; }
+}
+/* Registered so getComputedStyle hands the canvas resolved rgb() values instead of the
+   light-dark() source text. The trace reads its palette from CSS, not from a copy in JS. */
+@property --c-ink { syntax: "<color>"; inherits: true; initial-value: #F4F4F0; }
+@property --c-mid { syntax: "<color>"; inherits: true; initial-value: #A8ADB8; }
+@property --c-signal { syntax: "<color>"; inherits: true; initial-value: #F5A524; }
+@property --c-bg { syntax: "<color>"; inherits: true; initial-value: #0A0B0F; }
+:root { --c-ink: var(--ink); --c-mid: var(--mid); --c-signal: var(--signal); --c-bg: var(--bg); }
+
+/* ---------------------------------------------------------------- base */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--head) + 2.25rem); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.6 var(--sans); overflow-x: clip; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, dt, figure, blockquote { margin: 0; }
+ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+img, svg, canvas, iframe { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--signal-fill); color: var(--on-signal); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 60; padding: 0.7rem 1rem; background: var(--ink); color: var(--bg); text-decoration: none; }
+.skip:focus { top: 0.5rem; }
+html:not(.js) .needs-js { display: none; }
+
+.wrap { width: min(100% - 2 * var(--pad), 84rem); margin-inline: auto; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.label { display: block; font: 500 0.75rem/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut); }
+.lede { max-width: 46ch; font-size: clamp(1.0625rem, 1.3vw, 1.1875rem); color: var(--mid); text-wrap: pretty; }
+.prose { max-width: 62ch; text-wrap: pretty; }
+.prose + .prose { margin-top: 0.85rem; }
+.prose strong { font-weight: 600; }
+
+/* ---------------------------------------------------------------- header */
+.top { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top-in { display: flex; align-items: center; gap: 0.5rem; min-height: var(--head); }
+.brand { margin-right: auto; font: 600 0.9375rem var(--sans); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+.brand .short { display: none; }
+.nav { display: flex; gap: 0.25rem; }
+.nav a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 0.7rem; font-size: 0.875rem; color: var(--mid); text-decoration: none; transition: color var(--t); }
+.nav a:hover { color: var(--ink); text-decoration: underline; }
+.nav a[aria-current] { color: var(--ink); }
+.btn-plain { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-width: 44px; min-height: 44px; padding: 0 0.8rem; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--mid); font: 500 0.75rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: color var(--t), border-color var(--t); }
+.btn-plain:hover { color: var(--ink); border-color: var(--ink); }
+.btn-plain svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.t-dark { display: none; }
+:root[data-theme="light"] .t-light { display: none; }
+:root[data-theme="light"] .t-dark { display: inline; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .t-light { display: none; } :root:not([data-theme]) .t-dark { display: inline; } }
+
+/* Phones fold the section links behind a Menu button (v2's tested pattern). The nav follows the
+   button in the DOM, so Tab goes from Menu straight into the open list. */
+.menu-btn { display: none; }
+@media (max-width: 53.75rem) {
+  .menu-btn { display: inline-flex; }
+  .nav { position: absolute; left: 0; right: 0; top: 100%; display: none; flex-direction: column; gap: 0; padding: 0.5rem var(--pad) 1rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+  :root.menu-open .nav { display: flex; }
+  .nav a { padding-inline: 0; }
+}
+@media (max-width: 22.5rem) { .brand .full { display: none; } .brand .short { display: inline; } }
+
+/* ---------------------------------------------------------------- status line
+   The instrument readout: local time, the clock the trace runs on, and what he is open to. */
+.status { border-bottom: 1px solid var(--line); }
+.status-in { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; min-height: 2.25rem; align-items: center; padding-block: 0.3rem; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); }
+.status-in span { display: inline-flex; align-items: center; gap: 0.5rem; }
+.beat { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); transform: scale(0.75); opacity: 0.6; }
+.beat.on { transform: scale(1); opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .beat { transition: transform 120ms var(--ease-out), opacity 120ms; } }
+
+/* ---------------------------------------------------------------- hero */
+.hero { position: relative; isolation: isolate; display: grid; align-content: end; padding-block: clamp(2rem, 6vh, 5rem) clamp(1rem, 3vh, 2rem); overflow: clip; }
+/* Set by trace.js for as long as a press on the hero lasts: dragging to play with the trace was
+   painting a selection across the name. */
+.hero.pressing { -webkit-user-select: none; user-select: none; }
+.hero.tall { min-height: calc(100svh - var(--head) - 2.25rem); }
+/* An inner page keeps the trace as atmosphere, not as the event: fewer lanes, dimmer, and the
+   first section starts inside the first screen. */
+.hero.quiet { --trace-alpha: 0.42; min-height: 46svh; }
+.hero.quiet h1 { font-size: clamp(3rem, 11vw, 9rem); }
+.trace { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: var(--trace-alpha); cursor: crosshair; }
+html:not(.js) .trace, .trace.off { display: none; }
+.hero-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; row-gap: clamp(1.5rem, 4vh, 3rem); }
+.hero-grid > * { grid-column: 1 / -1; min-width: 0; }
+h1 { font: 800 clamp(3.25rem, 16vw, 15rem)/0.84 var(--display); letter-spacing: -0.045em; text-wrap: balance; overflow-wrap: anywhere; }
+h1 .line { display: block; }
+/* Body copy stays readable over moving traffic: a soft knockout fades the trace behind it. The
+   name has no knockout on purpose: at 16vw the letterforms carry themselves. */
+.knock { position: relative; background: color-mix(in srgb, var(--bg) 84%, transparent); box-shadow: 0 0 0 12px color-mix(in srgb, var(--bg) 84%, transparent), 0 0 48px 32px color-mix(in srgb, var(--bg) 70%, transparent); }
+.copy { display: flex; flex-direction: column; gap: 1rem; }
+.claim { font: 700 clamp(1.5rem, 4.2vw, 3.25rem)/1.05 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.625rem 1.25rem; padding-top: 0.25rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 48px; padding: 0 1.4rem; border: 1px solid var(--ink); border-radius: 2px; background: transparent; color: var(--ink); font: 600 0.9375rem var(--sans); text-decoration: none; cursor: pointer; transition: background-color var(--t), color var(--t), border-color var(--t); }
+.btn:hover { background: var(--ink); color: var(--bg); }
+.btn.primary { background: var(--signal-fill); border-color: var(--signal-fill); color: var(--on-signal); }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.more { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 44px; font-size: 0.9375rem; color: var(--mid); }
+.more:hover { color: var(--ink); }
+.more svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------------------------------------------------------------- the measurement block
+   The one primitive every number on this site is rendered in: a huge value, its unit in mono,
+   the human consequence underneath, and the source beside it. If a number has no source it does
+   not get to be on the page. */
+.ledger { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); border-top: 1px solid var(--line); padding-top: 1rem; }
+.m { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.m dt { order: 2; font-size: 0.9375rem; color: var(--mid); text-wrap: pretty; }
+.m dd { order: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15em 0.4em; font: 800 clamp(2rem, 4.6vw, 4.25rem)/1 var(--display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.m .from { font: 500 0.45em/1 var(--mono); color: var(--mut); text-decoration: line-through; text-decoration-thickness: 1px; }
+.m .arr { font: 400 0.45em/1 var(--mono); color: var(--mut); }
+.m .num { color: var(--ink); }
+.m .unit { font: 500 0.36em/1 var(--mono); color: var(--signal); letter-spacing: 0.04em; }
+.m cite { flex-basis: 100%; font: 400 0.75rem/1.5 var(--mono); font-style: normal; color: var(--mut); letter-spacing: 0; }
+.m cite a { color: inherit; }
+.m cite a:hover { color: var(--ink); }
+.ledger.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ledger.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ledger.flat { border-top: 0; padding-top: 0; }
+.ledger.flat .m dd { font-size: clamp(1.75rem, 3.4vw, 3rem); }
+
+/* figure row under the hero: caption, live readout, Pause */
+.fig-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; margin-top: clamp(1.25rem, 3vh, 2rem); }
+.cap { max-width: 78ch; font: 400 0.75rem/1.6 var(--mono); color: var(--mut); }
+.cap b { font-weight: 500; color: var(--mid); }
+.readout { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.readout span { color: var(--signal); font-weight: 500; }
+.pause .p-off, .pause[data-paused="true"] .p-on { display: none; }
+.pause[data-paused="true"] .p-off { display: inline; }
+@media (prefers-reduced-motion: reduce) { .pause { display: none; } }
+
+@media (min-width: 53.75rem) {
+  .copy { grid-column: 1 / 8; }
+  .ledger.in-hero { grid-column: 8 / -1; grid-template-columns: 1fr; border-top: 0; border-left: 1px solid var(--line); padding: 0 0 0 var(--gap); gap: 1.25rem; }
+  .ledger.in-hero .m dd { font-size: clamp(2.25rem, 3.6vw, 4rem); }
+}
+@media (max-width: 40rem) {
+  .readout { margin-left: 0; }
+  .ledger, .ledger.two, .ledger.four { grid-template-columns: 1fr; gap: 1.25rem; }
+  .m dd { font-size: clamp(2.25rem, 12vw, 3.25rem); }
+}
+@media (min-width: 120rem) { h1 { font-size: 15rem; } }
+
+/* ---------------------------------------------------------------- sections */
+.sec { border-top: 1px solid var(--line); padding-block: clamp(3rem, 8vh, 6rem); }
+.sec-head { display: grid; gap: 0.75rem; max-width: 62ch; margin-bottom: clamp(2rem, 5vh, 3.5rem); }
+h2 { font: 700 clamp(2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
+h3 { font: 700 clamp(1.5rem, 3vw, 2.25rem)/1.1 var(--display); letter-spacing: -0.025em; text-wrap: balance; }
+h3 .sub { display: block; font: 400 clamp(1rem, 1.4vw, 1.125rem)/1.4 var(--sans); letter-spacing: 0; color: var(--mid); margin-top: 0.5rem; }
+h4 { font: 600 1.0625rem/1.4 var(--sans); }
+/* A block's heading is a sub-heading whatever its level: on a case study it sits under an h3, on a
+   dedicated page under an h2, and the document outline has to stay honest either way. */
+.block > h3 { font: 600 1.0625rem/1.4 var(--sans); letter-spacing: 0; }
+
+/* case study skeleton: problem / what we built / my part / outcome, alternating 7-5 and 5-7 */
+.case + .case { border-top: 1px solid var(--line); margin-top: clamp(3rem, 8vh, 6rem); padding-top: clamp(3rem, 8vh, 6rem); }
+.case-head { display: grid; gap: 1rem; margin-bottom: clamp(1.5rem, 4vh, 2.5rem); }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem var(--gap); border-top: 1px solid var(--line); padding-top: 1rem; }
+.meta dt { font: 500 0.75rem/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--mut); }
+.meta dd { font-size: 0.9375rem; color: var(--ink); text-wrap: pretty; }
+.split { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1.5rem, 4vh, 2.5rem) var(--gap); }
+.split > * { grid-column: 1 / -1; min-width: 0; }
+.block { display: grid; gap: 0.6rem; align-content: start; }
+.block + .block { margin-top: clamp(1.5rem, 3vh, 2rem); }
+@media (min-width: 53.75rem) {
+  /* grid-row is explicit: .story comes first in the DOM (it is what a phone should read first), so
+     on a flipped split the aside's column start is behind the auto-placement cursor and sparse
+     packing would drop it onto a second row. */
+  .split > .story { grid-column: 1 / 8; grid-row: 1; }
+  .split > .aside { grid-column: 8 / -1; grid-row: 1; }
+  .split.flip > .story { grid-column: 6 / -1; }
+  .split.flip > .aside { grid-column: 1 / 6; }
+  .split > .full { grid-column: 1 / -1; grid-row: auto; }
+  /* A figure explains the paragraph next to it, and the story column is always the longer of the
+     two. Sticky keeps them together instead of leaving half a screen of nothing beside the text. */
+  .split > .aside > figure { position: sticky; top: calc(var(--head) + 1rem); }
+}
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; margin-top: 1.25rem; }
+.tags li { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--mid); border: 1px solid var(--line); padding: 0.5rem 0.6rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 1rem; }
+
+/* figures */
+figure.panel { border: 1px solid var(--line); padding: clamp(1rem, 2.5vw, 1.5rem); background: var(--panel); }
+figure .cap, figcaption.cap { margin-top: 0.75rem; }
+figure.panel > .cap:first-child { margin: 0 0 1rem; }
+.shot { border: 1px solid var(--line); background: var(--panel); }
+/* A diagram drawn black on white paper would sit on the dark page as a white slab. Inverting it
+   and turning the hue back round keeps its yellow states yellow-ish and lands the paper within a
+   shade of the panel. Only where light-dark() works, since that is where the dark theme exists. */
+@supports (color: light-dark(#000, #fff)) {
+  :root[data-theme="dark"] .shot.paper { filter: invert(0.93) hue-rotate(180deg); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme]) .shot.paper { filter: invert(0.93) hue-rotate(180deg); } }
+}
+/* A strip, not a gallery: three 9:16 screens side by side at every width. They stay small on a
+   phone on purpose: the alt text carries what each one shows, the strip carries the look. */
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
+
+/* The traffic figure on /e-jam/ (diagram.js + scene.js). Three layers in one box, all on the
+   same coordinates: an <svg> of geometry, a layer of real DOM text so the labels never scale
+   with the picture, and a <canvas> of moving packets on top. Only the canvas is optional, and
+   only the canvas costs a download.
+   width:100% is load-bearing: with a max-height and an aspect-ratio the box would otherwise
+   narrow itself to keep the ratio, and the figure would stop lining up with its own caption. */
+/* user-select: none because the figure is a picture, not a passage. Dragging across it to send a
+   burst, or swiping it to scroll, was painting a selection over the labels and leaving it there. */
+.model { position: relative; width: 100%; aspect-ratio: 2 / 1; border: 1px solid var(--line); background: var(--panel); overflow: hidden; contain: content; -webkit-user-select: none; user-select: none; }
+.model > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+.model canvas { opacity: 0; cursor: crosshair; }
+.model.live canvas { opacity: 1; }
+/* The frozen packets and the two inner rings are the canvas's job once it is live. The outer
+   ring stays in the SVG at all times: it is what the switch label points at. */
+.model.live .dgram .pk, .model.live .dgram .ring.inner { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .model canvas, .model .dgram .pk, .model .dgram .ring.inner { transition: opacity 420ms var(--ease-out); }
+}
+.dgram .ln { fill: none; stroke: var(--c-mid); stroke-opacity: 0.35; stroke-width: 1; }
+.dgram .ring { fill: none; stroke: var(--c-mid); stroke-opacity: 0.45; stroke-width: 1; }
+.dgram .ring.on { stroke: var(--c-signal); stroke-opacity: 1; stroke-width: 1.5; }
+.dgram .pk { fill: var(--c-mid); }
+.dgram .pk.hot { fill: var(--c-signal); }
+.dgram .pk.lost { fill: var(--c-mid); fill-opacity: 0.22; }
+/* A stream switched off at the generator: the wire is still there, nothing is on it. A CSS
+   opacity beats the per-packet opacity attribute the freeze wrote, so the packets go without
+   having to be redrawn. A stream whose verifier is off still transmits, so the far half keeps its
+   traffic and loses its weight: those packets crossed and nothing was there to check them. */
+.dgram .st.gen-off .ln { stroke-dasharray: 5 7; stroke-opacity: 0.16; }
+.dgram .st.gen-off .pk { opacity: 0; }
+.dgram .st.ver-off .pk.out { fill-opacity: 0.22; }
+.dgram .st.ver-off .ln.out { stroke-dasharray: 5 7; }
+
+/* Labels: positioned as a percentage of the box, sized in CSS pixels. That is the whole reason
+   they are not <text> in the SVG: a 1600-unit diagram at 358 px would set them at six. */
+/* Over the canvas, not under it: the packets are painted last and were crossing the words.
+   pointer-events stays off, so a click still reaches the canvas and still sends a burst. */
+.dlabels { pointer-events: none; z-index: 1; }
+.dlabel { position: absolute; transform: translate(-50%, -50%); font: 500 0.6875rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); white-space: nowrap; }
+.dlabel.lane { font-size: 0.625rem; letter-spacing: 0.08em; color: var(--mut); }
+.dlabel.sw { color: var(--ink); letter-spacing: 0.14em; }
+/* These two ride over open panel, where the lanes and the traffic run; a diagram labels a line by
+   breaking it, not by printing over it. The node labels sit inside a filled box and already have
+   their knockout. */
+.dlabel.lane, .dlabel.sw { background: var(--panel); padding: 0.2em 0.45em; }
+
+/* Every node is a switch, so every node is a button: one element carrying the box, the word, the
+   focus ring and the pressed state. It sits in the label layer, which is why it has to turn
+   pointer-events back on for itself; touch-action keeps a tap instant and still lets a finger
+   dragged across the figure scroll the page. */
+.dnode {
+  display: flex; align-items: center; justify-content: center; padding: 0; margin: 0;
+  border: 1px solid color-mix(in srgb, var(--mid) 70%, transparent); border-radius: 0;
+  background: var(--bg); color: var(--mid); cursor: pointer; pointer-events: auto;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: color var(--t), border-color var(--t), background-color var(--t), opacity var(--t);
+}
+.dnode:hover { color: var(--ink); border-color: var(--ink); }
+/* The burst belongs to the moving model. The still diagram has none, so its caption stops offering one. */
+#traffic:not(:has(.model.live)) .live-only { display: none; }
+/* Off has to read as off, not as dimmer: the box empties out to the figure's own background, the
+   border goes dashed, and the word is struck through. Three signals, none of them colour alone. */
+.dnode[aria-pressed="false"] {
+  border-style: dashed; border-color: color-mix(in srgb, var(--mid) 45%, transparent);
+  background: transparent; color: var(--mut); text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* The model's Pause appears only once the model is live. It keeps its box the whole time: a
+   control that pops into a row is a layout shift, and this one would land while the reader is
+   already looking at the figure. */
+.reserved { visibility: hidden; }
+
+/* The verifiers' tally. Counts this drawing, and says so on the same line.
+   Not .readout: the home page's hero already owns that name for its own counter. */
+.tally { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.9rem; inset: auto auto 0 0; width: auto; height: auto; padding: 0.75rem 0.9rem; font: 400 0.6875rem/1.5 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); pointer-events: none; }
+.tally span { white-space: nowrap; }
+/* Each counter keeps a fixed cell. Without it the numbers widen as they climb and nudge the two
+   labels beside them, which is a layout shift even though nothing in the document moves. */
+.tally b { display: inline-block; min-width: 6ch; text-align: right; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 47.999rem) {
+  .model { aspect-ratio: 1 / 1; }
+  /* The node labels stay at 10px: at 320 px "Generator" clears the inside of its node box by
+     0.7 px, and the box is drawn in viewBox units, so one step up overflows it. The lane labels
+     are free-floating, so they come up to 10 too and nothing on the figure is smaller. */
+  .dlabel { font-size: 0.625rem; letter-spacing: 0.06em; }
+  .dlabel.lane { font-size: 0.625rem; }
+  .tally { gap: 0.1rem 0.7rem; padding: 0.6rem 0.7rem; font-size: 0.625rem; letter-spacing: 0.04em; }
+  /* one line or it lands on a node: the caption already says the counters count the drawing */
+  .tally .wide-only { display: none; }
+}
+/* At 360 px and below the figure is under 330 px wide, and a 10 px lane label riding its own lane
+   reaches back over the generator box it started from (-3.3 px of clearance at 320). It drops a
+   step there; the knockout, not the size, is what made these readable in the first place. */
+@media (max-width: 22.5rem) {
+  .dlabel.lane { font-size: 0.5625rem; letter-spacing: 0.06em; }
+}
+/* No script, no diagram: the figure is drawn by diagram.js, and an empty framed box explains
+   nothing. The caption carries the picture in words either way. */
+html:not(.js) #traffic { display: none; }
+
+/* the 2 h -> 10 min bar, drawn to scale (120 : 10) */
+.bars { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0.5rem 0.75rem; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.bars .k { color: var(--mut); }
+.bars .track { height: 14px; border: 1px solid var(--line); }
+.bars .bar { display: block; height: 100%; background: var(--mid); width: var(--w); }
+.bars .now .bar, .bars .bar.now { background: var(--signal-fill); }
+.bars .v { color: var(--ink); font-variant-numeric: tabular-nums; }
+/* The bar is at its real width by default, so no-JS and reduced-motion readers see the finished
+   figure. Only a scripted page with motion allowed starts it at zero and lets it grow on first view. */
+@media (prefers-reduced-motion: no-preference) {
+  /* grown with transform, not width: the bar keeps its box and nothing around it re-lays out */
+  .bars .bar { transform-origin: left center; transition: transform 700ms var(--ease-out); }
+  html.js .reveal:not(.seen) .bars .bar { transform: scaleX(0); }
+}
+
+/* architecture diagram: plain boxes and hairline edges, no library */
+.diag { display: grid; gap: 0.5rem; justify-items: stretch; font-size: 0.9375rem; }
+.diag .box { border: 1px solid var(--line); padding: 0.85rem 1rem; background: var(--bg); }
+.diag .box b { display: block; font: 600 1rem/1.3 var(--sans); }
+.diag .box small { display: block; margin-top: 0.2rem; font: 400 0.75rem/1.5 var(--mono); color: var(--mut); }
+.diag .box.mine { border-color: var(--signal); }
+.diag .box.mine b::after { content: "my part";margin-left: 0.6rem; font: 500 0.6875rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); vertical-align: 0.15em; }
+.diag .edge { font: 400 0.75rem/1.5 var(--mono); color: var(--mut); text-align: center; letter-spacing: 0.04em; }
+.diag .key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.75rem; font: 400 0.75rem/1.5 var(--mono); color: var(--mut); }
+.diag .key span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.diag .key i { width: 12px; height: 12px; border: 1px solid var(--line); }
+.diag .key i.mine { border-color: var(--signal); }
+
+/* plain rows: Path, Toolbox, Can do, Facts, as lists rather than cards */
+.rows { border-top: 1px solid var(--line); }
+.rows > * { display: grid; grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr); gap: 0.25rem var(--gap); padding-block: 0.9rem; border-bottom: 1px solid var(--line); }
+.rows dt, .rows .when { font: 500 0.75rem/1.7 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); }
+.rows dd, .rows .what { text-wrap: pretty; }
+.rows b { font-weight: 600; }
+.rows .aside-note { color: var(--mut); }
+/* which rows of the stack were his. Same badge as the architecture diagram's boxes. */
+.rows .mine { display: block; color: var(--signal); }
+.spaced { margin-top: clamp(1.5rem, 4vh, 2.5rem); }
+@media (max-width: 40rem) { .rows > * { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------- contact + footer */
+.contact { border-top: 1px solid var(--line); background: var(--ink); color: var(--bg); padding-block: clamp(3rem, 8vh, 6rem); }
+.contact .label, .contact .cap { color: color-mix(in srgb, var(--bg) 72%, transparent); }
+.contact h2 { margin-top: 0.75rem; }
+.contact .lede { margin-top: 1rem; color: color-mix(in srgb, var(--bg) 85%, transparent); }
+.contact .big { display: inline-block; margin-top: 1.5rem; font: 600 clamp(1.125rem, 3.4vw, 2.25rem)/1.2 var(--mono); letter-spacing: -0.02em; color: var(--bg); overflow-wrap: anywhere; }
+.contact .btn { border-color: color-mix(in srgb, var(--bg) 45%, transparent); color: var(--bg); }
+.contact .btn:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+.contact .btn-plain { border-color: color-mix(in srgb, var(--bg) 35%, transparent); color: color-mix(in srgb, var(--bg) 82%, transparent); }
+.contact .btn-plain:hover { color: var(--bg); border-color: var(--bg); }
+.contact .more { color: color-mix(in srgb, var(--bg) 82%, transparent); }
+.contact .more:hover { color: var(--bg); }
+.contact :focus-visible { outline-color: var(--bg); }
+.contact .row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 1.5rem; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin-top: clamp(2rem, 5vh, 3rem); padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, var(--bg) 25%, transparent); font: 400 0.75rem/1.6 var(--mono); color: color-mix(in srgb, var(--bg) 72%, transparent); }
+.site-foot { border-top: 1px solid var(--line); padding-block: 1.5rem; font: 400 0.75rem/1.6 var(--mono); color: var(--mut); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: center; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-left: auto; }
+.site-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---------------------------------------------------------------- print
+   A CV or a case study printed from the browser should be a document, not a screenshot of one. */
+@media print {
+  :root { --bg: #fff; --panel: #fff; --ink: #000; --mid: #333; --mut: #555; --line: #bbb; --signal: #000; --signal-fill: #000; --on-signal: #fff; }
+  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas { display: none !important; }
+  /* print the diagram, not the canvas: the still packets and the inner ring come back */
+  .model.live .dgram .pk, .model.live .dgram .ring.inner { opacity: 1; }
+  .shot.paper { filter: none !important; }   /* paper prints as paper */
+  body { font-size: 11pt; }
+  .hero { min-height: 0; padding-block: 0 1rem; }
+  h1 { font-size: 28pt; }
+  .contact { background: none; color: #000; border-top: 1px solid #bbb; }
+  .sec, .case + .case { break-inside: auto; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font: 400 8pt var(--mono); color: #555; word-break: break-all; }
+}

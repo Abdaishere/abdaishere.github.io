@@ -42,6 +42,10 @@ h2{ font-size:1.5rem; margin:3rem 0 1rem }
 p,li{ color:var(--mid); max-width:44rem }
 a{ color:var(--accent) }
 a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px }
+/* Same skip link the rest of the site has: this page is 24 tab stops long and the download
+   button is a third of the way down it. */
+.skip{ position:absolute; left:1rem; top:-4rem; z-index:60; padding:.7rem 1rem; background:var(--fg); color:var(--bg); text-decoration:none; border-radius:4px }
+.skip:focus{ top:.5rem }
 .lede{ font-size:1.3rem; color:var(--fg); font-weight:700 }
 .logo{ display:block; width:min(100%, 34rem); height:auto }
 .facts{ display:grid; grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr)); gap:1px; background:var(--hair); border:1px solid var(--hair); border-radius:14px; overflow:hidden; margin:0 }
@@ -63,7 +67,8 @@ footer a{ color:#7c8396 }
 </style>
 </head>
 <body>
-<main>
+<a class="skip" href="#main">Skip to content</a>
+<main id="main">
 <img class="logo" src="../brand/lockup-horizontal.svg" alt="PolyBall" width="971" height="264">
 <h1>Press kit</h1>
 <p class="lede">Every note you hear, you played. One miss ends the run.</p>
@@ -77,7 +82,7 @@ footer a{ color:#7c8396 }
   <div><dt>Price</dt><dd>Free, with ads and optional purchases</dd></div>
   <div><dt>Languages</dt><dd>15: English, Spanish, Brazilian Portuguese, French, German, Italian, Russian, Turkish, Japanese, Korean, Simplified Chinese, Arabic (Egyptian and Modern Standard), Hindi, Indonesian</dd></div>
   <div><dt>Engine</dt><dd>Godot 4, GDScript</dd></div>
-  <div><dt>Website</dt><dd><a href="/games/polyball/">abdaishere.com/games/polyball</a></dd></div>
+  <div><dt>Website</dt><dd><a href="/polyball/">abdaishere.com/polyball</a></dd></div>
   <div><dt>Contact</dt><dd><a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></dd></div>
 </dl>
 
@@ -113,7 +118,7 @@ footer a{ color:#7c8396 }
 </ul>
 
 <h2>Logo and icon</h2>
-<p>Free to use in coverage of PolyBall. Write the name as PolyBall: one word, capital P and B. Keep the ring-colour versions on a dark ground; on white, use the dark wordmark.</p>
+<p>Free to use in coverage of PolyBall. Write the name as PolyBall: one word, capital P and B. Keep the ring-colour versions on a dark ground. On white, use the dark wordmark.</p>
 <ul class="logos">
   <li><img src="../brand/lockup-horizontal.svg" alt="" width="971" height="264"><p>Horizontal lockup: <a href="../brand/lockup-horizontal.svg">SVG</a> &middot; <a href="png/lockup-horizontal.png">PNG</a></p></li>
   <li><img src="../brand/lockup-stacked.svg" alt="" width="770" height="618"><p>Stacked lockup: <a href="../brand/lockup-stacked.svg">SVG</a> &middot; <a href="png/lockup-stacked.png">PNG</a></p></li>
@@ -124,7 +129,7 @@ footer a{ color:#7c8396 }
 </ul>
 
 <footer>
-<p>PolyBall &middot; <a href="/games/polyball/">Home</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/delete.html">Delete my data</a></p>
+<p>PolyBall &middot; <a href="/polyball/">Home</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/delete.html">Delete my data</a></p>
 </footer>
 </main>
 </body>

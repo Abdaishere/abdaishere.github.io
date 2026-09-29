@@ -39,6 +39,9 @@ a { color: #8fa2ff; }
 /* #7c8396 is 5.0:1 on #0f1117; the old #6b7285 was 3.9:1 and failed AA. */
 footer { margin-top: 3.5rem; color: #7c8396; font-size: .85rem; }
 footer a { color: #7c8396; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 60; padding: .7rem 1rem;
+  background: #e6e8ee; color: #0f1117; text-decoration: none; border-radius: 4px; }
+.skip:focus { top: .5rem; }
 @media (prefers-color-scheme: light) {
   body { background: #fbfbfd; color: #14161d; }
   p, li { color: #3d4353; }
@@ -48,16 +51,18 @@ footer a { color: #7c8396; }
   .lede { color: #14161d; }
   /* #5c6273 is 5.9:1 on #fbfbfd; #767c8c was 4.0:1 and footer a kept the dark-mode grey (3.7:1). */
   footer, footer a, .meta { color: #5c6273; }
+  .skip { background: #14161d; color: #fbfbfd; }
 }
 </style>
 </head>
 <body>
-<main>
+<a class="skip" href="#main">Skip to content</a>
+<main id="main">
 <h1>Nothing here</h1>
-<p class="lede">That page does not exist. <a href="/games/polyball/">Back to PolyBall</a>.</p>
+<p class="lede">That page does not exist. <a href="/polyball/">Back to PolyBall</a>.</p>
 
 <footer>
-<p>PolyBall &middot; com.polyball.game &middot; <a href="/games/polyball/">Home</a>
+<p>PolyBall &middot; com.polyball.game &middot; <a href="/polyball/">Home</a>
 &middot; <a href="/privacy.html">Privacy</a>
 &middot; <a href="/delete.html">Delete my data</a></p>
 </footer>

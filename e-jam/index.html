@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E‑Jam · A test bench for network switches · Abdallah El Belkasy</title>
+<meta name="description" content="E-Jam is a distributed test bench for network switches: C++ generators and verifiers in containers, statistics over Kafka, and a Rust control plane. One full test pass went from over two hours to about ten minutes. I worked on the control plane, the Kafka layer and the Flutter client.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://abdaishere.com/e-jam/">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://abdaishere.com/e-jam/">
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="E‑Jam · A test bench for network switches">
+<meta property="og:description" content="E-Jam runs the RFC 2544 and RFC 2889 switch tests unattended and grades the result. One cycle went from 2 h+ to about 10 min. I worked on the Rust control plane, Kafka and the Flutter client.">
+<!-- Share card: rendered by tools/make_og.py from tools/og/cards.html (card "ejam"). Absolute URL,
+     PNG. New file name on a copy change: Telegram and WhatsApp cache the old bytes. -->
+<meta property="og:image" content="https://abdaishere.com/img/og/ejam.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="E-Jam: a test bench for network switches. One full test pass, from over two hours to about ten minutes. Rust control plane, C++ generators and verifiers, statistics over Kafka. Packet dots converge on a hexagonal switch ring.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/ejam.png">
+<meta name="twitter:image:alt" content="E-Jam: a test bench for network switches. One full test cycle, from over two hours to about ten minutes.">
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script src="/boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/#path">Path</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
+
+<main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span>Dubai <span class="clock needs-js">--:--</span></span>
+    <span>120 BPM <i class="beat" id="beat" aria-hidden="true"></i></span>
+    <span>Case study · 2023</span>
+    <span>Open to Rust · systems · backend</span>
+  </div>
+</div>
+
+  <article>
+  <section class="hero quiet" id="top" aria-labelledby="name">
+    <canvas class="trace" id="trace" aria-hidden="true"></canvas>
+    <canvas class="trace off" id="trace2d" aria-hidden="true"></canvas>
+    <div class="wrap hero-grid">
+      <h1 id="name"><span class="line">E‑Jam</span></h1>
+      <div class="copy knock">
+        <p class="claim">A test bench for network switches, spread across many machines.</p>
+        <dl class="meta">
+          <div><dt>My part</dt><dd>The Admin Client: Center Point, the Rust control plane, the Flutter client, and the Kafka layer between them</dd></div>
+          <div><dt>When</dt><dd>Jan – Aug 2023</dd></div>
+          <div><dt>Context</dt><dd>Cairo University graduation project, five developers, with Siemens EDA as product owner</dd></div>
+          <div><dt>Licence</dt><dd>MIT, <a href="https://github.com/Abdaishere/E-Jam">public on GitHub</a></dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="wrap fig-row knock">
+      <p class="cap"><b>Fig. 01</b> &#183; Traffic on a line, one burst per beat. The shape of the bench it stands for is drawn properly in Fig.&nbsp;05.<span class="needs-js"> Click or tap to send a burst.</span></p>
+      <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
+    </div>
+  </section>
+
+  <section class="sec" id="problem" aria-labelledby="problem-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">01 · The problem</p>
+        <h2 id="problem-h">Proving a switch is sound took an afternoon and a person</h2>
+      </div>
+      <div class="split">
+        <div class="story">
+          <p class="prose">A network switch is the box every packet in an office passes through, and a new one has to prove it can carry full traffic without dropping or delaying anything. The proof is a standard set of measurements (throughput, latency, frame loss) at several frame sizes, each repeated many times. Done by hand, one full pass took an engineer more than two hours, and the hand was the slow part.</p>
+          <p class="prose">Two RFCs define what those measurements mean. <strong>RFC 2544</strong> finds throughput by binary search on the send rate: every trial runs at least 30 seconds and the final one at least 60, and a trial passes only if nothing is dropped. Latency comes from a single tagged frame dropped into a 60-second stream, timestamped on the way in and the way out, over at least 20 trials. Frame loss is at least 10 trials per frame size, starting at the full rate and stepping down. <strong>RFC 2889</strong> covers the switching cases on top of that, and RFC 1242 and RFC 2285 supply the vocabulary both of them use.</p>
+          <p class="prose">None of that is difficult. All of it is long, repetitive and exactly the kind of work a person does slightly differently the fourth time.</p>
+        </div>
+        <div class="aside">
+          <figure class="panel reveal" aria-labelledby="cycle-cap">
+            <figcaption class="cap" id="cycle-cap"><b>Fig. 02</b> · One switch test cycle, drawn to scale<span class="sr">: over 120 minutes by hand, about 10 minutes with E-Jam.</span></figcaption>
+            <div class="bars" aria-hidden="true">
+              <span class="k">By hand</span><span class="track"><i class="bar" style="--w:100%"></i></span><span class="v">120+ min</span>
+              <span class="k">E‑Jam</span><span class="track"><i class="bar now" style="--w:8.33%"></i></span><span class="v">~10 min</span>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="built" aria-labelledby="built-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">02 · What we built</p>
+        <h2 id="built-h">One control plane, as many test nodes as you have</h2>
+        <p class="lede">You describe a test once. Every machine in the bench runs its share of it, and every process reports on the same bus, so the client can draw the result while the run is still going.</p>
+      </div>
+
+      <figure class="panel" aria-labelledby="arch-cap">
+        <figcaption class="cap" id="arch-cap"><b>Fig. 03</b> · How the pieces fit together.</figcaption>
+        <div class="diag">
+          <div class="box mine"><b>Admin client</b><small>Flutter · configures a test, charts it live</small></div>
+          <p class="edge"><span aria-hidden="true">↓</span> REST</p>
+          <div class="box mine"><b>Center Point</b><small>Rust · Actix Web · explicit state machines for every stream, device and process</small></div>
+          <p class="edge"><span aria-hidden="true">↓</span> starts and stops a run on every node</p>
+          <div class="box"><b>System API × N</b><small>Java · Spring Boot · one per test node</small></div>
+          <p class="edge"><span aria-hidden="true">↓</span> launches the processes in Docker</p>
+          <div class="box"><b>Generators, verifiers, gateway</b><small>C++ · statistics out through named pipes</small></div>
+          <p class="edge"><span aria-hidden="true">↕</span> packets to the switch and back</p>
+          <div class="box"><b>Switch under test</b><small>watched passively over SNMP between tests</small></div>
+          <p class="edge"><span aria-hidden="true">↑</span> Avro-typed topics, checked against the schema registry</p>
+          <div class="box mine"><b>Apache Kafka</b><small>every node's statistics, back to Center Point and on to the charts</small></div>
+          <p class="key"><span><i class="mine" aria-hidden="true"></i>The part I worked on</span><span><i aria-hidden="true"></i>The rest of the team</span></p>
+        </div>
+      </figure>
+
+      <div class="split spaced">
+        <div class="story">
+          <section class="block">
+            <h3>What the user controls</h3>
+            <p class="prose">One frame size or a mix of them in a chosen ratio, from 64 bytes up to 1518. Traffic that runs back to back or in bursts, with the inter-frame gap under your hand. A share of broadcast frames, to see how the switch copes with flooding. A PRNG seed and a payload type, so a run can be repeated exactly. Four presets cover the usual jobs: throughput, latency, frame loss rate and packet integrity.</p>
+          </section>
+          <section class="block">
+            <h3>How a packet proves itself</h3>
+            <p class="prose">Every frame carries a two-byte stream id, an eight-byte sequence number, a timestamp the switch writes as the frame passes, and a four-byte CRC. That is the whole trick: with an id and a sequence number the verifier knows which stream a frame belongs to and whether any went missing, arrived twice or arrived out of order, and with the switch's own timestamp it can price the delay the switch added rather than the delay the network added.</p>
+          </section>
+        </div>
+        <div class="aside">
+          <figure>
+            <img class="shot" src="/img/ejam/stream-config.webp" width="721" height="847" loading="lazy" decoding="async" alt="The Stream Details form in the admin client: fields for id, name, description, delay, duration, inter-frame gap, generator and verifier counts, number of packets, broadcast frame frequency, generation seed, payload length and type, burst length and delay, flow type and transport protocol.">
+            <figcaption class="cap"><b>Fig. 04</b> · Configuring one stream in the admin client. Screenshot from the project repository, MIT.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <figure class="spaced" id="traffic" aria-labelledby="traffic-cap">
+        <div class="model">
+          <svg class="dgram" aria-hidden="true" focusable="false"></svg>
+          <div class="dlabels" role="group" aria-label="Fig. 05 nodes"></div>
+          <canvas id="scene" aria-hidden="true"></canvas>
+          <p class="tally" aria-hidden="true"><span class="wide-only">In this drawing, since you arrived</span><span><b id="c-sent">0</b> sent</span><span><b id="c-ok">0</b> verified</span><span><b id="c-lost">0</b> lost</span></p>
+        </div>
+        <figcaption class="fig-row">
+          <p class="cap" id="traffic-cap"><b>Fig. 05</b> &#183; E&#8209;Jam with the traffic on. Generator nodes on the left fire packets down their own stream to the switch under test, and the switch forwards each one to the verifier that is expecting it. Every packet turns amber for the instant it is inside the switch. That amber is the stamp the verifier prices the delay from. Not every frame comes out the far side, and the tally is what notices, which is the whole reason a frame carries a sequence number. The layout and the counters describe this drawing, not a measured run.<span class="needs-js"> The nodes are buttons. Turn a generator off and its stream stops: nothing more is sent, so nothing on that lane can be lost. Turn a verifier off and the stream still crosses the switch, but nobody checks the far end, so every frame on it counts as lost.<span class="live-only"> Click anywhere else on the figure to send a burst.</span></span></p>
+          <button class="btn-plain pause needs-js reserved" type="button" id="scene-pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> the model</span></button>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="mine" aria-labelledby="mine-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">03 · My part</p>
+        <h2 id="mine-h">The Admin Client: the control plane, the stream, and the client</h2>
+        <p class="lede">Five of us built E‑Jam. The three I worked on sit together in the repository under one directory called Admin Client, and they are the route a number takes: a process on a test node counts something, and a chart on somebody else's desk has to show it.</p>
+      </div>
+      <div class="split flip">
+        <div class="story">
+          <p class="prose"><strong>Center Point</strong> is the Rust service on Actix Web that everything else talks to. Its REST API is the only way a test is created, started, stopped or inspected, and behind that API every stream, device and process moves through an explicit state machine rather than a pile of booleans. A stream is created, sent to the nodes, queued, started, and then finishes, stops or errors. Each of those edges is a named transition that can be refused. Being able to say "this stream cannot go from Queued to Finished" is what makes an unattended run trustworthy: a test that ends in a state nobody expected is a test whose result you cannot use.</p>
+          <p class="prose">Center Point also consumes the statistics topics, so it is the one place that knows what every node is seeing, and the one place the client has to ask.</p>
+          <p class="prose">The <strong>Kafka layer</strong> is how anything that happens on a node reaches the screen at all. Each node's System API produces its statistics onto topics. The messages are Avro, registered against a schema registry, so a producer and a consumer that disagree about the shape of a statistic fail at the registry instead of quietly halfway through a run. The stack itself comes up from one compose file (Zookeeper, the brokers, the registry, ksqlDB), so a new bench has a streaming layer before it has a test.</p>
+          <p class="prose">The <strong>Flutter client</strong> is the end of that path: it configures a test and charts the results as they arrive. The team moved it off Electron mid-project, which the project documentation records as the riskiest call we made. It was also the right one. The UI got fast enough to draw live data without falling behind it.</p>
+        </div>
+        <div class="aside">
+          <figure>
+            <img class="shot paper" src="/img/ejam/stream-fsm.webp" width="1146" height="796" loading="lazy" decoding="async" alt="The stream state machine. Created goes to Sent on Start. Sent queues to Queued and back again. Queued starts to Running, and Sent can force-start straight to Running. Running reaches Finished when the stream finishes. Sent, Queued and Running can all fail to Error or be stopped to Stopped. Stopped, Error and Finished can all restart back to Sent.">
+            <figcaption class="cap"><b>Fig. 06</b> · The stream state machine, one of three in Center Point. Diagram from the project repository, MIT.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <figure class="spaced">
+        <img class="shot" src="/img/ejam/app-view.webp" width="1137" height="734" loading="lazy" decoding="async" alt="The admin client dashboard: a left rail with Dashboard, Streams, Devices, Charts, Settings and About, transport controls at the top, a grid of stream tiles coloured green and red by pass or fail, a progress dial at 80.98%, element counts, and gauges for upload, download, error rate and accepted packets. The data shown is placeholder.">
+        <figcaption class="cap"><b>Fig. 07</b> · The dashboard during a run, with placeholder data. Screenshot from the project repository, MIT.</figcaption>
+      </figure>
+
+      <section class="block spaced">
+        <h3>The stack, end to end</h3>
+        <p class="prose">Five components, four languages, and which of them I worked on. Nobody wrote all of it.</p>
+        <dl class="rows" aria-label="The E-Jam stack, component by component">
+          <div>
+            <dt>Center Point <span class="mine">my part</span></dt>
+            <dd><b>Rust · Actix&nbsp;Web.</b> The control plane, and the only thing the client ever talks to. It is also the one process that has seen what every node has seen.</dd>
+          </div>
+          <div>
+            <dt>Streaming <span class="mine">my part</span></dt>
+            <dd><b>Apache Kafka · Avro · schema registry.</b> The bus every node's statistics travel on, typed at both ends. Zookeeper, the brokers, the registry and ksqlDB all come up from one compose file.</dd>
+          </div>
+          <div>
+            <dt>Admin client <span class="mine">my part</span></dt>
+            <dd><b>Dart · Flutter.</b> The cross-platform desktop client: configure a test, watch it draw. It replaced an Electron prototype halfway through the project.</dd>
+          </div>
+          <div>
+            <dt>System API</dt>
+            <dd><b>Java · Spring&nbsp;Boot.</b> One per test node. It takes what Center Point sends, starts and stops the processes in Docker on that machine, and produces their statistics onto Kafka.</dd>
+          </div>
+          <div>
+            <dt>Generators, verifiers, gateway</dt>
+            <dd><b>C++.</b> The processes that put frames on the wire and check what comes back, one container each, handing their statistics up through named pipes.</dd>
+          </div>
+          <div>
+            <dt>Switch under test</dt>
+            <dd><b>SNMP.</b> Not ours: the device being measured, watched passively between runs.</dd>
+          </div>
+        </dl>
+        <p class="cap">GitHub's language breakdown puts about a tenth of the repository under C. There is no C component: the repository holds no hand-written C source, and that tenth is header and build files counted that way.</p>
+      </section>
+    </div>
+  </section>
+
+  <section class="sec" id="outcome" aria-labelledby="outcome-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">04 · What changed</p>
+        <h2 id="outcome-h">The measurements</h2>
+        <p class="lede">Each figure below names where it comes from. The project documentation records no packets-per-second, node-count or Kafka throughput numbers, so this page does not carry any.</p>
+      </div>
+      <dl class="ledger" aria-label="E-Jam outcome">
+        <div class="m">
+          <dt>One full test pass, from an afternoon to a coffee break.</dt>
+          <dd><span class="from">2 h+</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="120" data-to="10" data-dec="0" data-prefix="~">~10</b><span class="unit">min</span><cite>CV · E‑Jam</cite></dd>
+        </div>
+        <div class="m">
+          <dt>Tests that were run by hand now run themselves and grade the result.</dt>
+          <dd><b class="num">5+</b><span class="unit">cases</span><cite>CV · E‑Jam</cite></dd>
+        </div>
+        <div class="m">
+          <dt>Commits, the largest share in a team of five developers.</dt>
+          <dd><b class="num" data-from="0" data-to="256" data-dec="0">256</b><span class="unit">/ 548</span><cite><a href="https://github.com/Abdaishere/E-Jam/graphs/contributors">GitHub · contributors API</a></cite></dd>
+        </div>
+      </dl>
+      <figure class="spaced" aria-labelledby="lang-cap">
+        <dl class="ledger four flat" aria-label="Languages in the repository, by bytes">
+          <div class="m"><dt>Dart · the admin client</dt><dd><b class="num">31</b><span class="unit">%</span></dd></div>
+          <div class="m"><dt>C++ · generators and verifiers</dt><dd><b class="num">20</b><span class="unit">%</span></dd></div>
+          <div class="m"><dt>Java · the per-node system API</dt><dd><b class="num">16</b><span class="unit">%</span></dd></div>
+          <div class="m"><dt>Rust · Center Point</dt><dd><b class="num">12</b><span class="unit">%</span></dd></div>
+        </dl>
+        <figcaption class="cap" id="lang-cap"><b>Fig. 08</b> · What the repository is made of, by bytes, from the <a href="https://github.com/Abdaishere/E-Jam">GitHub languages API</a>, read on 2026-09-28. The remaining tenth is filed as C. The stack above says why that is not a fifth language.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="team" aria-labelledby="team-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">05 · The team</p>
+        <h2 id="team-h">Five developers, two-week sprints</h2>
+      </div>
+      <div class="split">
+        <div class="story">
+          <p class="prose">A five-developer graduation project, run in two-week sprints with a product owner and a scrum master alongside us, supervised at Cairo University by Dr Mohammad El-Ramly. I worked on the control plane, the streaming layer and the client. The repository is public under MIT, and the documentation, the diagrams and the screenshots on this page all come out of it.</p>
+          <p class="links">
+            <a class="more" href="https://github.com/Abdaishere/E-Jam">Source on GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <a class="more" href="https://youtu.be/oPZLR4RM150">Watch the walkthrough <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <a class="more" href="/">Back to the rest of the work <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </article>
+</main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
+    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <a class="btn-plain" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+        <span>Download CV (PDF)</span>
+      </a>
+      <span class="sr" id="copy-status" role="status"></span>
+      <p class="cap">Dubai, UTC+4<span class="needs-js">, where it is <span class="clock">--:--</span> now</span>.</p>
+    </div>
+    <div class="foot">
+      <p>© 2026 Abdallah El Belkasy</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/site.js"></script>
+<script type="module">
+import { start } from '/trace.js';
+import { counters, reveal } from '/measure.js';
+
+counters();
+reveal();
+
+// The same trace as the home page, quieter: six lanes behind a shorter hero.
+const beat = document.getElementById('beat');
+let phase = false;
+const trace = start(document.getElementById('trace'), {
+  fallback: document.getElementById('trace2d'),
+  lanes: 6,
+  onBeat: () => { phase = !phase; beat.classList.toggle('on', phase); },
+});
+document.addEventListener('theme-change', () => trace.recolor());
+
+const pause = document.getElementById('pause');
+pause.addEventListener('click', () => {
+  const p = pause.dataset.paused !== 'true';
+  pause.dataset.paused = String(p);
+  p ? trace.pause() : trace.resume();
+});
+
+if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__trace = trace; // gate hook
+
+/* ---- Fig. 05, the traffic model ----
+ * The diagram is drawn straight away and is never taken away: geometry in the <svg>, every label
+ * as real DOM text over it, and one frozen frame of traffic so the figure explains itself before
+ * anything is downloaded. three.js only replaces the frozen packets with moving ones.
+ *
+ * It costs about 190 KB gzipped against a 9 KB page, so it is never in the critical path: nothing
+ * is fetched until the figure is near the viewport, and nothing at all on a device asking for
+ * reduced motion, saving data, short of memory, or without a WebGL context. Those keep the still
+ * diagram, which is the whole point of drawing it first. */
+import { draw, applyState, variant, freshState } from './diagram.js';
+
+const model = document.querySelector('#traffic .model');
+const dgram = model.querySelector('.dgram');
+const dlabels = model.querySelector('.dlabels');
+const canvas = document.getElementById('scene');
+const scenePause = document.getElementById('scene-pause');
+const out = { sent: document.getElementById('c-sent'), ok: document.getElementById('c-ok'), lost: document.getElementById('c-lost') };
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const constrained = navigator.connection?.saveData || (navigator.deviceMemory && navigator.deviceMemory <= 2);
+const lowPower = matchMedia('(pointer: coarse)').matches || innerWidth < 720;
+const nf = new Intl.NumberFormat('en-GB');
+
+let sceneApi = null, booting = false, gaveUp = false, onScreen = false, shown = null;
+
+/* Which nodes the reader has left switched on. It lives here, not in the scene, because it has to
+ * outlive the scene: the figure is redrawn at the breakpoint, three.js may never load at all, and
+ * the still diagram answers to the same switchboard the moving one does. */
+const state = freshState();
+const apply = () => { applyState(dgram, dlabels, key, state); sceneApi?.setState(state); };
+
+let key = variant();
+draw(dgram, dlabels, key, { frozen: true });
+apply();
+
+model.addEventListener('click', (e) => {
+  const b = e.target.closest('.dnode');
+  if (!b) return;
+  state[b.dataset.kind][+b.dataset.s] = b.getAttribute('aria-pressed') === 'false';
+  apply();
+});
+
+async function boot() {
+  if (sceneApi || booting || gaveUp || calm.matches || constrained) return;
+  const probe = document.createElement('canvas');
+  if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return;
+  booting = true;
+  try {
+    const { start: startScene } = await import('./scene.js');
+    if (sceneApi || calm.matches) return; // reduced motion was switched on while the module loaded
+    sceneApi = startScene(canvas, {
+      lowPower, key, state, from: shown,
+      onCount: (c) => { shown = c; out.sent.textContent = nf.format(c.sent); out.ok.textContent = nf.format(c.verified); out.lost.textContent = nf.format(c.lost); },
+    });
+    sceneApi.setPaused(scenePause.dataset.paused === 'true');
+    model.classList.add('live');
+    scenePause.classList.remove('reserved');
+    if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__scene = sceneApi; // gate hook
+  } catch (err) { console.info('Traffic model unavailable, keeping the still diagram.', err); }
+  finally { booting = false; }
+}
+
+// Back to the still diagram for the rest of the visit. Pause is about to vanish, so its focus
+// moves first, and the counters go back to zero rather than freezing on a number that stopped.
+const toStill = () => {
+  if (scenePause.contains(document.activeElement)) { model.tabIndex = -1; model.focus(); }
+  sceneApi = null; window.__scene = null;
+  model.classList.remove('live');
+  scenePause.classList.add('reserved');
+  shown = null;
+  for (const el of Object.values(out)) el.textContent = '0';
+};
+canvas.addEventListener('scene-fallback', () => { gaveUp = true; toStill(); });
+calm.addEventListener('change', () => { if (calm.matches) { sceneApi?.dispose(); toStill(); } else if (onScreen) boot(); });
+
+scenePause.addEventListener('click', () => {
+  const p = scenePause.dataset.paused !== 'true';
+  scenePause.dataset.paused = String(p);
+  sceneApi?.setPaused(p);
+});
+
+// Four streams do not fit at 390 px, so the diagram has a two-stream form. Crossing the boundary
+// redraws it and rebuilds the scene on the new coordinates rather than leaving packets on lanes
+// that have moved.
+matchMedia('(min-width: 48rem)').addEventListener('change', () => {
+  const next = variant();
+  if (next === key) return;
+  key = next;
+  const wasLive = !!sceneApi;
+  sceneApi?.dispose(); sceneApi = null; window.__scene = null;
+  model.classList.remove('live');
+  draw(dgram, dlabels, key, { frozen: true });
+  apply();                                   // the reader's switches outlive the redraw
+  if (wasLive) boot();
+});
+
+new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) boot(); }, { rootMargin: '200px 0px' }).observe(model);
+</script>
+</body>
+</html>

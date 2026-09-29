@@ -11,7 +11,7 @@
     </filter>
     <filter id="halo" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="26"/></filter>
     <!-- The RING is the whole mark: a 5-gon (sides are always ODD in-game),
-         centred on the canvas at r 310. The ball + trail are gone — at launcher
+         centred on the canvas at r 310. The ball + trail are gone: at launcher
          size they collapsed into a smudge sitting above an off-centre shape
          (beta feedback, Android + iOS). Red is drawn LAST so it stays on top at
          both of its corners. -->

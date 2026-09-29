@@ -6,8 +6,8 @@
 <title>CV · Abdallah El Belkasy · Systems &amp; backend engineer</title>
 <meta name="description" content="One-page CV of Abdallah El Belkasy, software engineer in Dubai: the Rust control plane for E-Jam at Siemens EDA, PolyBall on Google Play, and Python and PostgreSQL backend work at Odoo. PDF, A4.">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://abdaishere.com/cv/">
 <link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
@@ -18,14 +18,14 @@
 <meta property="og:title" content="Abdallah El Belkasy · CV, one page">
 <meta property="og:description" content="Systems and backend engineer in Dubai. The Rust control plane for E-Jam at Siemens EDA, PolyBall on Google Play, Python and PostgreSQL backends at Odoo. PDF, A4, one page.">
 <!-- Share card: rendered by tools/make_og.py from tools/og/cards.html (card "cv"). Absolute URL, PNG.
-     New file name on a copy change: Telegram and WhatsApp cache the old bytes. -->
-<meta property="og:image" content="https://abdaishere.com/img/og/cv.png">
+     Bump the ?v= when the card's pixels change: Telegram and WhatsApp cache the old bytes. -->
+<meta property="og:image" content="https://abdaishere.com/img/og/cv.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Abdallah El Belkasy, curriculum vitae, one page PDF. Systems and backend engineer. Rust control plane at Siemens EDA, PolyBall on Google Play, Python and PostgreSQL at Odoo. A white A4 sheet beside the name.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://abdaishere.com/img/og/cv.png">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/cv.png?v=3">
 <meta name="twitter:image:alt" content="Abdallah El Belkasy, curriculum vitae, one page PDF. Systems and backend engineer in Dubai.">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/","jobTitle":"Software engineer","address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Cairo University"},"knowsAbout":["Rust","C++","Python","PostgreSQL","Apache Kafka","Distributed systems","Godot"],"sameAs":["https://github.com/Abdaishere","https://www.linkedin.com/in/abdallahelbelkasy"]}
@@ -33,160 +33,156 @@
 <link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/home.css">
+<link rel="stylesheet" href="/site.css">
 <style>
-/* Page-only rules; everything else is home.css. The sheet reuses .stage so the hero frames like the homepage. */
-.sheet { display: block; color: inherit; text-decoration: none; transition: border-color var(--t-fast); }
-.sheet:hover { border-color: var(--line2); }
-.sheet img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.short .band-head p + p { margin-top: -0.25rem; }
-.short .path li:target { background: color-mix(in srgb, var(--accent) 8%, transparent); }
-.short .path a { overflow-wrap: anywhere; } /* bare URLs have no break opportunity at 320 px */
-.short .toolbox { margin-top: 1.5rem; }
-.also-head { margin-top: 2rem; }
+/* Page-only: the one thing this page has that no other page does: a sheet of paper you can click. */
+.sheet { display: block; max-width: 52rem; }
+.sheet img { width: 100%; transition: border-color var(--t); }
+.sheet:hover img { border-color: var(--ink); }
 </style>
-<script>
-document.documentElement.classList.add('js');
-try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-</script>
+<script src="/boot.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="/"><span class="beat" aria-hidden="true"></span><span class="name-full">Abdallah El Belkasy</span><span class="name-short">A. El Belkasy</span></a>
-    <button class="pill-btn menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
     <nav class="nav" id="nav" aria-label="Site">
       <a href="/#work">Work</a>
       <a href="/#path">Path</a>
       <a href="/#about">About</a>
       <a href="/#contact">Contact</a>
     </nav>
-    <button class="pill-btn" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
   </div>
 </header>
 
 <main id="main">
-  <section class="hero" id="top" aria-labelledby="name">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <ul role="list" class="pills" aria-label="Status">
-            <li><span class="dot" aria-hidden="true"></span>Open to Rust · systems · backend</li>
-            <li>PDF · A4 · one page · 69 KB</li>
-          </ul>
-          <p class="eyebrow">Curriculum vitae</p>
-          <h1 id="name">Abdallah<br> El Belkasy</h1>
-          <p class="claim">Software engineer, systems &amp; backend.</p>
-          <p class="lede">Rust, C++ and Python. I wrote the Rust control plane for E-Jam, a switch-testing bench at Siemens EDA, shipped the rhythm game PolyBall on my own, and build Python and PostgreSQL backends at Odoo.</p>
-          <div class="cta">
-            <a class="btn primary" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">Download the CV (PDF)</a>
-            <a class="btn" href="/cv/Abdallah-El-Belkasy-CV.pdf" type="application/pdf">Open it in the browser</a>
-          </div>
-          <p class="fine">Updated 22 September 2026. Dubai, UTC+4. Remote worldwide, or relocation with a visa.</p>
+<div class="status">
+  <div class="wrap status-in">
+    <span>Dubai <span class="clock needs-js">--:--</span></span>
+    <span>PDF · A4 · one page · 69 KB</span>
+    <span>Updated 22 September 2026</span>
+    <span>Open to Rust · systems · backend</span>
+  </div>
+</div>
+
+  <section class="hero quiet" id="top" aria-labelledby="name">
+    <div class="wrap hero-grid">
+      <h1 id="name"><span class="line">Abdallah</span><span class="line">El Belkasy</span></h1>
+      <div class="copy">
+        <p class="claim">Software engineer, systems &amp; backend.</p>
+        <p class="lede">Rust, C++ and Python. I wrote the Rust control plane for E‑Jam, a switch-testing bench at Siemens EDA, shipped the rhythm game PolyBall on my own, and build Python and PostgreSQL backends at Odoo.</p>
+        <div class="cta">
+          <a class="btn primary" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">Download the CV (PDF)</a>
+          <a class="btn" href="/cv/Abdallah-El-Belkasy-CV.pdf" type="application/pdf">Open it in the browser</a>
+          <a class="more" href="/">Back to the site <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg></a>
         </div>
-
-        <figure class="fig hero-fig">
-          <a class="stage sheet" href="/cv/Abdallah-El-Belkasy-CV.pdf" type="application/pdf">
-            <img src="/cv/preview.webp" width="1600" height="1200" fetchpriority="high" alt="The top of the CV page: name, role, contact line, and the three highlight figures. The same facts are listed further down this page.">
-          </a>
-          <figcaption class="cap">Fig. 01 — The top of the page as it prints. Open the PDF for the whole sheet.</figcaption>
-        </figure>
+        <p class="cap">Dubai, UTC+4. Remote worldwide, or relocation with a visa.</p>
       </div>
-
-      <ul role="list" class="ledger" aria-label="Highlights">
-        <li class="lead"><a href="#ejam"><span class="eyebrow">2023 · Siemens EDA · E-Jam</span><span class="l-what">One full switch test cycle</span><span class="l-num"><s>2&nbsp;h+</s> <span class="arrow" aria-hidden="true">→</span><span class="sr">down to</span> ~10&nbsp;min</span></a></li>
-        <li><a href="#polyball"><span class="eyebrow">2026 · PolyBall · v0.9.4</span><span class="l-what">Google Play closed testing · open to new testers</span><span class="l-num">177 countries</span></a></li>
-        <li><a href="#odoo"><span class="eyebrow">2025–now · Odoo</span><span class="l-what">Enterprise clients · Python + PostgreSQL</span><span class="l-num">100+ projects</span></a></li>
-      </ul>
     </div>
   </section>
 
-  <section class="band short" id="short" aria-labelledby="short-h">
-    <div class="wrap split">
-      <div class="band-head">
-        <h2 id="short-h">The short version</h2>
-        <p>What the PDF says, in the order a hiring manager for Rust, systems or backend work would read it.</p>
-        <p>Nothing here is new after you download it.</p>
+  <section class="sec" id="highlights" aria-labelledby="highlights-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">The three figures</p>
+        <h2 id="highlights-h">What the sheet leads with</h2>
       </div>
-      <div>
-        <ol role="list" class="path" aria-label="Highlights">
-          <li id="ejam"><span class="p-when">Jan – Aug 2023</span><span class="p-what"><b>Siemens EDA · E-Jam.</b> Software engineer on the graduation project, remote from Cairo. Wrote Center Point, the Rust control plane on Actix Web: a REST API that drives every stream, device and process through explicit state machines and publishes to Apache Kafka against a schema registry. Built the Flutter admin client. Team of five, top contributor with 255 commits. One switch test cycle went from 2&nbsp;h+ to about 10&nbsp;min, and 5+ manual test cases run end to end with pass/fail. Open source, MIT: <a href="https://github.com/Abdaishere/E-Jam">github.com/Abdaishere/E-Jam</a>.</span></li>
-          <li id="polyball"><span class="p-when">2026</span><span class="p-what"><b>PolyBall.</b> Rhythm game, solo: design, code, audio and release. Godot 4, GDScript. In Google Play closed testing in 177 countries, with a browser build at <a href="/games/polyball/">abdaishere.com/games/polyball</a>. Every note is synthesised at runtime, 16 additive voices, no music files. CI across six targets on GitHub Actions; 15 locales, Arabic right-to-left layout covered by tests; live leaderboard on Supabase.</span></li>
-          <li id="odoo"><span class="p-when">Apr 2025 – now</span><span class="p-what"><b>Odoo PSAE · Software engineer, Dubai.</b> Python and PostgreSQL work on 100+ client projects: data models, business logic, database and performance fixes. Designed and built 5+ vertical modules now used by every client in their segment. Reviews partner code against Odoo standards. Star of the Month, July 2026.</span></li>
-        </ol>
-
-        <h3 class="eyebrow also-head">Also on the page</h3>
-        <ol role="list" class="path" aria-label="Earlier">
-          <li><span class="p-when">2023 – 2024</span><span class="p-what"><b>Mandatory national service,</b> Egypt.</span></li>
-          <li><span class="p-when">Jun – Aug 2022</span><span class="p-what"><b>Banque Misr · Android developer intern, Cairo.</b> Kotlin and Java screens in MVVM, REST APIs for accounts and authentication, crash and performance fixes.</span></li>
-          <li><span class="p-when">2019 – 2023</span><span class="p-what"><b>Cairo University · B.Sc. Computers and Artificial Intelligence.</b> GPA 3.5/4.0, Excellent with Honours, top 100 of 800+. ICPC contestant, 2021.</span></li>
-        </ol>
-
-        <div class="toolbox" id="skills">
-          <h3 class="eyebrow">Skills</h3>
-          <dl>
-            <div><dt>Languages</dt><dd>Rust, C++, Python, SQL, Java, Dart, GDScript, Kotlin</dd></div>
-            <div><dt>Systems</dt><dd>Apache Kafka, Docker, Linux, distributed test infrastructure</dd></div>
-            <div><dt>Backend</dt><dd>PostgreSQL, Actix Web, Spring Boot, Django, Odoo ORM, REST APIs</dd></div>
-            <div><dt>Shipping</dt><dd>GitHub Actions, cross-platform CI, Godot 4, Flutter</dd></div>
-            <div><dt>Spoken</dt><dd>Arabic (native), English (fluent)</dd></div>
-          </dl>
+      <dl class="ledger" aria-label="Highlights">
+        <div class="m">
+          <dt>One full switch test cycle, from an afternoon to a coffee break.</dt>
+          <dd><span class="from">2 h+</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="120" data-to="10" data-dec="0" data-prefix="~">~10</b><span class="unit">min</span><cite><a href="#ejam">2023 · Siemens EDA · E‑Jam</a></cite></dd>
         </div>
+        <div class="m">
+          <dt>Where PolyBall is open to testers on Google Play.</dt>
+          <dd><b class="num" data-from="0" data-to="177" data-dec="0">177</b><span class="unit">countries</span><cite><a href="#polyball">2026 · PolyBall · v0.9.6</a></cite></dd>
+        </div>
+        <div class="m">
+          <dt>Enterprise client projects, in Python and PostgreSQL.</dt>
+          <dd><b class="num">100+</b><span class="unit">projects</span><cite><a href="#odoo">2025–now · Odoo</a></cite></dd>
+        </div>
+      </dl>
+
+      <figure class="spaced">
+        <a class="sheet" href="/cv/Abdallah-El-Belkasy-CV.pdf" type="application/pdf">
+          <img class="shot" src="/cv/preview.webp" width="1600" height="1200" fetchpriority="high" alt="The top of the CV page: name, role, contact line, and the three highlight figures. The same facts are listed further down this page.">
+        </a>
+        <figcaption class="cap"><b>Fig. 01</b> · The top of the page as it prints. Open the PDF for the whole sheet.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="short" aria-labelledby="short-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">The short version</p>
+        <h2 id="short-h">What the PDF says, in reading order</h2>
+        <p class="lede">The order a hiring manager for Rust, systems or backend work would read it. Nothing here is new after you download it.</p>
       </div>
+      <ol role="list" class="rows" aria-label="Highlights">
+        <li id="ejam"><span class="when">Jan – Aug 2023</span><span class="what"><b>Siemens EDA · E‑Jam.</b> Software engineer on the graduation project, remote from Cairo. Wrote Center Point, the Rust control plane on Actix Web: a REST API that drives every stream, device and process through explicit state machines and publishes to Apache Kafka against a schema registry. Built the Flutter admin client. Team of five, top contributor with 255 commits. One switch test cycle went from 2&nbsp;h+ to about 10&nbsp;min, and 5+ manual test cases run end to end with pass/fail. <a href="/e-jam/">The case study</a> · open source, MIT: <a href="https://github.com/Abdaishere/E-Jam">github.com/Abdaishere/E-Jam</a>.</span></li>
+        <li id="polyball"><span class="when">2026</span><span class="what"><b>PolyBall.</b> Rhythm game, solo: design, code, audio and release. Godot 4, GDScript. In Google Play closed testing in 177 countries, with a browser build at <a href="/polyball/">abdaishere.com/polyball</a>. Every note is synthesised at runtime, 16 additive voices, no music files. CI across six targets on GitHub Actions. 15 locales, with Arabic right-to-left layout covered by tests. Live leaderboard on Supabase.</span></li>
+        <li id="odoo"><span class="when">Apr 2025 – now</span><span class="what"><b>Odoo PSAE · Software engineer, Dubai.</b> Python and PostgreSQL work on 100+ client projects: data models, business logic, database and performance fixes. Designed and built 5+ vertical modules now used by every client in their segment. Reviews partner code against Odoo standards. Star of the Month, July 2026.</span></li>
+      </ol>
+
+      <h3 class="label spaced">Also on the page</h3>
+      <ol role="list" class="rows" aria-label="Earlier">
+        <li><span class="when">2023 – 24</span><span class="what"><b>Mandatory national service,</b> Egypt.</span></li>
+        <li><span class="when">Jun – Aug 2022</span><span class="what"><b>Banque Misr · Android developer intern, Cairo.</b> Kotlin and Java screens in MVVM, REST APIs for accounts and authentication, crash and performance fixes.</span></li>
+        <li><span class="when">2019 – 2023</span><span class="what"><b>Cairo University · B.Sc. Computers and Artificial Intelligence.</b> GPA 3.5/4.0, Excellent with Honours, top 100 of 800+. ICPC contestant, 2021.</span></li>
+      </ol>
+
+      <h3 class="label spaced" id="skills">Skills</h3>
+      <dl class="rows" aria-label="Skills">
+        <div><dt>Languages</dt><dd>Rust, C++, Python, SQL, Java, Dart, GDScript, Kotlin</dd></div>
+        <div><dt>Systems</dt><dd>Apache Kafka, Docker, Linux, distributed test infrastructure</dd></div>
+        <div><dt>Backend</dt><dd>PostgreSQL, Actix Web, Spring Boot, Django, Odoo ORM, REST APIs</dd></div>
+        <div><dt>Shipping</dt><dd>GitHub Actions, cross-platform CI, Godot 4, Flutter</dd></div>
+        <div><dt>Spoken</dt><dd>Arabic (native), English (fluent)</dd></div>
+      </dl>
     </div>
   </section>
 </main>
 
 <footer class="contact" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
-    <h2 class="eyebrow" id="contact-h"><span class="beat" aria-hidden="true"></span>Hiring for Rust, systems or backend?</h2>
-    <p class="contact-lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
+    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
     <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
-    <div class="mail-row">
-      <a class="pill-btn action" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <a class="btn-plain" href="/cv/Abdallah-El-Belkasy-CV.pdf" download type="application/pdf">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
         <span>Download CV (PDF)</span>
       </a>
-      <a class="pill-btn action" href="/">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>
-        <span>Back to the site</span>
-      </a>
-      <p class="where">Dubai, UTC+4.</p>
+      <span class="sr" id="copy-status" role="status"></span>
+      <p class="cap">Dubai, UTC+4<span class="needs-js">, where it is <span class="clock">--:--</span> now</span>.</p>
     </div>
-    <ul role="list" class="links social">
-      <li><a href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
-      <li><a href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
-      <li><a href="https://www.youtube.com/@abdaizhere">YouTube <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
-      <li><a href="https://abdaishere.itch.io">itch.io <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+    <ul role="list" class="links">
+      <li><a class="more" href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.youtube.com/@abdaizhere">YouTube <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://abdaishere.itch.io">itch.io <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
     </ul>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
-      <p>Hand-built with HTML and CSS. No framework, no trackers.</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.</p>
     </div>
   </div>
 </footer>
 
+<script type="module" src="/site.js"></script>
 <script type="module">
-// Same theme switch and small-screen Menu as the homepage; no hero scene on this page.
-const root = document.documentElement;
-document.getElementById('theme').addEventListener('click', () => {
-  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = dark ? 'light' : 'dark';
-  try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-  paintBar();
-});
-function paintBar() { if (root.dataset.theme && CSS.supports('color', 'light-dark(#000, #fff)')) document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.content = root.dataset.theme === 'dark' ? '#09090b' : '#fafaf9'; }); }
-paintBar();
-
-const menu = document.getElementById('menu');
-const narrow = matchMedia('(max-width: 53.75rem)');
-const setMenu = (open) => { menu.setAttribute('aria-expanded', open); menu.textContent = open ? 'Close' : 'Menu'; root.classList.toggle('menu-open', open); };
-menu.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') !== 'true'));
-document.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
-narrow.addEventListener('change', () => setMenu(false));
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setMenu(false); if (narrow.matches) menu.focus(); } });
+// No trace on this page: the CV is here to be read and downloaded, not to be a demo.
+import { counters } from '/measure.js';
+counters();
 </script>
 </body>
 </html>

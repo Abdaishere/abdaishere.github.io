@@ -18,6 +18,7 @@
 <meta property="og:image:alt" content="PolyBall: Privacy and your data. What the game keeps, what it never sees, how to delete it.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://abdaishere.com/img/og/policy.png">
+<meta name="twitter:image:alt" content="PolyBall: Privacy and your data. What the game keeps, what it never sees, how to delete it.">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg?v=2" type="image/svg+xml">
 <link rel="icon" href="/img/favicon-32.png?v=2" type="image/png" sizes="32x32">
@@ -52,6 +53,9 @@ a { color: #8fa2ff; }
 /* #7c8396 is 5.0:1 on #0f1117; the old #6b7285 was 3.9:1 and failed AA. */
 footer { margin-top: 3.5rem; color: #7c8396; font-size: .85rem; }
 footer a { color: #7c8396; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 60; padding: .7rem 1rem;
+  background: #e6e8ee; color: #0f1117; text-decoration: none; border-radius: 4px; }
+.skip:focus { top: .5rem; }
 @media (prefers-color-scheme: light) {
   body { background: #fbfbfd; color: #14161d; }
   p, li { color: #3d4353; }
@@ -61,15 +65,17 @@ footer a { color: #7c8396; }
   .lede { color: #14161d; }
   /* #5c6273 is 5.9:1 on #fbfbfd; #767c8c was 4.0:1 and footer a kept the dark-mode grey (3.7:1). */
   footer, footer a, .meta { color: #5c6273; }
+  .skip { background: #14161d; color: #fbfbfd; }
 }
 </style>
 </head>
 <body>
-<main>
+<a class="skip" href="#main">Skip to content</a>
+<main id="main">
 <h1>POLYBALL PRIVACY POLICY</h1>
 <p class="meta">Effective 24 September 2026<br>App: PolyBall (com.polyball.game), published by Abdallah El Belkasy (solo developer).<br>Contact: <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
 <h2>THE SHORT VERSION</h2>
-<p>PolyBall uses the internet for exactly four things: showing ads through Google AdMob, processing optional purchases through Google Play, anonymous usage statistics through PostHog (you can turn these off), and the optional online leaderboard. The game still has no accounts, no sign-in, and collects no personal data of its own - the online features run on a random install identifier and a generated player name, never anything you typed. This policy explains exactly what each system does and how you control it.</p>
+<p>PolyBall uses the internet for exactly four things: showing ads through Google AdMob, processing optional purchases through Google Play, anonymous usage statistics through PostHog (you can turn these off), and the optional online leaderboard. The game still has no accounts, no sign-in, and collects no personal data of its own. The online features run on a random install identifier and a generated player name, never anything you typed. This policy explains exactly what each system does and how you control it.</p>
 <h2>WHAT CHANGED FROM THE PREVIOUS VERSION</h2>
 <p>Earlier versions of PolyBall had no internet permission at all. Later versions added it for ads and then for in-app purchases through Google Play. This version adds two more online features, both described in their own sections below: anonymous analytics (PostHog, with an off switch in Settings &gt; DATA) and the online leaderboard (generated names only). Your saves and the optional local gameplay log remain local-only, exactly as before. From the game update that follows this policy, the leaderboard row also names the platform a run was played on, so the board can show it; the LEADERBOARD section says exactly what that is.</p>
 <h2>WHAT THE GAME STORES ON YOUR DEVICE</h2>
@@ -89,21 +95,21 @@ footer a { color: #7c8396; }
 <h2>CHILDREN</h2>
 <p>PolyBall is not directed at children. It is a simple arcade game with no chat, no user-generated content, and no external links inside gameplay. The game itself collects no personal data from anyone. Ad serving follows the consent rules above, including the regional consent requirements that apply to users under the age of digital consent.</p>
 <h2>PERMISSIONS</h2>
-<p>- INTERNET: used by the ad system, Google Play billing, the anonymous analytics, and the online leaderboard - nothing else. - VIBRATE: used only for optional haptic feedback (toggle in Settings). It accesses no data. - Writing the manual export may prompt for storage access on older Android versions. It is used only to place the export files in your Downloads folder.</p>
+<p>- INTERNET: used by the ad system, Google Play billing, the anonymous analytics, and the online leaderboard, nothing else. - VIBRATE: used only for optional haptic feedback (toggle in Settings). It accesses no data. - Writing the manual export may prompt for storage access on older Android versions. It is used only to place the export files in your Downloads folder.</p>
 <h2>ANALYTICS</h2>
-<p>The game sends anonymous usage statistics (which screens are used, how runs end, frame-rate tier) to PostHog, our analytics processor, over HTTPS. These are tied to a random install identifier generated on your device - never your name, email, advertising ID, or anything you typed. You can turn this off any time in Settings &gt; DATA &gt; ANALYTICS. Clearing the app&#x27;s data resets the identifier.</p>
+<p>The game sends anonymous usage statistics (which screens are used, how runs end, frame-rate tier) to PostHog, our analytics processor, over HTTPS. These are tied to a random install identifier generated on your device, never your name, email, advertising ID, or anything you typed. You can turn this off any time in Settings &gt; DATA &gt; ANALYTICS. Clearing the app&#x27;s data resets the identifier.</p>
 <h2>LEADERBOARD (WHEN AVAILABLE)</h2>
-<p>If a ranked run sets a new best, the game transmits exactly one row: that score, the mode and the side count the run was played at, your GENERATED player name (names you type yourself are never transmitted - there is no code path that can send one), the plate style, title and title font you have equipped, the platform the run was played on (Android, Web for the browser build, or Windows, macOS or Linux for the desktop builds), and the same random install identifier, so your row can be updated rather than duplicated. The platform is shown as a small icon beside your score, so players can see which version of the game a run came from. It is the name of the platform and nothing more - never a device model, a browser name or anything that could identify you. Nothing else is sent. The row appears on other players&#x27; screens. Submissions happen only while your player name is a generated one: set a name of your own and nothing is submitted from then on.</p>
+<p>If a ranked run sets a new best, the game transmits exactly one row: that score, the mode and the side count the run was played at, your GENERATED player name (names you type yourself are never transmitted, there is no code path that can send one), the plate style, title and title font you have equipped, the platform the run was played on (Android, Web for the browser build, or Windows, macOS or Linux for the desktop builds), and the same random install identifier, so your row can be updated rather than duplicated. The platform is shown as a small icon beside your score, so players can see which version of the game a run came from. It is the name of the platform and nothing more, never a device model, a browser name or anything that could identify you. Nothing else is sent. The row appears on other players&#x27; screens. Submissions happen only while your player name is a generated one: set a name of your own and nothing is submitted from then on.</p>
 <h2>BROWSER VERSION</h2>
 <p>PolyBall also runs in a web browser as a WebAssembly build. For data it behaves exactly like the Android app: the same anonymous PostHog analytics, on by default with the same off switch in Settings &gt; DATA &gt; ANALYTICS, and the same single leaderboard row on a new ranked best, keyed to a random install identifier your browser stores. It shows no ads and offers no purchases at all, because the AdMob and Google Play billing components are Android-only and are absent from that build. Clearing the site data for that page in your browser erases the local save and resets the identifier.</p>
 <h2>DATA DELETION</h2>
-<p>The game&#x27;s own data lives on your device: Settings &gt; DATA &gt; Reset progress erases progress, and uninstalling the app removes everything the game stored locally. Two things can exist server-side: your leaderboard row (install identifier, generated name, and each best score with its mode, side count, the platform it was played on and the plate, title and title font shown beside it) and the anonymous analytics events. Resetting or uninstalling does not remove those - email <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a> and they will be deleted; the deletion page linked from the store listing explains the steps. Data collected by Google for ad serving is handled under Google&#x27;s privacy policy and controls (advertising ID reset and ad personalization settings on your device).</p>
+<p>The game&#x27;s own data lives on your device: Settings &gt; DATA &gt; Reset progress erases progress, and uninstalling the app removes everything the game stored locally. Two things can exist server-side: your leaderboard row (install identifier, generated name, and each best score with its mode, side count, the platform it was played on and the plate, title and title font shown beside it) and the anonymous analytics events. Resetting or uninstalling does not remove those. Email <a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a> and they will be deleted; the deletion page linked from the store listing explains the steps. Data collected by Google for ad serving is handled under Google&#x27;s privacy policy and controls (advertising ID reset and ad personalization settings on your device).</p>
 <h2>CHANGES</h2>
 <p>The analytics and leaderboard features described above shipped with this version of the policy. If a future version adds anything new that transmits data, this policy will be updated first and the change will be visible in the app&#x27;s store listing before it applies.</p>
 <h2>CONTACT</h2>
 <p><a href="mailto:abdaishere@gmail.com">abdaishere@gmail.com</a></p>
 <footer>
-<p>PolyBall &middot; com.polyball.game &middot; <a href="/games/polyball/">Home</a>
+<p>PolyBall &middot; com.polyball.game &middot; <a href="/polyball/">Home</a>
 &middot; <a href="/privacy.html">Privacy</a>
 &middot; <a href="/delete.html">Delete my data</a></p>
 </footer>
