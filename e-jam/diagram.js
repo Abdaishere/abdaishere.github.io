@@ -26,6 +26,7 @@ export const LAYOUT = {
     gap: 182,            // lanes stop this far from the switch centre
     labelDrop: 206,      // "switch under test" sits this far below it
     laneAt: 0.44,        // where a stream's name rides its own lane
+    fanAt: 0.44,         // the same, measured from the verifier, when one generator fans out
   },
   narrow: {
     w: 1000, h: 1000,
@@ -35,6 +36,7 @@ export const LAYOUT = {
     gap: 162,
     labelDrop: -200,  // above the switch here: the gap below it belongs to stream 2's name
     laneAt: 0.58,
+    fanAt: 0.9,       // right by the switch: nearer the boxes the names run into them
   },
 };
 
@@ -48,28 +50,34 @@ export const rows = (L, n) => {
   return Array.from({ length: n }, (_, i) => y0 + i * gap);
 };
 
-/* Which verifier each generator's stream goes to. One stream per generator; with fewer verifiers
- * than generators some verifiers expect several streams, with more some sit idle. Monotonic, so
- * no two streams ever cross on the way out. */
-export const route = (nGen, nVer) => Array.from({ length: nGen }, (_, s) => (nGen === 1 ? (nVer - 1) >> 1 : Math.round((s * (nVer - 1)) / (nGen - 1))));
+/* Which generator sends each stream and which verifier expects it. There are as many streams as
+ * the bigger column has nodes, so nobody sits idle: one generator fans out to every verifier, one
+ * verifier checks every generator. Both maps are monotonic with steps of at most one, so every
+ * node gets at least one stream and no two streams ever cross. */
+export const route = (nGen, nVer) => {
+  const n = Math.max(nGen, nVer), at = (k, m) => (n === 1 ? 0 : Math.round((k * (m - 1)) / (n - 1)));
+  return Array.from({ length: n }, (_, k) => ({ g: at(k, nGen), v: at(k, nVer) }));
+};
 
 /** Everything the three layers need about the current switchboard: node heights and one entry
- *  per stream with its verifier and its geometry. */
+ *  per stream with its generator, its verifier and its geometry. */
 export function topology(L, state) {
   const nGen = state.gen.length, nVer = state.ver.length;
-  const gy = rows(L, nGen), vy = rows(L, nVer), to = route(nGen, nVer);
-  return { gy, vy, streams: gy.map((y, s) => ({ s, v: to[s], ...stream(L, y, vy[to[s]]) })) };
+  const gy = rows(L, nGen), vy = rows(L, nVer), r = route(nGen, nVer), sy = rows(L, r.length);
+  return { gy, vy, fanOut: nVer > nGen, streams: r.map(({ g, v }, s) => ({ s, g, v, ...stream(L, gy[g], vy[v], sy[s]) })) };
 }
 
 /* Where a stream's packets are born, where they are judged, and the two points where its lane
  * meets the switch. scene.js animates position -> switch centre -> end; the lane is drawn short
  * of the centre so the boxes and the rings never touch. */
-export function stream(L, y, yOut = y) {
+// `ys` is the stream's own height among all the streams: where it crosses the switch, so streams
+// sharing a node still fan apart instead of drawing on top of each other.
+export function stream(L, y, yOut = y, ys = y) {
   const a = { x: L.genX + L.boxW / 2, y };
   const b = { x: L.verX - L.boxW / 2 - 14, y: yOut };   // stop just short of the box, not on its edge
   // Inside the switch a stream keeps a little of its own height, so four streams crossing at once
   // read as four streams being forwarded rather than as one bonfire in the middle.
-  const c = { x: L.sw.x, y: L.sw.y + (y - L.sw.y) * 0.2 };
+  const c = { x: L.sw.x, y: L.sw.y + (ys - L.sw.y) * 0.2 };
   // The lane is drawn along the path the packets actually fly, stopping short of the switch so
   // the rings stay clear. Aim it at c, not at the switch's centre, or the traffic leaves the wire.
   const toward = (p) => {
@@ -130,7 +138,7 @@ export function draw(svg, labels, key, state, { frozen = false } = {}) {
    * of that stream's picture. applyState works on these groups and touches nothing else. */
   const rnd = prng(20260928);
   T.streams.forEach((s, i) => {
-    const g = el('g', { class: 'st', 'data-s': i, 'data-v': s.v });
+    const g = el('g', { class: 'st', 'data-s': i, 'data-g': s.g, 'data-v': s.v });
     g.appendChild(el('path', { class: 'ln in', 'vector-effect': 'non-scaling-stroke', d: `M${s.a.x} ${s.a.y}L${s.inb.x.toFixed(1)} ${s.inb.y.toFixed(1)}` }));
     g.appendChild(el('path', { class: 'ln out', 'vector-effect': 'non-scaling-stroke', d: `M${s.outb.x.toFixed(1)} ${s.outb.y.toFixed(1)}L${s.b.x} ${s.b.y}` }));
     if (frozen) freezeStream(g, L, s, rnd);
@@ -167,10 +175,13 @@ export function draw(svg, labels, key, state, { frozen = false } = {}) {
       labels.appendChild(b);
     });
   }
-  // each stream's name rides its own lane, a little above it, near the generator that owns it
+  // each stream's name rides its own lane, a little above it, on the side where it is the only
+  // lane at its node: by the generator normally, by the verifier when one generator fans out
   const lift = Math.min(L.h * 0.058, boxH * 0.4);
   T.streams.forEach((s, i) => {
-    const lx = s.a.x + (s.inb.x - s.a.x) * L.laneAt, ly = s.a.y + (s.inb.y - s.a.y) * L.laneAt;
+    const [p, q] = T.fanOut ? [s.b, s.outb] : [s.a, s.inb];
+    const t = T.fanOut ? L.fanAt : L.laneAt;
+    const lx = p.x + (q.x - p.x) * t, ly = p.y + (q.y - p.y) * t;
     text(`Stream ${i + 1}`, lx, ly - lift, 'lane');
   });
 
@@ -184,7 +195,7 @@ export function draw(svg, labels, key, state, { frozen = false } = {}) {
  *  covers the packets, never the lanes or the nodes. */
 export function applyState(svg, labels, key, state) {
   for (const g of svg.querySelectorAll('.st')) {
-    g.classList.toggle('gen-off', !state.gen[+g.dataset.s]);
+    g.classList.toggle('gen-off', !state.gen[+g.dataset.g]);
     g.classList.toggle('ver-off', !state.ver[+g.dataset.v]);
   }
   for (const b of labels.querySelectorAll('.dnode')) {

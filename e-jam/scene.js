@@ -77,10 +77,10 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   // How many packets each stream carries and how many of those this switch will not forward.
   // Per stream, not one global figure, so the loss a reader sees is the loss of the streams that
   // are actually running.
-  let nPer = [], dPer = [], vOf = [], onAttr = null, shape = '';
+  let nPer = [], dPer = [], gOf = [], vOf = [], onAttr = null, shape = '';
   function build(n) {
     const T = topology(L, state);
-    shape = state.gen.length + 'x' + state.ver.length; vOf = T.streams.map((g) => g.v);
+    shape = state.gen.length + 'x' + state.ver.length; gOf = T.streams.map((g) => g.g); vOf = T.streams.map((g) => g.v);
     const total = n * T.streams.length;
     const pos = new Float32Array(total * 3), mid = new Float32Array(total * 3), end = new Float32Array(total * 3), data = new Float32Array(total * 4);
     const on = new Float32Array(total * 2);
@@ -90,7 +90,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
     let i = 0;
     T.streams.forEach((g, s) => {
       const a = up(g.a), b = up(g.b), c = up(g.c);
-      const gOn = state.gen[s] ? 1 : 0, vOn = state.ver[g.v] ? 1 : 0;
+      const gOn = state.gen[g.g] ? 1 : 0, vOn = state.ver[g.v] ? 1 : 0;
       let d = 0;
       for (let k = 0; k < n; k++, i++) {
         const off = (rnd() - 0.5) * spread, offB = (rnd() - 0.5) * spread;
@@ -130,7 +130,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
       const a = onAttr.array;
       let i = 0;
       nPer.forEach((n, s) => {
-        const g = state.gen[s] ? 1 : 0, v = state.ver[vOf[s]] ? 1 : 0;
+        const g = state.gen[gOf[s]] ? 1 : 0, v = state.ver[vOf[s]] ? 1 : 0;
         for (let k = 0; k < n; k++, i++) { a[i * 2] = g; a[i * 2 + 1] = v; }
       });
       onAttr.needsUpdate = true;
@@ -194,7 +194,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   host.addEventListener('pointerdown', onDown, { passive: true });
 
   const api = { fps: 0, state: 'running', packets: perStream * nPer.length, paused: false, setPaused, setState, dispose, counts: () => counts(),
-    streams: () => ({ n: nPer.slice(), d: dPer.slice(), v: vOf.slice() }) };  // per-stream packets and drops, for the gate
+    streams: () => ({ n: nPer.slice(), d: dPer.slice(), g: gOf.slice(), v: vOf.slice() }) };  // per-stream packets and drops, for the gate
 
   /* What the verifiers have checked, counted off the same clock the packets fly on rather than by
    * watching them: every packet completes exactly one trip per cycle, so the arithmetic is exact
@@ -217,7 +217,7 @@ export function start(canvas, { lowPower = false, key = 'wide', onCount = null, 
   function tally(dt) {
     const laps = dt / CYCLE;
     for (let s = 0; s < nPer.length; s++) {
-      if (!state.gen[s]) continue;
+      if (!state.gen[gOf[s]]) continue;
       if (state.ver[vOf[s]]) { seen.lost += dPer[s] * laps; seen.verified += (nPer[s] - dPer[s]) * laps; }
       else seen.lost += nPer[s] * laps;
     }
