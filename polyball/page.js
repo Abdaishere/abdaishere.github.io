@@ -110,4 +110,20 @@ if (ol && window.PB) {
     })
     .catch(() => { ol.textContent = ''; note('The leaderboard is taking a break. Try again in a moment.'); })
     .then(() => ol.removeAttribute('aria-busy'));
+
+  /* Name the cup, but only while it really is this board (the cup board is a server setting), and
+     the latest confirmed champion once there is one ("Last champion", not "last cup": the newest cup
+     may still be waiting for the check). Any failure keeps the static lede. */
+  PB.fetchCups().then((cups) => {
+    const live = PB.cupOf(cups, 'live'), last = cups.champs[0];
+    if (live && live.mode === 'Classic' && live.sides === 5) {
+      document.getElementById('cupLede').replaceChildren('The ' + live.name + ': the best Classic runs on 5' + PB.NB + 'sides, live from the game. It closes ', PB.closeTime(live.season), '.');
+    }
+    if (last) {
+      const p = document.getElementById('cupLast'), a = document.createElement('a');
+      a.href = 'leaderboard/#champions'; a.textContent = last.name;
+      p.replaceChildren('Last champion: ', a, ', ' + PB.monthOf(last.season) + ', with' + PB.NB + new Intl.NumberFormat().format(last.score) + '.');
+      p.hidden = false;
+    }
+  }).catch(() => { /* either read failed: the static lede, and no last-cup line, are the fallback */ });
 }

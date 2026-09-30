@@ -96,6 +96,7 @@
 /* the cup teaser's player cards, in v3 tokens. The plate cosmetics (flair frames, name fonts)
    stay on /polyball/leaderboard/, which keeps the game's own dark palette. */
 #cupTop { display: grid; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+#cupLast { margin-top: 0.75rem; }
 .pcard { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; border: 1px solid var(--line); padding: 0.75rem 1rem; }
 .pcard.first { border-color: var(--gold); }
 .pcard .rank { width: 1.75rem; text-align: center; font: 700 1.125rem/1 var(--mono); color: var(--mut); }
@@ -284,11 +285,12 @@
       <div class="sec-head">
         <p class="label">Leaderboard</p>
         <h2 id="lb-h">Who's on top</h2>
-        <p class="lede">The best Classic runs on five sides, live from the game. Beat one and your name goes up here.</p>
+        <p class="lede" id="cupLede">The best Classic runs on five sides, live from the game. Beat one and your name goes up here.</p>
       </div>
       <div class="split">
         <div class="story">
           <ol id="cupTop" aria-label="Current top three" aria-busy="true"></ol>
+          <p class="cap" id="cupLast" hidden></p>
           <p class="links"><a class="btn" href="leaderboard/">See the full leaderboard</a></p>
         </div>
       </div>

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var URL_BASE = 'https://osnwwrpkyvcflfcixwmw.supabase.co/rest/v1/board';
+  var REST = 'https://osnwwrpkyvcflfcixwmw.supabase.co/rest/v1/';
   var KEY = 'sb_publishable_LvCJhoJY47Q-FIpaiBswfQ_2qzyx7tW';
   var MODES = ['Classic', 'Music', 'Time'];
 
@@ -56,23 +56,73 @@
     return j.slice(0, 100).map(function (r) {
       if (!r || typeof r !== 'object') r = {};
       /* title_text is the one admin-written free-text field (profiles.title_text); it wins over the title id */
-      return { name: str(r.name, 24), title: str(r.title_text, 32) || titleOf(str(r.title, 24)), flair: str(r.flair, 16), font: str(r.font, 24), platform: str(r.platform, 16), score: Number(r.score) };
+      return { name: str(r.name, 24), title: str(r.title_text, 32) || titleOf(str(r.title, 24)), flair: str(r.flair, 16), font: str(r.font, 24), platform: str(r.platform, 16), score: Number(r.score), season: str(r.season, 10) };
     }).filter(function (r) { return r.name && isFinite(r.score); });
+  }
+
+  /* read-only GET on a public view or table; rejects on any non-2xx, timeout or non-list body */
+  function get(path) {
+    var ac = new AbortController(), to = setTimeout(function () { ac.abort(); }, 8000);
+    return fetch(REST + path, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }, signal: ac.signal })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (j) { clearTimeout(to); if (!Array.isArray(j)) throw new Error('bad payload'); return j; },
+            function (e) { clearTimeout(to); throw e; });
   }
 
   var cache = {};
   function fetchBoard(mode, sides) {
     var k = mode + '|' + sides;
     if (cache[k]) return cache[k];
-    var ac = new AbortController(), to = setTimeout(function () { ac.abort(); }, 8000);
     /* Same order as the game (net.gd LB_ORDER): on a tie the earlier submit ranks
        higher, which is also how the cup's champions view breaks ties. */
-    var p = fetch(URL_BASE + '?select=name,flair,score,title,title_text,font,platform&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc,submitted_at.asc&limit=100', {
-      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }, signal: ac.signal
-    }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (j) { clearTimeout(to); return normalize(j); });
-    p.catch(function () { clearTimeout(to); delete cache[k]; });
+    var p = get('board?select=name,flair,score,title,title_text,font,platform&mode=eq.' + mode + '&sides=eq.' + sides + '&order=score.desc,submitted_at.asc&limit=100').then(normalize);
+    p.catch(function () { delete cache[k]; });
     return (cache[k] = p);
+  }
+
+  /* The cups. `seasons` is one row per month (live, provisional after the 1st, final once the owner
+     has checked the result); `champions` is the archive's top three per closed cup. Only FINAL cups
+     are ever shown as won: a provisional result can still change, so it is never read here. */
+  var DAY = /^\d{4}-\d{2}-01$/, STATUS = { live: 1, provisional: 1, 'final': 1 };
+  function fetchCups() {
+    return Promise.all([
+      get('seasons?select=season,name,status,cup_mode,cup_sides&order=season.desc&limit=36'),
+      get('champions?select=season,name,flair,score,title,title_text,font,platform&status=eq.final&rank=eq.1&order=season.desc&limit=36')
+    ]).then(function (res) {
+      var seasons = res[0].filter(function (s) { return s && DAY.test(s.season) && own(STATUS, s.status); }).map(function (s) {
+        /* a cup still marked live after its close time (the rollover has not run yet, or failed) is
+           shown as closed and unconfirmed. The visitor's clock only ever withholds a claim here. */
+        var st = s.status === 'live' && closeDate(s.season) <= Date.now() ? 'provisional' : s.status;
+        return { season: s.season, name: str(s.name, 32) || s.season.slice(0, 7), status: st, mode: MODES[s.cup_mode] || 'Classic', sides: +s.cup_sides || 5 };
+      });
+      var seen = {}, champs = normalize(res[1]).filter(function (c) {
+        if (!DAY.test(c.season) || seen[c.season]) return false;   // one winner per cup, even on a dead-heat
+        return (seen[c.season] = true);
+      });
+      return { seasons: seasons, champs: champs };
+    });
+  }
+  /* Cups run on UTC months: the pg_cron rollover fires 00:00 UTC on the 1st. */
+  var MONTH = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  var DAY_MON = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  function monthOf(season) { return MONTH.format(new Date(season + 'T00:00:00Z')); }
+  /* <time datetime="2026-10-01T00:00Z">1 Oct at 00:00 UTC</time>: UTC spelled out, because "1 Oct"
+     alone is wrong by hours in the Americas. */
+  function closeDate(season) { var d = new Date(season + 'T00:00:00Z'); d.setUTCMonth(d.getUTCMonth() + 1); return d; }
+  var NB = '\u00a0';   // "1 Oct", "00:00 UTC" and "5 sides" never break across lines
+  function closeTime(season) {
+    var d = closeDate(season), t = document.createElement('time');
+    t.dateTime = d.toISOString().slice(0, 10) + 'T00:00Z'; t.textContent = DAY_MON.format(d).replace(' ', NB) + ' at 00:00' + NB + 'UTC';
+    return t;
+  }
+  function cupOf(cups, status) { return cups.seasons.filter(function (s) { return s.status === status; })[0] || null; }
+  /* The honest line in the champions block, as parts for Element.append: a closed cup waits for the
+     owner's check before it names anyone. Once a champion exists and nothing is pending, no line. */
+  function cupNote(cups) {
+    var prov = cupOf(cups, 'provisional'), live = cupOf(cups, 'live'), first = !cups.champs.length;
+    if (prov) return [prov.name + ' closed on ', closeTime(prov.season), '. ' + (first ? 'The first champion' : 'Its champion') + ' appears here once the result is confirmed.'];
+    if (live && first) return [live.name + ' closes ', closeTime(live.season), '. The first champion appears here once the result is confirmed.'];
+    return null;
   }
 
   /* One player card. `row` = {name,title,font,flair,platform,score}. */
@@ -102,5 +152,5 @@
     return el;
   }
 
-  window.PB = { MODES: MODES, fetchBoard: fetchBoard, card: card };
+  window.PB = { NB: NB, MODES: MODES, fetchBoard: fetchBoard, card: card, fetchCups: fetchCups, monthOf: monthOf, closeTime: closeTime, cupOf: cupOf, cupNote: cupNote };
 })();

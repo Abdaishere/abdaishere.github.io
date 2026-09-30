@@ -67,17 +67,36 @@
 .chip:hover{ color:var(--ink); background:rgba(255,255,255,.05) }
 .chip[aria-pressed="true"]{ background:var(--tc,var(--ink)); border-color:var(--tc,var(--ink)); color:#08090C } .chip[aria-pressed="true"] .n{ color:rgba(8,9,12,.65) }
 select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); border:1px solid var(--line-2); background:var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B4B9C6' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 12px center/18px no-repeat; color:var(--ink); font:700 .9375rem/1 var(--display); appearance:none; cursor:pointer }
+#sides{ min-width:7.5rem }   /* its width from the start, before the options and the font land */
 @media (max-width:560px){ .row .lbl{ width:100% } .controls{ position:static } }
 
+/* the board fills in after a network read. Until the FIRST read settles it is a screen tall, so
+   nothing below starts on screen and gets shoved down by the rows (that shove was the page's whole
+   CLS). leaderboard.js drops .busy as soon as that read settles, so a short board leaves no hole. */
+#board.busy>.wrap{ min-height:100svh }
 .list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--s2) }
 .list .pcard.first{ border-color:rgba(255,194,75,.5) } .list .pcard.first .rank,.list .pcard.first .score{ color:var(--gold) }
 .status{ margin-top:var(--s4); color:var(--muted); font-size:var(--t-small) }
+.podium .wait{ grid-column:1/-1; color:var(--muted); font-size:var(--t-small) }
 .empty{ padding:var(--s7) var(--s5); text-align:center; border:1px dashed var(--line-2); border-radius:var(--r-card); color:var(--ink-2) }
 
 
 .rules li{ color:var(--ink-2); margin-bottom:var(--s2) } .rules ul{ padding-left:1.2em; margin:var(--s3) 0 0 }
 .retry{ margin-left:var(--s3) }
 .pod .plat:empty{ display:none }   /* .pcard's own empty rule lives in site.css */
+
+/* ---- champions: one row per finished cup, the month where the rank would be ---- */
+.champs{ padding-top:0 }
+.champs .lead{ margin-top:var(--s3) }
+.champs .note{ margin:var(--s4) 0 0; color:var(--muted) }
+.champs .note:empty{ display:none }
+.champs .list{ margin-top:var(--s5) }
+/* gold is the score alone (as on the #1 podium tile) plus a faint border; the month is muted caps */
+.champ{ grid-template-columns:9.5rem minmax(0,1fr) auto auto; border-color:rgba(255,194,75,.35) }
+.champ .when{ font:700 var(--t-eyebrow)/1.3 var(--display); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding-left:var(--s2) }
+.champ .score{ color:var(--gold) }
+/* phones: month on its own line, flush with the plate's left edge, 8px clear of the plate's glow */
+@media (max-width:560px){ .champ{ grid-template-columns:minmax(0,1fr) auto auto; row-gap:var(--s2); padding-left:var(--s3) } .champ .when{ grid-column:1/-1; padding:var(--s1) 0 0 } }
 </style>
 </head>
 <body>
@@ -108,7 +127,7 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 </section>
 <hr class="ring-line">
 
-<section class="section" id="board" style="padding-top:var(--s7)">
+<section class="section busy" id="board" style="padding-top:var(--s7)">
   <div class="wrap">
     <h2 class="vh">Current standings</h2>
     <div class="controls" role="group" aria-label="Leaderboard filters">
@@ -126,10 +145,21 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
   </div>
 </section>
 
+<!-- hidden until both reads land; on any failure it stays hidden (leaderboard.js) -->
+<section class="section champs" id="champions" aria-labelledby="ch-h" hidden>
+  <div class="wrap">
+    <p class="eyebrow gold">Monthly cup</p>
+    <h2 id="ch-h">Champions</h2>
+    <p class="lead" id="ch-rule"></p>
+    <p class="note" id="ch-note"></p>
+    <ul class="list" id="champs" aria-label="Cup winners, newest first"></ul>
+  </div>
+</section>
+
 <section class="section rules" style="padding-top:0">
   <div class="wrap">
     <div class="grid g3">
-      <div class="card"><h3>How it works</h3><ul><li>Your best run on each shape is the one that counts.</li><li>Classic, Music and Time each keep their own board. Zen is just for you.</li></ul></div>
+      <div class="card"><h3>How it works</h3><ul><li>Your best run on each shape is the one that counts.</li><li>Classic, Music and Time each keep their own board. Zen is just for you.</li><li>On a tie, the earlier run ranks higher.</li></ul></div>
       <div class="card"><h3>Fair play</h3><ul><li>Nothing you buy moves your rank.</li><li>Scores go up when you are back online, if you played without wifi.</li></ul></div>
       <div class="card"><h3>Your card</h3><ul><li>Your name is made by the game. No typing, no sign-up.</li><li>Your plate, font and title come from what you have equipped.</li></ul></div>
     </div>
