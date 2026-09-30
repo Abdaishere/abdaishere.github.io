@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Godot web build that played no sound · Abdallah El Belkasy</title>
+<meta name="description" content="PolyBall's browser build was silent from 19 to 22 September while its audio check passed. A runtime add_bus() on Godot's web export disconnects Master from the speakers. How I proved it, and the one-line fix.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://abdaishere.com/notes/godot-web-silent-audio/">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://abdaishere.com/notes/godot-web-silent-audio/">
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="The Godot web build that played no sound">
+<meta property="og:description" content="Every sample played. Nothing reached the speakers. A runtime add_bus() on Godot's web export, and a check that finally looks at the last hop.">
+<meta property="og:image" content="https://abdaishere.com/img/og/note-audio.png?v=1">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Godot web build that played no sound. Buffers started: all of them. Reaching the speakers: none. The fix: bus_count = i + 1.">
+<meta property="article:published_time" content="2026-09-30">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/note-audio.png?v=1">
+<meta name="twitter:image:alt" content="The Godot web build that played no sound. Buffers started: all of them. Reaching the speakers: none.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"The Godot web build that played no sound","datePublished":"2026-09-30","author":{"@type":"Person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/"},"about":["Godot Engine","Web Audio API"],"url":"https://abdaishere.com/notes/godot-web-silent-audio/"}
+</script>
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<style>
+/* Page-only: an article. One reading column, code in panels that scroll sideways on a phone
+   instead of pushing the page wider. */
+.note { max-width: 42rem; }
+.note h1 { font: 700 clamp(2.25rem, 6vw, 3.75rem)/1.02 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
+.note .dek { margin-top: 1.25rem; font-size: clamp(1.125rem, 1.6vw, 1.3125rem); color: var(--mid); text-wrap: pretty; }
+.note .meta { margin-top: 1.25rem; }
+.note h2 { margin-top: 3rem; font: 650 1.5rem/1.2 var(--display); letter-spacing: -0.015em; }
+.note h2 + p { margin-top: 0.85rem; }
+.note p + p { margin-top: 0.95rem; }
+.note p, .note li { text-wrap: pretty; }
+.note code { font: 450 0.875em/1 var(--mono); overflow-wrap: anywhere; }
+.note pre { margin: 1.25rem 0; padding: 1rem 1.1rem; overflow-x: auto; border: 1px solid var(--line); background: var(--panel); font: 400 0.8125rem/1.65 var(--mono); tab-size: 4; }
+.note pre code { font: inherit; overflow-wrap: normal; }
+.note pre:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.note .c { color: var(--mut); }   /* comments inside code */
+.note .end { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.note .meta { color: var(--mid); }
+.note .swap { margin: 1.25rem 0; border-collapse: collapse; font: 400 0.875rem/1.5 var(--mono); }
+.note .swap caption { caption-side: top; text-align: left; padding-bottom: 0.5rem; font: 400 0.75rem/1.5 var(--mono); color: var(--mut); }
+.note .swap th, .note .swap td { padding: 0.45rem 1.25rem 0.45rem 0; border-bottom: 1px solid var(--line); text-align: left; }
+.note .swap thead th { font-weight: 500; color: var(--mut); }
+.note .swap tbody th { font-weight: 400; color: var(--mut); }
+</style>
+<script src="/boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/#path">Path</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
+
+<main id="main">
+  <article class="sec" aria-labelledby="note-h">
+    <div class="wrap">
+      <div class="note">
+        <p class="label">Notes · Godot 4.7 · Web Audio</p>
+        <h1 id="note-h">The Godot web build that played no sound</h1>
+        <p class="dek">Every sample played. None of it reached the speakers. The bug was in the engine, and the worse one was in my check.</p>
+        <p class="cap meta"><time datetime="2026-09-30">30 September 2026</time></p>
+
+        <h2>19 to 22 September</h2>
+        <p>For three days my audio check said the browser build of <a href="/polyball/">PolyBall</a> was fine. The build made no sound at all. The Android build was fine, the desktop builds were fine, and the check passed every time I ran it.</p>
+        <p>PolyBall is a rhythm game. Every catch plays a note.</p>
+
+        <h2>What the check was counting</h2>
+        <p>The check loads the export in Chromium on a phone profile, wraps <code>AudioBufferSourceNode.prototype.start</code> and counts. Did the ambient bed start? Does it loop on its own instead of being restarted? Do notes fire once a run gets going? All yes. Godot was playing every sample. It was playing them into a graph that never reached the speakers.</p>
+        <p>I did measure the output once. On 20 September I put an <code>AnalyserNode</code> on the last hop, read silence, and decided the measurement was the problem, since everything else said the build was fine. I was half right. Godot calls <code>disconnect()</code> with no arguments on a bus's output, which drops every edge on it, my tap included, so that tap would have read silence either way. But the build really was silent too, and I didn't find that out for two more days.</p>
+
+        <h2>What was actually wrong</h2>
+        <p>The game builds its buses at runtime: Music, Drums, Echo, SFX and Note. Every one was added the same way:</p>
+<pre tabindex="0" role="region" aria-label="Code: adding a bus, before the fix"><code>var i := AudioServer.bus_count
+AudioServer.add_bus(i)
+AudioServer.set_bus_name(i, "Music")
+AudioServer.set_bus_send(i, "Master")</code></pre>
+        <p>On desktop that is fine. On the web, since 4.3, Godot keeps a copy of the bus list in JavaScript (<code>library_godot_audio.js</code>), and that copy gets out of order.</p>
+        <p><code>AudioServer::add_bus()</code> turns any position at or past the end into <code>-1</code>, which means "append". The web driver hands that to <code>Bus.addAt(-1)</code>, which creates the bus at the end and then calls <code>Bus.move(id, -1)</code>, because <code>-1</code> is not the new bus's index. <code>move()</code> inserts with <code>splice(toIndex - 1, 0, bus)</code>. That is <code>splice(-2, …)</code>, and with only Master in the list the new bus lands at index 0, in front of Master.</p>
+        <table class="swap">
+          <caption>After the first <code>add_bus()</code> on the web</caption>
+          <thead><tr><th scope="col">Index</th><th scope="col">Engine's list</th><th scope="col">Browser's list</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">0</th><td>Master</td><td>Music</td></tr>
+            <tr><th scope="row">1</th><td>Music</td><td>Master</td></tr>
+          </tbody>
+        </table>
+        <p>Every later call by index now lands on the wrong bus in the browser. <code>set_bus_send(1, "Master")</code> sent the browser's Master into Music. Master was disconnected from <code>ctx.destination</code>, wired into a loop with a sub-bus, and picked up the sub-bus volumes as its own gain. The one node still connected to the speakers was the stream worklet, and nothing played through it: with the web's default playback type, Sample, an <code>AudioStreamWAV</code> plays through the sample buses.</p>
+
+        <h2>The fix</h2>
+        <p>One line per bus:</p>
+<pre tabindex="0" role="region" aria-label="Code: the fix"><code><span class="c"># was: AudioServer.add_bus(i)</span>
+AudioServer.bus_count = i + 1</code></pre>
+        <p>Setting <code>bus_count</code> appends in place. On the web it goes through <code>set_sample_bus_count</code>, which adds the new bus to the end of the JavaScript list, in order. A <code>default_bus_layout.tres</code> takes that path too, which is probably why most projects never hit this. Only buses added at runtime with <code>add_bus()</code> are affected. PolyBall commit <code>c0cbe65</code>, 22 September.</p>
+        <p>The same code is still in Godot 4.7 (<a href="https://github.com/godotengine/godot/blob/4.7-stable/servers/audio/audio_server.cpp#L873-L884"><code>add_bus()</code></a>, <a href="https://github.com/godotengine/godot/blob/4.7-stable/platform/web/js/libs/library_godot_audio.js#L871-L892"><code>addAt()</code> and <code>move()</code></a>) and in master as I write this. It is reported upstream as <a href="https://github.com/godotengine/godot/issues/119026">godotengine/godot#119026</a>, with a one-line fix open in <a href="https://github.com/godotengine/godot/pull/119027">#119027</a>.</p>
+
+        <h2>The check that would have caught it</h2>
+        <p>Counting buffers tells you what you sent. It says nothing about what arrived. So the check now watches the last hop itself, from before Godot loads:</p>
+<pre tabindex="0" role="region" aria-label="Code: the final-hop tracker"><code>window.__final = new Set();
+const connect = AudioNode.prototype.connect;
+const disconnect = AudioNode.prototype.disconnect;
+AudioNode.prototype.connect = function (dst, ...rest) {
+  if (dst instanceof AudioDestinationNode)
+    window.__final.add(this);
+  return connect.call(this, dst, ...rest);
+};
+AudioNode.prototype.disconnect = function (...a) {
+  <span class="c">// no arguments drops every edge,</span>
+  <span class="c">// the one to the speakers included</span>
+  if (!a.length || a[0] instanceof AudioDestinationNode)
+    window.__final.delete(this);
+  return disconnect.apply(this, a);
+};</code></pre>
+        <p>That set is always "who feeds the speakers right now". Godot 4.7's web audio code only ever calls <code>disconnect()</code> with no arguments, so the other forms don't come up. While the ambient bed plays, the check puts a fresh <code>AnalyserNode</code> on each node in the set and reads the RMS. It passes only if a <code>GainNode</code> is in there with RMS above 0.001. A Godot bus ends in a <code>GainNode</code>, and the stream worklet is connected to the speakers too, so the worklet alone can't pass it.</p>
+        <p>On the broken build no <code>GainNode</code> was in the set, so it failed. On the fixed build Master reads about 0.01. I checked both, because a check that can't fail on the bug it was written for isn't doing anything.</p>
+
+        <h2>What I'd tell myself on the 19th</h2>
+        <p>I measured the output once, got silence, and blamed the measurement, because my other numbers disagreed. Half of that was fair. The other half cost me two more days.</p>
+        <p>If the thing you care about is sound coming out of a speaker, measure the last hop.</p>
+
+        <p class="end"><a class="more" href="/polyball/">Play PolyBall in the browser, sound on <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></a></p>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
+    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <span class="sr" id="copy-status" role="status"></span>
+    </div>
+    <ul role="list" class="links">
+      <li><a class="more" href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+    </ul>
+    <div class="foot">
+      <p>© 2026 Abdallah El Belkasy</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/site.js"></script>
+<script type="module">
+import { counters } from '/measure.js';
+counters();
+</script>
+</body>
+</html>
