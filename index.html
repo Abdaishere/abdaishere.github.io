@@ -66,11 +66,16 @@
 
 <main id="main">
 <div class="status">
-  <div class="wrap status-in">
+  <div class="wrap status-in beatbar">
     <span>Dubai <span class="clock needs-js">--:--</span></span>
-    <span>Open to Rust · systems · backend</span>
-    <span>Remote, or relocation with a visa</span>
-    <a class="proof" id="proof" href="/polyball/#leaderboard" data-lead="PolyBall this month: best " hidden></a>
+    <span class="sb-beat needs-js tapctl" id="beatitem">
+      <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+      <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+    </span>
+    <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    <span class="fact">Open to Rust · systems · backend</span>
+    <span class="fact">Remote, or relocation with a visa</span>
+    <a class="proof" id="proof" href="/polyball/#leaderboard" data-lead="PolyBall this month: best " data-min="85rem" hidden></a>
   </div>
 </div>
 
@@ -82,15 +87,6 @@
 
       <div class="copy knock">
         <p class="claim">I make slow systems fast.</p>
-        <div class="beatcard needs-js" id="beatcard" role="group" aria-label="Tap on the beat, 120 BPM">
-          <div class="bc-top">
-            <p class="bc-bpm"><span class="bc-pulse" aria-hidden="true"><svg viewBox="0 0 28 28" focusable="false"><circle class="bc-dot" cx="14" cy="14" r="5"/><circle class="bc-fill" cx="14" cy="14" r="5"/></svg><canvas class="bc-ring"></canvas></span>120 BPM</p>
-            <button class="btn-plain sound tapctl" type="button" id="sound" aria-pressed="false">Sound <i aria-hidden="true"></i></button>
-          </div>
-          <button class="btn-plain tapctl" type="button" id="tap">Tap on the beat</button>
-          <p class="bc-say tapctl" id="streak" aria-hidden="true"></p>
-          <p class="bc-calm">Motion is off, so the beat is too.</p>
-        </div>
         <p class="lede">Software engineer in Dubai. I build the software that tests network switches, the backends behind business software, and one rhythm game, on my own, from the synthesiser up.</p>
         <div class="cta">
           <a class="btn primary" href="#work">See the work</a>
@@ -374,10 +370,10 @@ import { taps } from '/tap.js';
 counters();
 reveal();
 
-// One clock drives everything that moves: the trace fires the beat, the beat card's pulse reads the
-// same clock, and Pause stops both (WCAG 2.2.2). Taps are judged against it too.
+// One clock drives everything that moves: the trace fires the beat, the status bar's beat item reads
+// the same clock, and Pause stops both (WCAG 2.2.2). Taps are judged against it too.
 const $ = (id) => document.getElementById(id);
-const tapper = taps({ card: $('beatcard'), tap: $('tap'), sound: $('sound'), line: $('streak'), status: $('tap-status') });
+const tapper = taps({ item: $('beatitem'), tap: $('tap'), sound: $('sound'), line: $('streak'), status: $('tap-status') });
 const trace = start(document.getElementById('trace'), {
   fallback: document.getElementById('trace2d'),
   onTap: tapper.onTap,

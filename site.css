@@ -135,6 +135,49 @@ html:not(.js) .needs-js { display: none; }
 .beat { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); transform: scale(0.75); opacity: 0.6; }
 .beat.on { transform: scale(1); opacity: 1; }
 @media (prefers-reduced-motion: no-preference) { .beat { transition: transform 120ms var(--ease-out), opacity 120ms; } }
+/* tap.js: home's beat item, right after the clock. A ring closes onto the outline of a dot over each
+   beat (against a 60 ms window the beat has to be seen coming), and one fixed-width slot reads
+   "120 BPM · Tap" at rest and the verdict after a tap, so nothing in the bar ever moves. The buttons
+   are the bar's own line height; ::after widens what they catch instead: the bar's full 36 px on one
+   line, 44 px on phones, spilling over line 2, which holds no control. Never into the hero, and a
+   4 px gap that is neither Tap nor Sound. */
+.status-in .sb-beat { gap: 4px; }
+.sb-tap, .sb-sound { position: relative; display: inline-flex; align-items: center; height: 1.4em; padding: 0; border: 0; border-radius: 2px; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.sb-tap { gap: 6px; }
+.sb-tap:focus-visible, .sb-sound:focus-visible { outline-offset: 1px; }   /* 3 px out, inside the 4 px between them */
+.sb-tap::after, .sb-sound::after { content: ""; position: absolute; inset: -9.6px -4px; }
+.sb-tap::after { left: -10px; right: 0; }
+.sb-sound { justify-content: flex-start; width: 24px; padding-left: 3px; color: var(--mid); }   /* the glyph sits 4 px clear of Tap's focus ring */
+.sb-sound::after { left: 0; right: -10px; }
+.sb-sound svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sb-sound:hover, .sb-sound[aria-pressed="true"] { color: var(--ink); }
+.sb-sound[aria-pressed="true"] .s-off, .sb-sound:not([aria-pressed="true"]) .s-on { display: none; }
+.status-in .sb-pulse { position: relative; display: block; width: 20px; height: 20px; flex: none; }
+.sb-pulse > * { position: absolute; inset: 0; width: 20px; height: 20px; }
+.sb-ring { color: var(--mut); }
+.sb-dot { fill: none; stroke: var(--mut); stroke-width: 1.5; }   /* the ring lands on this outline */
+.sb-fill { fill: var(--signal); opacity: 0; }
+.status-in .sb-say { display: block; width: calc(14 * (1ch + 0.08em)); overflow: hidden; white-space: nowrap; text-align: left; font-variant-numeric: tabular-nums; }
+.sb-say b { font-weight: 500; color: var(--signal); }
+.sb-tap:hover .sb-say { color: var(--ink); }
+.sb-beat.held .sb-ring { visibility: hidden; }
+.sb-beat.held .sb-dot { fill: var(--mut); }
+#tap[aria-disabled="true"] { cursor: not-allowed; }
+/* No script, or reduced motion: no clock to play, so the same place holds a still dot and the tempo. */
+.status-in .sb-still { display: none; }
+html:not(.js) .status-in .sb-still { display: inline-flex; }
+@media (prefers-reduced-motion: reduce) { .status-in .sb-still { display: inline-flex; } }
+.sb-still i { width: 8px; height: 8px; border-radius: 50%; background: var(--mut); }
+/* Home's line breaks are set by width, not by flex wrap, so neither a verdict nor a late font can add
+   a line: below 40rem the clock and the beat share line 1 and each fact gets its own, to 60rem the
+   second fact drops to line 2, above that it is one line. The proof joins from 85rem, where its
+   widest reading ("best 1,482 · 100+ players") still fits beside the rest. */
+@media (max-width: 39.99rem) {
+  .beatbar .fact { flex-basis: 100%; }
+  .sb-tap::after, .sb-sound::after { top: -4.8px; bottom: -22.4px; }
+}
+@media (min-width: 40rem) and (max-width: 59.99rem) { .beatbar .fact + .fact { flex-basis: 100%; } }
+@media (max-width: 84.99rem) { .beatbar .proof { display: none !important; } }
 
 /* ---------------------------------------------------------------- hero */
 .hero { position: relative; isolation: isolate; display: grid; align-content: end; padding-block: clamp(2rem, 6vh, 5rem) clamp(1rem, 3vh, 2rem); overflow: clip; }
@@ -201,44 +244,7 @@ h1 .line { display: block; }
 .readout { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .readout span { color: var(--signal); font-weight: 500; }
 .pause .p-off, .pause[data-paused="true"] .p-on { display: none; }
-/* tap.js: the beat card. In the page flow after the claim (phones, tablets, and the focus order
-   everywhere); from 80rem it lifts into the hero's free top-right corner, right of "Abdallah"
-   (68.5% of the width) and above "El Belkasy" (77%). Narrower, the second line runs in under a
-   15rem card, so it stays in the flow. The copy block drops its position there so the card is
-   placed against the hero. */
-.beatcard { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); background: var(--panel); max-width: 22rem; }
-.bc-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; }
-.bc-bpm { display: flex; align-items: center; gap: 10px; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; color: var(--mid); }
-.bc-pulse { position: relative; width: 28px; height: 28px; flex: none; }
-.bc-pulse > * { position: absolute; inset: 0; width: 28px; height: 28px; }
-.bc-ring { color: var(--mut); }
-.bc-dot { fill: var(--line); }
-.bc-fill { fill: var(--signal); opacity: 0; }
-.beatcard #tap { width: 100%; }
-.bc-say { min-height: 2.8em; font: 400 0.75rem/1.4 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
-.bc-say b { font-weight: 500; color: var(--signal); }
-.bc-say .bc-off, .bc-say .bc-miss { color: var(--mid); }
-.bc-say .bc-line { display: block; }
-.bc-calm { display: none; font: 400 0.75rem/1.4 var(--mono); color: var(--mid); }
-.beatcard.held .bc-ring { visibility: hidden; }
-.beatcard.held .bc-dot { fill: var(--mut); }
-.sound i { width: 8px; height: 8px; border: 1px solid currentColor; }
-.sound[aria-pressed="true"] i { background: currentColor; }
-#tap[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
-@media (max-width: 40rem) { .beatcard #tap { min-height: 48px; } .beatcard { max-width: none; } }
-@media (min-width: 80rem) {
-  .hero .copy.knock { position: static; }
-  .beatcard { position: absolute; top: 20px; right: max(var(--pad), (100% - 84rem) / 2); width: 15rem; }
-}
-/* Reduced motion: the card stays, still: a muted dot, the tempo, and why nothing moves. */
-@media (prefers-reduced-motion: reduce) {
-  .tapctl, .bc-ring { display: none !important; }
-  .bc-dot { fill: var(--mut); }
-  /* nothing to press, so one line: the dot, the tempo, and why it is still */
-  .beatcard { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
-  .bc-top { min-height: 0; }
-  .bc-calm { display: block; }
-}
+@media (prefers-reduced-motion: reduce) { .tapctl { display: none !important; } }
 .pause[data-paused="true"] .p-off { display: inline; }
 @media (prefers-reduced-motion: reduce) { .pause { display: none; } }
 
@@ -506,7 +512,7 @@ html:not(.js) #traffic { display: none; }
    A CV or a case study printed from the browser should be a document, not a screenshot of one. */
 @media print {
   :root { --bg: #fff; --panel: #fff; --ink: #000; --mid: #333; --mut: #555; --line: #bbb; --signal: #000; --signal-fill: #000; --on-signal: #fff; }
-  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas, .beatcard, .probe-row .btn-plain { display: none !important; }
+  .top, .status, .trace, .pause, .readout, .tally, .skip, .contact .row, .site-foot, .model canvas, .probe-row .btn-plain { display: none !important; }
   /* print the diagram, not the canvas: the still packets and the inner ring come back */
   .model.live .dgram .pk, .model.live .dgram .ring.inner { opacity: 1; }
   .shot.paper { filter: none !important; }   /* paper prints as paper */
