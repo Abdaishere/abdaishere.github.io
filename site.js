@@ -1,11 +1,20 @@
-/* Shell behaviour shared by every page: theme toggle, the phone Menu, the Dubai clock, the copy
- * button, and the nav's reading marker. Everything here is optional. A page that has none of these
+/* Shell behaviour shared by every page: theme toggle, the phone Menu, the Dubai clock, the status
+ * bar's beat item, the copy button, and the nav's reading marker. Everything here is optional. A page that has none of these
  * elements loads this file and nothing happens.
  *
  * Deliberately not a framework and deliberately not inline: four pages were repeating the same
  * sixty lines, and the copy that drifted was always the one nobody was looking at. */
 
+import { taps } from '/tap.js';
+
 const root = document.documentElement;
+
+/* ---- the beat item in the status bar. A page with a trace wires it to the trace itself (home,
+       /e-jam/); every other page gives it its own clock here. ---- */
+if (document.getElementById('beatitem') && !document.getElementById('trace')) {
+  const t = taps(); t.bind();
+  if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__taps = t; // gate hook
+}
 
 /* ---- theme: data-theme wins over the system preference, and the choice survives a reload ---- */
 const themeBtn = document.getElementById('theme');
@@ -21,7 +30,7 @@ if (themeBtn) {
 /* The browser chrome follows the page. Only meaningful once a manual choice overrides the system
  * preference; the media-query variants in the markup handle the rest. */
 function paintBar() {
-  if (!root.dataset.theme) return;
+  if (!root.dataset.theme || !themeBtn) return;   // no toggle on the page (the leaderboard is dark only)
   document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.content = root.dataset.theme === 'dark' ? '#0A0B0F' : '#FAFAF7'; });
 }
 paintBar();

@@ -132,11 +132,9 @@ html:not(.js) .needs-js { display: none; }
 .proof b { font-weight: 500; color: var(--ink); }
 .proof[hidden] { display: none; }
 @media (max-width: 68.74rem) { .proof { display: none !important; } }
-.beat { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); transform: scale(0.75); opacity: 0.6; }
-.beat.on { transform: scale(1); opacity: 1; }
-@media (prefers-reduced-motion: no-preference) { .beat { transition: transform 120ms var(--ease-out), opacity 120ms; } }
-/* tap.js: home's beat item, right after the clock. A ring closes onto the outline of a dot over each
-   beat (against a 60 ms window the beat has to be seen coming), and one fixed-width slot reads
+/* tap.js: the beat item, right after the clock (first, where a page has no clock). A ring closes
+   onto the outline of a dot over each beat (against a 60 ms window the beat has to be seen coming),
+   and one fixed-width slot reads
    "120 BPM · Tap" at rest and the verdict after a tap, so nothing in the bar ever moves. The buttons
    are the bar's own line height; ::after widens what they catch instead: the bar's full 36 px on one
    line, 44 px on phones, spilling over line 2, which holds no control. Never into the hero, and a
@@ -168,6 +166,8 @@ html:not(.js) .needs-js { display: none; }
 html:not(.js) .status-in .sb-still { display: inline-flex; }
 @media (prefers-reduced-motion: reduce) { .status-in .sb-still { display: inline-flex; } }
 .sb-still i { width: 8px; height: 8px; border-radius: 50%; background: var(--mut); }
+/* Elsewhere the clock and the item are one unit that cannot wrap apart, whatever the rest does. */
+.status-in .sb-lead { gap: 0.25rem 1.25rem; }
 /* Home's line breaks are set by width, not by flex wrap, so neither a verdict nor a late font can add
    a line: below 40rem the clock and the beat share line 1 and each fact gets its own, to 60rem the
    second fact drops to line 2, above that it is one line. The proof joins from 85rem, where its
@@ -178,6 +178,9 @@ html:not(.js) .status-in .sb-still { display: inline-flex; }
 }
 @media (min-width: 40rem) and (max-width: 59.99rem) { .beatbar .fact + .fact { flex-basis: 100%; } }
 @media (max-width: 84.99rem) { .beatbar .proof { display: none !important; } }
+/* /polyball/: the item leads its bar, and the widest proof ("best 12,482, on Windows · 100+ players")
+   fits beside it from 82rem, with 34 px to spare. */
+@media (max-width: 81.99rem) { .proof[data-min="82rem"] { display: none !important; } }
 
 /* ---------------------------------------------------------------- hero */
 .hero { position: relative; isolation: isolate; display: grid; align-content: end; padding-block: clamp(2rem, 6vh, 5rem) clamp(1rem, 3vh, 2rem); overflow: clip; }
@@ -264,6 +267,7 @@ h1 .line { display: block; }
 
 /* ---------------------------------------------------------------- sections */
 .sec { border-top: 1px solid var(--line); padding-block: clamp(3rem, 8vh, 6rem); }
+.status + .sec { border-top: 0; }   /* the note opens on a section, and the bar already draws that line */
 .sec-head { display: grid; gap: 0.75rem; max-width: 62ch; margin-bottom: clamp(2rem, 5vh, 3.5rem); }
 h2 { font: 700 clamp(2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
 h3 { font: 700 clamp(1.5rem, 3vw, 2.25rem)/1.1 var(--display); letter-spacing: -0.025em; text-wrap: balance; }

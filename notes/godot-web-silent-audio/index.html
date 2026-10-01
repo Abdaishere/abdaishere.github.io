@@ -77,6 +77,21 @@
 </header>
 
 <main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span class="sb-lead">
+      <span>Dubai <span class="clock needs-js">--:--</span></span>
+      <span class="sb-beat needs-js tapctl" id="beatitem">
+        <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+        <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+        <span class="sr" id="tap-status" role="status"></span>
+      </span>
+      <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    </span>
+    <span>Open to Rust · systems · backend</span>
+  </div>
+</div>
+
   <article class="sec" aria-labelledby="note-h">
     <div class="wrap">
       <div class="note">

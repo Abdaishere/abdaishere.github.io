@@ -7,10 +7,11 @@
  * no zero and no remembered number is ever shown as fact.
  *
  * Wide screens only. Below 68.75rem the status bar wraps, so an item arriving after the fetch
- * would add a line and push the hero down; phones get the live board itself on /polyball/. Home's
- * bar also carries the beat item, so there it waits for 85rem (data-min, matched in site.css).
+ * would add a line and push the hero down; phones get the live board itself on /polyball/. Both
+ * bars also carry the beat item, so home's waits for 85rem and /polyball/'s for 82rem (data-min,
+ * matched in site.css).
  *
- *   <a class="proof" id="proof" href="/polyball/#leaderboard" data-platform data-min="85rem" hidden></a>
+ *   <a class="proof" id="proof" href="/polyball/#leaderboard" data-platform data-min="82rem" hidden></a>
  */
 const el = document.getElementById('proof');
 const wide = matchMedia(`(min-width: ${el?.dataset.min || '68.75rem'})`);

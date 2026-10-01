@@ -53,8 +53,15 @@
 <main id="main">
 <div class="status">
   <div class="wrap status-in">
-    <span>Dubai <span class="clock needs-js">--:--</span></span>
-    <span>120 BPM <i class="beat" id="beat" aria-hidden="true"></i></span>
+    <span class="sb-lead">
+      <span>Dubai <span class="clock needs-js">--:--</span></span>
+      <span class="sb-beat needs-js tapctl" id="beatitem">
+        <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+        <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+        <span class="sr" id="tap-status" role="status"></span>
+      </span>
+      <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    </span>
     <span>Case study · 2023</span>
     <span>Open to Rust · systems · backend</span>
   </div>
@@ -77,7 +84,7 @@
       </div>
     </div>
     <div class="wrap fig-row knock">
-      <p class="cap"><b>Fig. 01</b> &#183; Traffic on a line, one burst per beat. The shape of the bench it stands for is drawn properly in Fig.&nbsp;05.<span class="needs-js"> Click or tap to send a burst.</span></p>
+      <p class="cap"><b>Fig. 01</b> &#183; Traffic on a line, one burst per beat. The shape of the bench it stands for is drawn properly in Fig.&nbsp;05.<span class="needs-js"> Click or tap to send a burst.</span><span class="needs-js tapctl"> On the beat, it passes the switch in amber. Off the beat, it turns red and stops there.</span></p>
       <button class="btn-plain pause needs-js" type="button" id="pause"><span class="p-on">Pause</span><span class="p-off">Play</span><span class="sr"> animation</span></button>
     </div>
   </section>
@@ -324,17 +331,18 @@
 <script type="module">
 import { start } from '/trace.js';
 import { counters, reveal } from '/measure.js';
+import { taps } from '/tap.js';
 
 counters();
 reveal();
 
-// The same trace as the home page, quieter: six lanes behind a shorter hero.
-const beat = document.getElementById('beat');
-let phase = false;
+// The same trace as the home page, quieter: six lanes behind a shorter hero. The status bar's beat
+// item plays on its clock, and taps on the hero are judged against it, as on home.
+const tapper = taps();
 const trace = start(document.getElementById('trace'), {
   fallback: document.getElementById('trace2d'),
   lanes: 6,
-  onBeat: () => { phase = !phase; beat.classList.toggle('on', phase); },
+  onTap: tapper.onTap,
 });
 document.addEventListener('theme-change', () => trace.recolor());
 
@@ -344,8 +352,9 @@ pause.addEventListener('click', () => {
   pause.dataset.paused = String(p);
   p ? trace.pause() : trace.resume();
 });
+tapper.bind(trace, pause);
 
-if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__trace = trace; // gate hook
+if (['localhost', '127.0.0.1'].includes(location.hostname)) { window.__trace = trace; window.__taps = tapper; } // gate hooks
 
 /* ---- Fig. 05, the traffic model ----
  * The diagram is drawn straight away and is never taken away: geometry in the <svg>, every label

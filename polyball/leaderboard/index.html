@@ -27,6 +27,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; base-uri 'none'; form-action 'none'">
 <link rel="preload" href="/fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/chakra-petch-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
 <link rel="stylesheet" href="../polyball.css">
 <style>
 .cup-hero{ position:relative; overflow:hidden; padding-block:clamp(40px,6vw,80px) var(--s7) }
@@ -34,6 +37,7 @@
 .cup-hero .wrap{ position:relative; display:grid; grid-template-columns:1fr }
 .cup-hero h1{ font-size:clamp(2.25rem,5vw,4.25rem) } .cup-hero h1 span{ color:var(--gold) }
 .cup-hero .lead{ margin-top:var(--s4); max-width:44ch }
+.cup-hero .btn{ margin-top:var(--s5) }
 
 
 /* ---- podium ---- */
@@ -59,7 +63,7 @@
   .pod .plat{ grid-column:3 } .pod .plat span{ display:none } }
 
 /* ---- controls ---- */
-.controls{ position:sticky; top:64px; z-index:10; background:rgba(8,9,12,.9); backdrop-filter:blur(12px); padding-block:var(--s3); margin-bottom:var(--s4); display:grid; gap:var(--s3); border-bottom:1px solid var(--line) }
+.controls{ position:sticky; top:calc(var(--head) + 1px); z-index:10; background:rgba(8,9,12,.9); backdrop-filter:blur(12px); padding-block:var(--s3); margin-bottom:var(--s4); display:grid; gap:var(--s3); border-bottom:1px solid var(--line) }
 .row{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--s2) }
 .row .lbl{ font:500 var(--t-eyebrow)/1 var(--display); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); width:84px }
 .chip{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 16px; border-radius:var(--r-pill); border:1px solid var(--line-2); background:transparent; color:var(--ink-2); cursor:pointer; font:700 .9375rem/1 var(--display); transition:background .15s,color .15s,border-color .15s }
@@ -76,7 +80,7 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 #board.busy>.wrap{ min-height:100svh }
 .list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--s2) }
 .list .pcard.first{ border-color:rgba(255,194,75,.5) } .list .pcard.first .rank,.list .pcard.first .score{ color:var(--gold) }
-.status{ margin-top:var(--s4); color:var(--muted); font-size:var(--t-small) }
+.msg{ margin-top:var(--s4); color:var(--muted); font-size:var(--t-small) }
 .podium .wait{ grid-column:1/-1; color:var(--muted); font-size:var(--t-small) }
 .empty{ padding:var(--s7) var(--s5); text-align:center; border:1px dashed var(--line-2); border-radius:var(--r-card); color:var(--ink-2) }
 
@@ -98,30 +102,48 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 /* phones: month on its own line, flush with the plate's left edge, 8px clear of the plate's glow */
 @media (max-width:560px){ .champ{ grid-template-columns:minmax(0,1fr) auto auto; row-gap:var(--s2); padding-left:var(--s3) } .champ .when{ grid-column:1/-1; padding:var(--s1) 0 0 } }
 </style>
+<script src="/boot.js"></script>
 </head>
 <body>
 <a class="skip" href="#board">Skip to the leaderboard</a>
 
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="../" aria-label="PolyBall home"><img src="/brand/lockup-horizontal.svg" alt="PolyBall" height="26"></a>
-    <ul>
-      <li><a class="opt" href="../#trailer">Trailer</a></li>
-      <li><a class="opt" href="../#modes">Modes</a></li>
-      <li><a class="cup" href="./" aria-current="page">Leaderboard</a></li>
-      <li><a href="../#get">Get it</a></li>
-    </ul>
-    <a class="btn btn-primary btn-sm" href="/polyball/play/">Play now</a>
+<!-- The site's header and status bar, as on /polyball/. No Light/Dark here: this page keeps the
+     game's dark look. -->
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="../"><img src="/brand/wordmark-ring.svg" alt="PolyBall" width="103" height="30"></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="../#trailer">Trailer</a>
+      <a href="../#modes">Modes</a>
+      <a href="./" aria-current="page">Leaderboard</a>
+      <a href="../#get">Get it</a>
+      <a href="../#built">How it's built</a>
+    </nav>
   </div>
 </header>
 
 <main>
+<div class="status">
+  <div class="wrap status-in">
+    <span class="sb-beat needs-js tapctl" id="beatitem">
+      <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+      <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+      <span class="sr" id="tap-status" role="status"></span>
+    </span>
+    <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    <span>Free to play</span>
+    <span>Android · browser · desktop</span>
+    <span>No sign-up</span>
+  </div>
+</div>
 <section class="cup-hero">
   <div class="wrap">
     <div>
       <p class="eyebrow gold">Leaderboard</p>
       <h1>Who's <span>on top</span></h1>
       <p class="lead">Every shape keeps its own board, from 3 sides to 63. Pick one, then go take a spot.</p>
+      <a class="btn btn-primary" href="/polyball/play/">Play now</a>
     </div>
   </div>
 </section>
@@ -141,7 +163,7 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
     </div>
     <ol class="podium" id="podium" aria-label="Top three"></ol>
     <ol class="list" id="list" start="4" aria-label="Ranks four and below"></ol>
-    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <p class="msg" id="status" role="status" aria-live="polite"></p>
   </div>
 </section>
 
@@ -167,7 +189,7 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 </section>
 </main>
 
-<footer class="foot">
+<footer class="pb-foot">
   <div class="wrap">
     <span>PolyBall · made by Abdallah El Belkasy</span>
     <nav aria-label="Site"><a href="../">Home</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
@@ -176,5 +198,6 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 
 <script src="../board.js"></script>
 <script src="leaderboard.js"></script>
+<script type="module" src="/site.js"></script>
 </body>
 </html>
