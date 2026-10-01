@@ -3,69 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Not found | PolyBall</title>
+<title>Not found | Abdallah El Belkasy</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/img/favicon.svg?v=2" type="image/svg+xml">
-<link rel="icon" href="/img/favicon-32.png?v=2" type="image/png" sizes="32x32">
-<link rel="icon" href="/img/favicon-16.png?v=2" type="image/png" sizes="16x16">
-<link rel="icon" href="/img/favicon-192.png?v=2" type="image/png" sizes="192x192">
-<link rel="icon" href="/img/favicon-512.png?v=2" type="image/png" sizes="512x512">
-<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
 <style>
-:root { color-scheme: dark light; }
-* { box-sizing: border-box; }
-body {
-  margin: 0; padding: 2.5rem 1.25rem 5rem;
-  background: #0f1117; color: #e6e8ee;
-  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-main { max-width: 46rem; margin: 0 auto; overflow-wrap: anywhere; }
-h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .35rem; letter-spacing: -.01em; }
-h2 {
-  font-size: .82rem; text-transform: uppercase; letter-spacing: .09em;
-  color: #8fa2ff; margin: 2.4rem 0 .6rem; font-weight: 600;
-}
-p, li { color: #c3c8d4; }
-a { color: #8fa2ff; }
-.lede { font-size: 1.05rem; color: #e6e8ee; }
-.meta { color: #7d8496; font-size: .9rem; margin: 0 0 2rem; }
-.card {
-  border: 1px solid #262b39; border-radius: 14px;
-  padding: 1.1rem 1.25rem; margin: 1rem 0; background: #151824;
-}
-.card h3 { margin: 0 0 .35rem; font-size: 1rem; }
-.card p { margin: 0; font-size: .95rem; }
-/* #7c8396 is 5.0:1 on #0f1117; the old #6b7285 was 3.9:1 and failed AA. */
-footer { margin-top: 3.5rem; color: #7c8396; font-size: .85rem; }
-footer a { color: #7c8396; }
-.skip { position: absolute; left: 1rem; top: -4rem; z-index: 60; padding: .7rem 1rem;
-  background: #e6e8ee; color: #0f1117; text-decoration: none; border-radius: 4px; }
-.skip:focus { top: .5rem; }
-@media (prefers-color-scheme: light) {
-  body { background: #fbfbfd; color: #14161d; }
-  p, li { color: #3d4353; }
-  .card { background: #fff; border-color: #e3e6ee; }
-  h2 { color: #3b4ea8; }
-  a { color: #3b4ea8; }
-  .lede { color: #14161d; }
-  /* #5c6273 is 5.9:1 on #fbfbfd; #767c8c was 4.0:1 and footer a kept the dark-mode grey (3.7:1). */
-  footer, footer a, .meta { color: #5c6273; }
-  .skip { background: #14161d; color: #fbfbfd; }
-}
+/* Page-only: one short column. */
+.nf { max-width: 42rem; }
+.nf h1 { font: 700 clamp(2.25rem, 6vw, 3.75rem)/1.02 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
+.nf .lede { margin-top: 1.25rem; text-wrap: pretty; }
+.nf .cta { margin-top: 2rem; }
 </style>
+<script src="/boot.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<main id="main">
-<h1>Nothing here</h1>
-<p class="lede">That page does not exist. <a href="/polyball/">Back to PolyBall</a>.</p>
 
-<footer>
-<p>PolyBall &middot; com.polyball.game &middot; <a href="/polyball/">Home</a>
-&middot; <a href="/privacy.html">Privacy</a>
-&middot; <a href="/delete.html">Delete my data</a></p>
-</footer>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/#path">Path</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
+
+<main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span class="sb-lead">
+      <span>Dubai <span class="clock needs-js">--:--</span></span>
+      <span class="sb-beat needs-js tapctl" id="beatitem">
+        <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+        <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+        <span class="sr" id="tap-status" role="status"></span>
+      </span>
+      <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    </span>
+    <span>HTTP 404</span>
+    <span>Open to Rust · systems · backend</span>
+  </div>
+</div>
+
+  <section class="sec" aria-labelledby="nf-h">
+    <div class="wrap">
+      <div class="nf">
+        <p class="label">404 · Not found</p>
+        <h1 id="nf-h">Nothing lives at this address</h1>
+        <p class="lede">The link is old, or someone typed it wrong. Either way, start from one of these.</p>
+        <div class="cta">
+          <a class="btn primary" href="/">Home</a>
+          <a class="more" href="/e-jam/">E&#8209;Jam <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></a>
+          <a class="more" href="/polyball/">PolyBall <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></a>
+          <a class="more" href="/cv/">CV <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
+    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <span class="sr" id="copy-status" role="status"></span>
+    </div>
+    <ul role="list" class="links">
+      <li><a class="more" href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+    </ul>
+    <div class="foot">
+      <p>© 2026 Abdallah El Belkasy</p>
+      <p><a href="/privacy.html">Privacy</a> · <a href="/delete.html">Delete my data</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/site.js"></script>
 </body>
 </html>
