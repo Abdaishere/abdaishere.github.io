@@ -26,7 +26,7 @@
   --accent:#5AD1E6; --on-accent:#06222A;
   --gold:#FFC24B; --violet:#B48CFF; --ok:#5BD6A0; --danger:#FF5A5A;
   --r-green:#4BD86B; --r-cyan:#3FD0E0; --r-magenta:#F45CD0; --r-yellow:#FFD23F; --r-red:#FF5A5A;
-  --m-classic:#5AD1E6; --m-music:#B06CFF; --m-time:#FFC24B; --m-zen:#5BD6A0;
+  --m-classic:#5AD1E6; --m-music:#B06CFF; --m-time:#FFC24B; --m-zen:#5BD6A0; --m-remix:#FF7A9C;
   --ring-line:linear-gradient(90deg,var(--r-green),var(--r-cyan),var(--r-magenta),var(--r-yellow),var(--r-red));
 
   --display:"Chakra Petch","Noto Sans",system-ui,sans-serif;

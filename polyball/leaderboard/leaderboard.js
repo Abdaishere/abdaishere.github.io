@@ -3,10 +3,12 @@
 (function () {
   'use strict';
   var podium = document.getElementById('podium'), list = document.getElementById('list'),
-      status = document.getElementById('status'), sidesSel = document.getElementById('sides'),
+      status = document.getElementById('status'), note = document.getElementById('mode-note'), sidesSel = document.getElementById('sides'),
       chips = [].slice.call(document.querySelectorAll('[data-mode]')), champsSec = document.getElementById('champions');
   var m = /mode=(\d)/.exec(location.hash), s = /sides=(\d+)/.exec(location.hash);
-  var state = { mode: m && +m[1] <= 2 ? +m[1] : 0, sides: s && +s[1] >= 3 && +s[1] <= 63 && +s[1] % 2 ? +s[1] : 5 };
+  var state = { mode: m && PB.MODES[+m[1]] ? +m[1] : 0, sides: s && +s[1] >= 3 && +s[1] <= 63 && +s[1] % 2 ? +s[1] : 5 };
+  /* one line per ranked mode, the same words as the landing page's mode cards */
+  var NOTES = { 0: 'Endless, and it only gets faster.', 4: 'Classic, plus a new twist every ten catches.', 1: 'Balls land on the beat.', 2: 'Clean catches buy back seconds.' };
   var seq = 0, shown = false, live = null;   // shown = this board's rows are on screen; live = this month's cup
   /* The champions block appears in the same frame as the board's first result, never on its own:
      one layout change instead of two. And a #champions link cannot jump by itself (load() rewrites
@@ -30,6 +32,13 @@
     el.appendChild(md); el.appendChild(li.querySelector('.plate')); el.appendChild(li.querySelector('.score')); el.appendChild(li.querySelector('.plat'));
     return el;
   }
+  function openPod(rank) {                             // an empty place on a short board, drawn as an outline
+    var el = document.createElement('li'); el.className = 'pod open n' + rank; el.setAttribute('aria-hidden', 'true');
+    var md = document.createElement('span'); md.className = 'medal'; md.textContent = rank;
+    var fr = document.createElement('span'); fr.className = 'free'; fr.textContent = 'Open';
+    el.appendChild(md); el.appendChild(fr);
+    return el;
+  }
   /* On the cup's own board the caption says so, with the close time from the server, never the
      visitor's clock. Runs after whichever of the two reads lands second. */
   function cupCaption() {
@@ -51,6 +60,7 @@
     var my = ++seq, mode = PB.MODES[state.mode];
     chips.forEach(function (c) { c.setAttribute('aria-pressed', String(+c.dataset.mode === state.mode)); });
     sidesSel.value = state.sides;
+    note.textContent = NOTES[state.mode];
     history.replaceState(null, '', '#mode=' + state.mode + '&sides=' + state.sides);
     podium.setAttribute('aria-busy', 'true');
     /* first load: the note sits where the rows will land, so nothing gets pushed down (CLS);
@@ -62,12 +72,13 @@
       podium.textContent = ''; list.textContent = '';
       if (!rows.length) {
         var e = document.createElement('li'); e.className = 'empty';
-        e.textContent = 'Nobody has posted a ' + mode + ' run on ' + state.sides + PB.NB + 'sides yet. It could be you.';
+        e.textContent = 'Nobody has posted a ' + mode + ' run on ' + state.sides + PB.NB + 'sides yet. The first one takes the top spot.';
         list.appendChild(e); say(''); shown = true; cupCaption(); return;
       }
       rows.slice(0, 3).forEach(function (r, i) { podium.appendChild(pod(r, i + 1)); });
+      for (var k = rows.length + 1; k <= 3; k++) podium.appendChild(openPod(k));
       rows.slice(3).forEach(function (r, i) { list.appendChild(PB.card(r, i + 4)); });
-      say(rows.length === 1 ? 'One run so far. Room at the top.' : 'Top ' + rows.length + ' ' + mode + ' runs on ' + state.sides + PB.NB + 'sides.');
+      say(rows.length === 1 ? 'One run so far. Second and third are open.' : rows.length === 2 ? 'Two runs so far. Third is open.' : 'Top ' + rows.length + ' ' + mode + ' runs on ' + state.sides + PB.NB + 'sides.');
       shown = true; cupCaption();
     }).catch(function () {
       if (my !== seq) return;

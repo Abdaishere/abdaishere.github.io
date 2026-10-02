@@ -9,7 +9,7 @@
 
   var REST = 'https://osnwwrpkyvcflfcixwmw.supabase.co/rest/v1/';
   var KEY = 'sb_publishable_LvCJhoJY47Q-FIpaiBswfQ_2qzyx7tW';
-  var MODES = ['Classic', 'Music', 'Time'];
+  var MODES = { 0: 'Classic', 1: 'Music', 2: 'Time', 4: 'Remix' };   // the game's mode ids; 3 is Zen, which has no board
 
   var FLAIR = { none:1, slate:1, neon:1, holo:1, circuit:1, frost:1, gilded:1, ember:1, 'void':1, bloom:1, carbon:1 };
   /* game font id -> card font class. ponytail: Fredoka / Baloo are not self-hosted
