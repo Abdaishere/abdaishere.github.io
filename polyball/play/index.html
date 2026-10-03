@@ -187,6 +187,17 @@ try {
 	}
 } catch (err) { /* no audio fix, but the game still boots */ }
 </script>
+<!-- QA PF-01: after the download the engine starts on the page's only thread and
+     the page cannot paint for several seconds. A transform/opacity animation runs
+     on the compositor, so this ring keeps turning through that and the loader
+     never looks hung. It lives on #status, which the shell removes once the game
+     is up. -->
+<style>
+#status::after { content: ''; position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; box-sizing: border-box; border-radius: 50%; border: 4px solid rgba(90, 209, 230, 0.18); border-top-color: #5ad1e6; animation: pb-load-spin 0.9s linear infinite; will-change: transform; }
+@keyframes pb-load-spin { to { transform: rotate(360deg); } }
+@keyframes pb-load-pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { #status::after { animation: pb-load-pulse 2s ease-in-out infinite; will-change: opacity; } }
+</style>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -205,7 +216,7 @@ try {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":9985248,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":10005600,"index.wasm":29495521},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
