@@ -125,15 +125,17 @@
     return null;
   }
 
-  /* One player card. `row` = {name,title,font,flair,platform,score}. */
+  /* One player card. `row` = {name,title,font,flair,platform,score}. The player's plate (flair) is
+     worn by the whole card, rank to score (polyball.css [data-plate]); the name keeps its font. */
   function card(row, rank, tag) {
     var el = document.createElement(tag || 'li');
     el.className = 'pcard b-none' + (rank === 1 ? ' first' : '');
+    var flair = own(FLAIR, row.flair) ? row.flair : 'none';
+    if (flair !== 'none') el.dataset.plate = flair;
     var r = document.createElement('span'); r.className = 'rank'; r.textContent = rank;
     var who = document.createElement('div'); who.className = 'who';
-    var flair = own(FLAIR, row.flair) ? row.flair : 'none';
     var pl = document.createElement('div');
-    pl.className = 'plate' + (flair !== 'none' ? ' f-' + flair : '') + ' nf-' + (own(FONT, row.font) ? FONT[row.font] : 'nunito') + ' t-cyan';
+    pl.className = 'plate nf-' + (own(FONT, row.font) ? FONT[row.font] : 'nunito') + ' t-cyan';
     var nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = row.name; pl.appendChild(nm);
     if (row.title) { var ti = document.createElement('div'); ti.className = 'ti'; ti.textContent = row.title; pl.appendChild(ti); }
     who.appendChild(pl);

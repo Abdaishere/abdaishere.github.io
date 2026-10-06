@@ -113,7 +113,7 @@ section .wrap>*{ max-width:1160px }
   -webkit-mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.55) 45%,transparent 85%); mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.55) 45%,transparent 85%) }
 .pcard .rank{ width:44px; text-align:center; font:700 1.125rem/1 var(--display); color:var(--muted) }
 .pcard .who{ min-width:0 }
-.pcard .score{ font:700 1.5rem/1 var(--display); font-variant-numeric:tabular-nums; min-width:72px; text-align:right }
+.pcard .score{ font:700 1.5rem/1 var(--display); font-variant-numeric:tabular-nums; min-width:72px; text-align:right; grid-column:-2 }   /* the last column even when the platform slot is empty */
 .pcard .plat{ display:inline-flex; align-items:center; gap:6px; color:var(--muted); font:700 var(--t-eyebrow)/1 var(--display); letter-spacing:.08em; text-transform:uppercase }
 /* the glyph carries the whole meaning on a phone (the label is hidden below 560px), so it sits a
    step brighter than its own caption: 9.4:1 on the card instead of the caption's 4.9:1 */
@@ -127,15 +127,43 @@ section .wrap>*{ max-width:1160px }
 .plate .nm{ font:700 1.25rem/1.15 var(--body); color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .plate .ti{ font:700 .8125rem/1.2 var(--body); color:var(--tone,var(--accent)); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 @media (max-width:560px){ .plate{ padding:6px 12px } .plate .nm{ font-size:1.0625rem } }
-/* plate frames (ids match the game's flair ids; values lifted from the live site) */
-.f-slate  { background:linear-gradient(180deg,#262B38,#12141C); box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.06) }
-.f-neon   { background:linear-gradient(180deg,#102E3C,#0A1217); box-shadow:0 0 0 1px rgba(90,209,230,.95),0 0 0 3.5px rgba(90,209,230,.28),0 0 14px rgba(90,209,230,.28) }
-.f-circuit{ background:linear-gradient(180deg,#0F2117,#08120D); box-shadow:0 0 0 1px rgba(75,216,107,.85),0 0 0 3.5px rgba(75,216,107,.20),0 0 14px rgba(75,216,107,.20) }
-.f-frost  { background:linear-gradient(180deg,#2A3C4D,#0D141C); box-shadow:0 0 0 1px rgba(191,232,255,.9),0 0 0 3.5px rgba(191,232,255,.24),0 0 14px rgba(191,232,255,.24) }
-.f-gilded { background:linear-gradient(180deg,#382B0F,#170F05); box-shadow:0 0 0 1px rgba(255,214,102,1),0 0 0 3.5px rgba(255,214,102,.26),0 0 0 5px rgba(102,71,15,.9),0 0 14px rgba(255,214,102,.26) }
-.f-ember  { background:linear-gradient(180deg,#2E120A,#421708); box-shadow:0 0 0 1px rgba(255,122,58,.95),0 0 0 3.5px rgba(255,122,58,.26),0 0 14px rgba(255,122,58,.26) }
-.f-bloom  { background:linear-gradient(180deg,#331724,#170A12); box-shadow:0 0 0 1px rgba(245,143,168,.9),0 0 0 3.5px rgba(245,143,168,.24),0 0 14px rgba(245,143,168,.24) }
-.f-void   { background:radial-gradient(circle at 18% 30%,rgba(255,255,255,.55) 0 1.5px,transparent 1.6px),radial-gradient(circle at 70% 65%,rgba(255,255,255,.4) 0 1px,transparent 1.1px),linear-gradient(180deg,#171028,#07050E); box-shadow:0 0 0 1px rgba(180,140,255,.9),0 0 0 3.5px rgba(180,140,255,.22),0 0 14px rgba(180,140,255,.22) }
+/* plate frames (ids match the game's flair ids). The whole card wears its player's plate
+   (owner, 2026-10-06: "the highlight must span the full row width, not just the name"), so
+   a frame is a set of values the card uses: fill, ring (the card's own 1px border, recoloured),
+   and a glow drawn INSIDE (an outer one bled between rows 8px apart). The name keeps what is
+   the name's: its font, slant and spacing (nf-*) and the title colour. Fills are 180deg on
+   purpose: a vertical gradient survives a 1160px row, a keyword angle would not. */
+[data-plate]{ background:var(--plate-scrim,linear-gradient(transparent,transparent)),var(--plate-bg); background-color:var(--card);
+  border-color:var(--plate-ring); box-shadow:inset 0 0 0 3.5px var(--plate-glow); --lb-muted:#B8C0CA }
+[data-plate]:hover{ border-color:var(--plate-ring) }
+[data-plate]::before{ display:none }   /* the plate replaces the banner layer under it */
+[data-plate] .rank,[data-plate] .plat{ color:var(--lb-muted) }   /* ~6:1 on the lightest fill, the card's grey was ~3.5:1 */
+[data-plate="slate"]  { --plate-bg:linear-gradient(180deg,#262B38,#12141C); --plate-ring:rgba(255,255,255,.9);  --plate-glow:rgba(255,255,255,.06) }
+[data-plate="neon"]   { --plate-bg:linear-gradient(180deg,#102E3C,#0A1217); --plate-ring:rgba(90,209,230,.95);  --plate-glow:rgba(90,209,230,.28) }
+[data-plate="circuit"]{ --plate-bg:linear-gradient(180deg,#0F2117,#08120D); --plate-ring:rgba(75,216,107,.85);  --plate-glow:rgba(75,216,107,.20) }
+[data-plate="frost"]  { --plate-bg:linear-gradient(180deg,#2A3C4D,#0D141C); --plate-ring:rgba(191,232,255,.9);  --plate-glow:rgba(191,232,255,.24) }
+[data-plate="gilded"] { --plate-bg:linear-gradient(180deg,#382B0F,#170F05); --plate-ring:rgb(255,214,102);      --plate-glow:rgba(255,214,102,.26) }
+[data-plate="ember"]  { --plate-bg:linear-gradient(180deg,#2E120A,#421708); --plate-ring:rgba(255,122,58,.95);  --plate-glow:rgba(255,122,58,.26) }
+[data-plate="bloom"]  { --plate-bg:linear-gradient(180deg,#331724,#170A12); --plate-ring:rgba(245,143,168,.9);  --plate-glow:rgba(245,143,168,.24) }
+/* void's stars tile at a fixed density in the bands between the edge (ring 1px + glow 3.5px, plus 4)
+   and the words, four layers at their own heights and tile widths so no two line up into stitching:
+   two dots stretched over a 1160px row read as dust, not as a sky */
+[data-plate="void"]   { --plate-bg:radial-gradient(circle at 11px 9px,rgba(255,255,255,.6) 0 1.1px,transparent 1.6px) 0 0/97px 100% repeat-x,
+                          radial-gradient(circle at 40px 14px,rgba(255,255,255,.35) 0 .8px,transparent 1.2px) 0 0/61px 100% repeat-x,
+                          radial-gradient(circle at 47px calc(100% - 10px),rgba(255,255,255,.45) 0 .9px,transparent 1.4px) 0 0/71px 100% repeat-x,
+                          radial-gradient(circle at 23px calc(100% - 15px),rgba(255,255,255,.3) 0 .8px,transparent 1.2px) 0 0/53px 100% repeat-x,
+                          linear-gradient(180deg,#171028,#07050E);
+                        --plate-ring:rgba(180,140,255,.9); --plate-glow:rgba(180,140,255,.22) }
+[data-plate="carbon"] { --plate-bg:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3.5px),linear-gradient(180deg,#212429,#0F0F14);
+                        --plate-ring:rgba(191,199,217,.85); --plate-glow:rgba(191,199,217,.10) }
+/* Holo across a whole row was too loud: the fill holds still (one static sweep of hues under a
+   dark scrim) and only the ring and the inner glow turn. Never hue-rotate the row itself: it would
+   turn the gold score and the cyan title with it. */
+@property --plate-h{ syntax:'<angle>'; inherits:true; initial-value:0deg }
+[data-plate="holo"]   { --plate-bg:linear-gradient(90deg,hsl(0 50% 60% / .26),hsl(60 50% 60% / .26),hsl(120 50% 60% / .26),hsl(180 50% 60% / .26),hsl(240 50% 60% / .26),hsl(300 50% 60% / .26),hsl(360 50% 60% / .26));
+                        --plate-scrim:linear-gradient(rgb(0 0 0 / .35),rgb(0 0 0 / .35));
+                        --plate-ring:oklch(.82 .14 var(--plate-h)); --plate-glow:oklch(.82 .14 var(--plate-h) / .22); animation:holo-h 8s linear infinite }
+@keyframes holo-h{ to{ --plate-h:360deg } }
 /* banners (NEW cosmetic slot) */
 .b-aurora { --banner:linear-gradient(100deg,#0e5a6b,#3b2a7a 60%,#7a2a6b) }
 .b-sunset { --banner:linear-gradient(100deg,#7a4a0e,#8a2a4a 70%) }
@@ -154,14 +182,4 @@ section .wrap>*{ max-width:1160px }
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important }
 }
 
-/* live flair ids the mockup lacked, same art as the old landing */
-.f-holo   { background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35)),
-            linear-gradient(90deg,hsla(0,50%,60%,.26),hsla(60,50%,60%,.26),hsla(120,50%,60%,.26),hsla(180,50%,60%,.26),hsla(240,50%,60%,.26),hsla(300,50%,60%,.26),hsla(360,50%,60%,.26));
-            background-size:auto,300% 100%; box-shadow:0 0 0 1px rgba(255,255,255,.9),0 0 0 3.5px rgba(255,255,255,.18),0 0 14px rgba(255,255,255,.18);
-            animation:holo 4.5s linear infinite }
-.f-holo::before{ background:rgba(255,255,255,.22) }
-@keyframes holo{ to{ background-position:0 0,300% 0 } }
-.f-carbon { background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3.5px),
-            linear-gradient(180deg,#212429,#0F0F14);
-            box-shadow:0 0 0 1px rgba(191,199,217,.85),0 0 0 3.5px rgba(191,199,217,.10),0 0 14px rgba(191,199,217,.10) }
-@media (prefers-reduced-motion:reduce){ .f-holo{ animation:none } }
+@media (prefers-reduced-motion:reduce){ [data-plate="holo"]{ animation:none } }

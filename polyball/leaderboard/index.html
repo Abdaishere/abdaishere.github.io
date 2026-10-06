@@ -106,6 +106,14 @@ select{ min-height:44px; padding:0 40px 0 16px; border-radius:var(--r-pill); bor
 .champ{ grid-template-columns:9.5rem minmax(0,1fr) auto auto; border-color:rgba(255,194,75,.35) }
 .champ .when{ font:700 var(--t-eyebrow)/1.3 var(--display); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding-left:var(--s2) }
 .champ .score{ color:var(--gold) }
+/* A plated tile or champions row wears the whole frame, as a list row does (polyball.css
+   [data-plate]); these come after the page's own .pod/.champ rules so the plate wins. */
+.pod[data-plate],.champ[data-plate]{ background:var(--plate-scrim,linear-gradient(transparent,transparent)),var(--plate-bg); background-color:var(--card);
+  border-color:var(--plate-ring); box-shadow:inset 0 0 0 3.5px var(--plate-glow) }
+.pod[data-plate]::before{ display:none }
+.pod[data-plate] .plat{ color:var(--lb-muted) }
+.pod.n1[data-plate]{ box-shadow:inset 0 0 0 3.5px var(--plate-glow),0 20px 60px -30px rgba(255,194,75,.5) }   /* #1 keeps its gold light */
+.podium:has(.pod[data-plate]) .pod.n1:not([data-plate]){ box-shadow:0 20px 60px -30px rgba(255,194,75,.7) }   /* a plain #1 beside a plated tile still reads first */
 /* phones: month on its own line, flush with the plate's left edge, 8px clear of the plate's glow */
 @media (max-width:560px){ .champ{ grid-template-columns:minmax(0,1fr) auto auto; row-gap:var(--s2); padding-left:var(--s3) } .champ .when{ grid-column:1/-1; padding:var(--s1) 0 0 } }
 </style>
