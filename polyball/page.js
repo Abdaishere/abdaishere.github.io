@@ -91,7 +91,7 @@ if (play && stage && !coarse) {
 const trailerBtn = document.getElementById('trailerBtn');
 if (trailerBtn) trailerBtn.addEventListener('click', function () {
   const f = document.createElement('iframe');
-  f.src = 'https://www.youtube-nocookie.com/embed/0A4oTiEH7Co?autoplay=1';
+  f.src = 'https://www.youtube-nocookie.com/embed/dyrDli1sBtU?autoplay=1';
   f.allow = 'autoplay; fullscreen';
   f.title = 'PolyBall trailer';
   f.style.cssText = 'width:100%;aspect-ratio:16/9;border:1px solid var(--line);display:block';
