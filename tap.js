@@ -49,7 +49,14 @@ function own() {
   };
 }
 
-export function taps({ item = document.getElementById('beatitem'), tap = document.getElementById('tap'), sound = document.getElementById('sound'), line = document.getElementById('streak'), status = document.getElementById('tap-status') } = {}) {
+// QA ST-02: restLabel overrides the rest-state text. The widget's own clock
+// (BEAT, above) is a generic UI pace shared by every no-trace page and stays
+// 120 regardless; only /polyball/ passes a different label here, because
+// that page's actual game runs at 100 BPM (band.js), and a NUMBER on this
+// page has to either match the widget's own clock (120, still wrong versus
+// the game) or the game (100, wrong versus the widget it is actually tapping
+// along to) - no single number is honest, so this page drops it instead.
+export function taps({ item = document.getElementById('beatitem'), tap = document.getElementById('tap'), sound = document.getElementById('sound'), line = document.getElementById('streak'), status = document.getElementById('tap-status'), restLabel = '120 BPM · Tap' } = {}) {
   const calm = matchMedia('(prefers-reduced-motion: reduce)');
   const ring = item.querySelector('.sb-ring'), fill = item.querySelector('.sb-fill');
   let trace = null, solo = false, pending = null, streak = 0, best = 0, shown = null, timer = 0, ac = null, voice = null, bus = null;
@@ -68,7 +75,7 @@ export function taps({ item = document.getElementById('beatitem'), tap = documen
     else if (shown === 'in') say('Count-in');
     else if (shown?.hit) say([String(streak)], streak >= 100 ? ' on beat' : ' on the beat');   // 100+ would not fit the slot
     else if (shown) say(`${Math.abs(shown.ms)} ms ${shown.ms > 0 ? 'late' : 'early'}`);
-    else say('120 BPM · Tap');
+    else say(restLabel);
   };
   const rest = () => { clearTimeout(timer); streak = 0; shown = null; if (solo) trace.stop(); render(); go(); };
 

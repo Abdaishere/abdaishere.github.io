@@ -12,7 +12,10 @@ const root = document.documentElement;
 /* ---- the beat item in the status bar. A page with a trace wires it to the trace itself (home,
        /e-jam/); every other page gives it its own clock here. ---- */
 if (document.getElementById('beatitem') && !document.getElementById('trace')) {
-  const t = taps(); t.bind();
+  // QA ST-02: /polyball/'s own game runs at 100 BPM (band.js), not the
+  // widget's generic 120 BPM pace other no-trace pages show.
+  const onPolyball = location.pathname.startsWith('/polyball/');
+  const t = taps(onPolyball ? { restLabel: 'Tap' } : {}); t.bind();
   if (['localhost', '127.0.0.1'].includes(location.hostname)) window.__taps = t; // gate hook
 }
 
