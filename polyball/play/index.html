@@ -198,6 +198,74 @@ try {
 @keyframes pb-load-pulse { 50% { opacity: 0.35; } }
 @media (prefers-reduced-motion: reduce) { #status::after { animation: pb-load-pulse 2s ease-in-out infinite; will-change: opacity; } }
 </style>
+<script>
+// Godot's web build plays straight through Web Audio and skips every bus effect:
+// no reverb, no echo, no master limiter, so the browser mix was dry, mono and,
+// for want of a limiter, had to sit quieter (audit 2026-10-08, finding 8). Every
+// sound reaches the speakers through the master's one connection to the
+// destination, so put the browser's own nodes on that path: a limiter, which
+// lets web run at the app's loudness, and a light stereo room for the space and
+// width the app's reverbs give. Knobs: window.polyballWebMix (wet, limiter dB).
+window.AudioNode && window.AudioDestinationNode && (() => {
+	const mix = window.polyballWebMix = window.polyballWebMix || { wet: 0.55, ceiling: -1.0 };
+	const connect = AudioNode.prototype.connect;
+	const chains = new WeakMap();
+	const room = (ctx) => {
+		// 1.8 s of decaying, darkening stereo noise after an 18 ms gap: the same
+		// kind of tail as the app's reverbs, L and R independent for width.
+		const sr = ctx.sampleRate, n = Math.floor(1.8 * sr), pre = Math.floor(0.018 * sr);
+		const ir = ctx.createBuffer(2, n, sr);
+		for (let ch = 0; ch < 2; ch++) {
+			const d = ir.getChannelData(ch);
+			let lp = 0, e = 0;
+			for (let i = pre; i < n; i++) {
+				const t = (i - pre) / sr;
+				const k = Math.min(0.92, 0.25 + t * 0.6);  // brighter early, duller late
+				lp += (Math.random() * 2 - 1 - lp) * (1 - k);
+				d[i] = lp * Math.exp(-t / 0.42);
+				e += d[i] * d[i];
+			}
+			const g = 1 / Math.sqrt(e);
+			for (let i = 0; i < n; i++) d[i] *= g;
+		}
+		return ir;
+	};
+	const chainFor = (ctx) => {
+		let c = chains.get(ctx);
+		if (c) return c;
+		const input = ctx.createGain();
+		const lim = ctx.createDynamicsCompressor();
+		lim.threshold.value = mix.ceiling;
+		lim.knee.value = 0;
+		lim.ratio.value = 20;
+		lim.attack.value = 0.001;
+		lim.release.value = 0.1;
+		const verb = ctx.createConvolver();
+		verb.normalize = false;
+		verb.buffer = room(ctx);
+		const wet = ctx.createGain();
+		wet.gain.value = mix.wet;
+		connect.call(input, lim);
+		connect.call(input, verb);
+		connect.call(verb, wet);
+		connect.call(wet, lim);
+		connect.call(lim, ctx.destination);
+		c = { input, wet, lim };
+		chains.set(ctx, c);
+		window.polyballWebMixNodes = c;
+		// What the browser says sits between this context and the ear (Bluetooth
+		// included where the OS tells it): GameState reads it as the route latency.
+		window.polyballOutputLatencyMs = () => Math.round(((ctx.outputLatency || 0) + (ctx.baseLatency || 0)) * 1000);
+		return c;
+	};
+	AudioNode.prototype.connect = function (dest, ...rest) {
+		if (dest instanceof AudioDestinationNode) {
+			return connect.call(this, chainFor(dest.context).input, ...rest);
+		}
+		return connect.call(this, dest, ...rest);
+	};
+})();
+</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -216,7 +284,7 @@ try {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":10059596,"index.wasm":29495521},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":10140804,"index.wasm":29495521},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
