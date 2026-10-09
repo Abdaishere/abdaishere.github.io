@@ -75,12 +75,14 @@ function embed() {
   f.focus();
 }
 
-if (play && stage && !coarse) {
-  play.addEventListener('click', (e) => {
+const playTargets = [play, document.getElementById('stagePlay')].filter(Boolean);
+if (playTargets.length && stage && !coarse) {
+  const go = (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;   // let a new-tab click be a new tab
     e.preventDefault();
     embed();
-  });
+  };
+  playTargets.forEach((el) => el.addEventListener('click', go));
   // ?play is the deep link for end cards and QR codes: skip the poster step entirely.
   if (new URLSearchParams(location.search).has('play')) embed();
 } else if (coarse && new URLSearchParams(location.search).has('play')) {

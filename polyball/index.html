@@ -62,6 +62,7 @@
 .stage > img, .stage > iframe, .stage > video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .stage > img, .stage > video { object-fit: cover; }
 .stage > video { pointer-events: none; }
+.stage-play { position: absolute; inset: 0; z-index: 1; }
 /* caption left, the loop's Pause right: off the footage, where it would pass for a game button */
 .stage-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; width: min(100%, 22rem); }
 .stage-row .pause { flex: none; }
@@ -76,8 +77,8 @@
 .trailer { position: relative; display: block; width: min(100%, 60rem); aspect-ratio: 16 / 9; padding: 0; border: 1px solid var(--line); background: #000; cursor: pointer; overflow: hidden; }
 .trailer img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: opacity var(--t); }
 .trailer:hover img { opacity: 1; }
-.trailer .play-mark { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; background: var(--signal-fill); color: var(--on-signal); display: grid; place-items: center; }
-.trailer .play-mark svg { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; }
+.trailer .play-mark, .stage-play .play-mark { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; background: var(--signal-fill); color: var(--on-signal); display: grid; place-items: center; }
+.trailer .play-mark svg, .stage-play .play-mark svg { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; }
 .trailer .len { position: absolute; left: 0.75rem; bottom: 0.75rem; padding: 0.35rem 0.6rem; background: rgba(0, 0, 0, 0.72); color: #fff; font: 500 0.75rem/1 var(--mono); }
 
 .rail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(0.5rem, 1.5vw, 1rem); }
@@ -187,10 +188,11 @@
       </div>
       <div class="aside play-col">
         <div class="stage" id="stage">
-          <img src="loop-poster.webp" width="540" height="960" fetchpriority="high" decoding="async" alt="A Classic run in PolyBall on a phone: score 3, a green ball falling toward a five-sided ring with its colours around the edge.">
+          <img src="loop-poster.webp" width="540" height="960" fetchpriority="high" decoding="async" alt="A Classic run in PolyBall on a phone: score 6, a cyan ball falling toward a five-sided ring with its colours around the edge.">
+          <a class="stage-play" id="stagePlay" href="/polyball/play/" aria-label="Play in your browser"><span class="play-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></a>
         </div>
         <div class="stage-row">
-          <p class="cap" id="stage-note"><span class="loop-note" hidden>Four seconds of a Classic run, recorded in 0.9.7, without its sound. </span>The game itself runs in the browser, sound on. <a id="fullscreen" href="/polyball/play/">Open it full screen</a>.</p>
+          <p class="cap" id="stage-note"><span class="loop-note" hidden>Four seconds of a Classic run, recorded in 0.10.4, without its sound. </span>The game itself runs in the browser, sound on. <a id="fullscreen" href="/polyball/play/">Open it full screen</a>.</p>
         </div>
       </div>
     </div>
