@@ -7,40 +7,30 @@ on:
         description: 'URL to open in Mobile Safari'
         required: false
         default: 'https://abdaishere.com/polyball/play/'
+      device:
+        description: 'Simulator device name'
+        required: false
+        default: 'iPhone 16'
 
 jobs:
   safari-test:
-    runs-on: macos-15
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: iphone-se-ios18
-            device_query: 'iPhone SE'
-            runtime_id: com.apple.CoreSimulator.SimRuntime.iOS-18-5
-          - label: ipad-ios26
-            device_query: 'iPad'
-            runtime_id: com.apple.CoreSimulator.SimRuntime.iOS-26-1
-          - label: iphone16-ios18
-            device_query: 'iPhone 16'
-            runtime_id: com.apple.CoreSimulator.SimRuntime.iOS-18-5
+    runs-on: macos-14
     steps:
       - name: Show Xcode and runtime info
         run: |
           xcodebuild -version
           xcrun simctl list runtimes
 
-      - name: Create and boot simulator
+      - name: Boot simulator
         id: boot
         run: |
-          DEVICETYPE_ID=$(xcrun simctl list devicetypes | grep -F "${{ matrix.device_query }}" | grep -oE 'com\.apple\.CoreSimulator\.SimDeviceType\.[A-Za-z0-9_-]+' | head -1)
-          if [ -z "$DEVICETYPE_ID" ]; then
-            echo "No device type matched '${{ matrix.device_query }}'"
-            xcrun simctl list devicetypes
+          DEVICE="${{ github.event.inputs.device || 'iPhone 16' }}"
+          UDID=$(xcrun simctl list devices available | grep "$DEVICE (" | grep -oE '[0-9A-F-]{36}' | head -1)
+          if [ -z "$UDID" ]; then
+            echo "Device '$DEVICE' not found, listing available devices:"
+            xcrun simctl list devices available
             exit 1
           fi
-          echo "Using device type: $DEVICETYPE_ID"
-          UDID=$(xcrun simctl create "ci-${{ matrix.label }}" "$DEVICETYPE_ID" "${{ matrix.runtime_id }}")
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
@@ -59,6 +49,13 @@ jobs:
           mkdir -p artifacts
           xcrun simctl io "${{ steps.boot.outputs.udid }}" screenshot artifacts/01-initial.png
 
+      - name: Start screen recording
+        run: |
+          UDID="${{ steps.boot.outputs.udid }}"
+          xcrun simctl io "$UDID" recordVideo artifacts/video.mov &
+          echo $! > record.pid
+          sleep 1
+
       - name: Wait and take mid-load screenshot
         run: |
           sleep 10
@@ -69,13 +66,24 @@ jobs:
           sleep 10
           xcrun simctl io "${{ steps.boot.outputs.udid }}" screenshot artifacts/03-final.png
 
+      - name: Stop screen recording
+        run: |
+          kill -INT "$(cat record.pid)" || true
+          sleep 2
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ios-safari-test-${{ matrix.label }}-${{ github.run_number }}
+          name: ios-safari-test-${{ github.run_number }}
           path: artifacts/
           retention-days: 5
 
-# DIAGNOSTIC MATRIX: temporary, testing which device/iOS combo renders WebGL
-# without context loss. Will be collapsed back to a single fixed combo once
-# a working one is found.
+# v1 scope: load + screenshots + video only, no interaction.
+# To add taps/input later: drive the simulator with XCUITest (a small .xctestplan
+# tapping WKWebView coordinates) or idb (`idb ui tap`), both macOS-runner-only.
+#
+# WebGL in iOS Simulator on GitHub-hosted macOS runners loses context on load
+# (tested iPhone 16 + iPhone SE + iPad, iOS 18.5/26.1, macos-15): simulator GPU
+# acceleration is not available in these VMs. macos-14 tried as a second runner
+# image for the same reason. Real-device Safari is unaffected; this is a
+# simulator/CI limitation, not a site bug.
