@@ -1,0 +1,34 @@
+<svg class="plot" viewBox="0 0 520 460" role="img" aria-labelledby="chart-t"><title id="chart-t">Printing time of each bat version, in hours: Three upright pieces, PLA, loose coupler 16 h, Two pieces lying flat, PETG, 73.5 cm 18 h, Two upright pieces, PETG, 57.8 cm 13 h, Three upright, printed spine and coupler 30 h, Three upright on a steel rod 23 h, With caps, rod rings, 30 mm washers 26 h, Reviewed: infill every 2nd layer 22 h.</title>
+<style>.c-l{font:500 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--mid)}.c-n{font:500 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--ink)}.c-b{fill:var(--mid)}.c-f{fill:var(--ink)}.c-ax{stroke:var(--line);stroke-width:1}</style>
+<line class="c-ax" x1="0.0" y1="12" x2="0.0" y2="434"/>
+<text class="c-l" x="0.0" y="452" text-anchor="middle">0 h</text>
+<line class="c-ax" x1="92.5" y1="12" x2="92.5" y2="434"/>
+<text class="c-l" x="92.5" y="452" text-anchor="middle">8 h</text>
+<line class="c-ax" x1="185.0" y1="12" x2="185.0" y2="434"/>
+<text class="c-l" x="185.0" y="452" text-anchor="middle">16 h</text>
+<line class="c-ax" x1="277.5" y1="12" x2="277.5" y2="434"/>
+<text class="c-l" x="277.5" y="452" text-anchor="middle">24 h</text>
+<line class="c-ax" x1="370.0" y1="12" x2="370.0" y2="434"/>
+<text class="c-l" x="370.0" y="452" text-anchor="middle">32 h</text>
+<text class="c-l" x="-12" y="34" text-anchor="end">Three upright pieces, PLA, loose coupler</text>
+<rect class="c-b" x="0" y="21" width="181.7" height="18" rx="1"/>
+<text class="c-n" x="189.7" y="34">15 h 43 · 490 g</text>
+<text class="c-l" x="-12" y="92" text-anchor="end">Two pieces lying flat, PETG, 73.5 cm</text>
+<rect class="c-b" x="0" y="79" width="204.1" height="18" rx="1"/>
+<text class="c-n" x="212.1" y="92">17 h 39 · 536 g</text>
+<text class="c-l" x="-12" y="150" text-anchor="end">Two upright pieces, PETG, 57.8 cm</text>
+<rect class="c-b" x="0" y="137" width="154.4" height="18" rx="1"/>
+<text class="c-n" x="162.4" y="150">13 h 21 · 323 g</text>
+<text class="c-l" x="-12" y="208" text-anchor="end">Three upright, printed spine and coupler</text>
+<rect class="c-b" x="0" y="195" width="347.1" height="18" rx="1"/>
+<text class="c-n" x="355.1" y="208">30 h 01 · 839 g</text>
+<text class="c-l" x="-12" y="266" text-anchor="end">Three upright on a steel rod</text>
+<rect class="c-b" x="0" y="253" width="262.5" height="18" rx="1"/>
+<text class="c-n" x="270.5" y="266">22 h 42 · 628 g</text>
+<text class="c-l" x="-12" y="324" text-anchor="end">With caps, rod rings, 30 mm washers</text>
+<rect class="c-b" x="0" y="311" width="295.8" height="18" rx="1"/>
+<text class="c-n" x="303.8" y="324">25 h 35 · 666 g</text>
+<text class="c-l" x="-12" y="382" text-anchor="end">Reviewed: infill every 2nd layer</text>
+<rect class="c-f" x="0" y="369" width="255.5" height="18" rx="1"/>
+<text class="c-n" x="263.5" y="382">22 h 06 · 651 g</text>
+</svg>

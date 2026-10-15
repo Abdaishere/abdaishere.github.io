@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A life-size bat on a 30 cm printer · Off the bed</title>
+<meta name="description" content="Designing and printing a full-size 84 cm baseball bat in PETG on a K1 Max: the profile, the pieces, the steel rod, a brim that failed twice, a spool that starved three prints, and a barrel glued back together in three pieces.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://abdaishere.com/prints/bat/">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://abdaishere.com/prints/bat/">
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="A life-size bat on a 30 cm printer">
+<meta property="og:description" content="Designing and printing a full-size 84 cm baseball bat in PETG on a K1 Max: the profile, the pieces, the steel rod, a brim that failed twice, a spool that starved three prints, and a barrel glued back together in three pieces.">
+<meta property="og:image" content="https://abdaishere.com/img/og/print-bat.png?v=2">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A life-size bat on a 30 cm printer. No. 03 of Off the bed, 3D prints by Abdallah El Belkasy. 22 h 20 min, 8 prints.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/print-bat.png?v=2">
+<meta name="twitter:image:alt" content="A life-size bat on a 30 cm printer. No. 03 of Off the bed, 3D prints by Abdallah El Belkasy. 22 h 20 min, 8 prints.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"A life-size bat on a 30 cm printer","datePublished":"2026-10-15","author":{"@type":"Person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/"},"url":"https://abdaishere.com/prints/bat/"}
+</script>
+<meta property="article:published_time" content="2026-10-15">
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/prints/prints.css">
+<script src="/boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/#path">Path</a>
+      <a href="/#about">About</a>
+      <a href="/prints/" aria-current="true">Prints</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
+
+<main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span class="sb-lead">
+      <span>Dubai <span class="clock needs-js">--:--</span></span>
+      <span class="sb-beat needs-js tapctl" id="beatitem">
+        <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+        <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+        <span class="sr" id="tap-status" role="status"></span>
+      </span>
+      <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    </span>
+    <span>Open to Rust · systems · backend</span>
+  </div>
+</div>
+
+  <article class="sec post" aria-labelledby="post-h">
+    <div class="wrap">
+      <p class="crumb"><a class="more" href="/prints/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>Off the bed</a></p>
+      <div class="col">
+        
+        <p class="label">3D prints · No. 03</p>
+        <h1 id="post-h">A life-size bat on a 30 cm printer</h1>
+        <p class="dek">An 84 cm baseball bat in red PETG, printed upright on a steel rod. Eight prints started, five of them stopped, and the barrel ended up in three pieces.</p>
+        <p class="cap byline"><time datetime="2026-10-15">15 October 2026</time> · Designed in CadQuery, printed on a Creality K1 Max · <a href="#recap-h">Short version ↓</a></p>
+        <ul role="list" class="fl strip" aria-label="Facts"><li>PETG</li><li>22 h 20 min printing</li><li>about 680 g</li><li>8 prints started</li><li>84 cm</li></ul>
+        <figure class="hero-fig drawn">
+          <svg viewBox="0 0 848 72" role="img" aria-labelledby="bat-t" class="plot">
+<title id="bat-t">Side view of the bat, 840 mm from knob to cupped end, drawn from its design profile. Two thin lines mark the joints at 286 mm and 558 mm, and a dashed line down the middle is the steel rod.</title>
+<path class="pl" d="M4 14.50 L4.0 14.50 6.0 13.00 8.0 12.20 10.0 12.00 12.0 12.20 14.0 13.00 16.0 14.76 18.0 17.36 20.0 19.67 22.0 21.40 24.0 22.10 26.0 22.80 28.0 23.07 30.0 23.33 32.0 23.60 34.0 23.67 36.0 23.74 38.0 23.81 40.0 23.88 42.0 23.95 44.0 23.97 46.0 23.98 48.0 24.00 50.0 24.01 52.0 24.03 54.0 24.04 56.0 24.05 58.0 24.05 60.0 24.05 62.0 24.05 64.0 24.05 66.0 24.05 68.0 24.05 70.0 24.05 72.0 24.05 74.0 24.05 76.0 24.05 78.0 24.05 80.0 24.05 82.0 24.05 84.0 24.05 86.0 24.05 88.0 24.05 90.0 24.05 92.0 24.05 94.0 24.05 96.0 24.05 98.0 24.05 100.0 24.05 102.0 24.05 104.0 24.05 106.0 24.05 108.0 24.05 110.0 24.05 112.0 24.05 114.0 24.05 116.0 24.05 118.0 24.05 120.0 24.05 122.0 24.05 124.0 24.05 126.0 24.05 128.0 24.05 130.0 24.05 132.0 24.05 134.0 24.05 136.0 24.05 138.0 24.05 140.0 24.05 142.0 24.05 144.0 24.05 146.0 24.05 148.0 24.05 150.0 24.05 152.0 24.05 154.0 24.05 156.0 24.05 158.0 24.04 160.0 24.03 162.0 24.02 164.0 24.01 166.0 24.00 168.0 23.99 170.0 23.98 172.0 23.97 174.0 23.96 176.0 23.95 178.0 23.94 180.0 23.93 182.0 23.92 184.0 23.91 186.0 23.90 188.0 23.89 190.0 23.88 192.0 23.87 194.0 23.86 196.0 23.85 198.0 23.84 200.0 23.83 202.0 23.82 204.0 23.81 206.0 23.80 208.0 23.80 210.0 23.79 212.0 23.78 214.0 23.77 216.0 23.76 218.0 23.75 220.0 23.74 222.0 23.73 224.0 23.72 226.0 23.71 228.0 23.70 230.0 23.69 232.0 23.68 234.0 23.67 236.0 23.66 238.0 23.65 240.0 23.64 242.0 23.63 244.0 23.62 246.0 23.61 248.0 23.60 250.0 23.59 252.0 23.58 254.0 23.57 256.0 23.56 258.0 23.55 260.0 23.52 262.0 23.49 264.0 23.46 266.0 23.43 268.0 23.40 270.0 23.37 272.0 23.34 274.0 23.31 276.0 23.28 278.0 23.25 280.0 23.22 282.0 23.19 284.0 23.16 286.0 23.13 288.0 23.10 290.0 23.07 292.0 23.04 294.0 23.01 296.0 22.98 298.0 22.95 300.0 22.92 302.0 22.89 304.0 22.86 306.0 22.83 308.0 22.80 310.0 22.78 312.0 22.75 314.0 22.72 316.0 22.69 318.0 22.66 320.0 22.63 322.0 22.60 324.0 22.57 326.0 22.54 328.0 22.51 330.0 22.48 332.0 22.45 334.0 22.42 336.0 22.39 338.0 22.36 340.0 22.33 342.0 22.30 344.0 22.27 346.0 22.24 348.0 22.21 350.0 22.18 352.0 22.15 354.0 22.12 356.0 22.09 358.0 22.06 360.0 22.03 362.0 21.95 364.0 21.88 366.0 21.80 368.0 21.72 370.0 21.64 372.0 21.57 374.0 21.49 376.0 21.41 378.0 21.34 380.0 21.26 382.0 21.18 384.0 21.10 386.0 21.03 388.0 20.95 390.0 20.87 392.0 20.79 394.0 20.72 396.0 20.64 398.0 20.56 400.0 20.49 402.0 20.41 404.0 20.33 406.0 20.25 408.0 20.18 410.0 20.10 412.0 19.98 414.0 19.85 416.0 19.73 418.0 19.61 420.0 19.48 422.0 19.36 424.0 19.24 426.0 19.11 428.0 18.99 430.0 18.86 432.0 18.74 434.0 18.62 436.0 18.49 438.0 18.37 440.0 18.25 442.0 18.12 444.0 18.00 446.0 17.88 448.0 17.75 450.0 17.63 452.0 17.51 454.0 17.38 456.0 17.26 458.0 17.14 460.0 17.01 462.0 16.88 464.0 16.73 466.0 16.58 468.0 16.43 470.0 16.28 472.0 16.13 474.0 15.98 476.0 15.83 478.0 15.68 480.0 15.53 482.0 15.38 484.0 15.23 486.0 15.08 488.0 14.93 490.0 14.78 492.0 14.63 494.0 14.48 496.0 14.34 498.0 14.19 500.0 14.04 502.0 13.89 504.0 13.74 506.0 13.59 508.0 13.44 510.0 13.29 512.0 13.14 514.0 12.99 516.0 12.84 518.0 12.69 520.0 12.54 522.0 12.39 524.0 12.24 526.0 12.09 528.0 11.94 530.0 11.80 532.0 11.65 534.0 11.50 536.0 11.35 538.0 11.20 540.0 11.05 542.0 10.90 544.0 10.75 546.0 10.60 548.0 10.45 550.0 10.30 552.0 10.15 554.0 10.00 556.0 9.85 558.0 9.70 560.0 9.55 562.0 9.40 564.0 9.27 566.0 9.14 568.0 9.02 570.0 8.89 572.0 8.77 574.0 8.64 576.0 8.52 578.0 8.39 580.0 8.27 582.0 8.15 584.0 8.02 586.0 7.90 588.0 7.77 590.0 7.65 592.0 7.52 594.0 7.40 596.0 7.27 598.0 7.15 600.0 7.02 602.0 6.90 604.0 6.77 606.0 6.65 608.0 6.52 610.0 6.40 612.0 6.27 614.0 6.15 616.0 6.08 618.0 6.02 620.0 5.95 622.0 5.89 624.0 5.82 626.0 5.75 628.0 5.69 630.0 5.62 632.0 5.56 634.0 5.49 636.0 5.42 638.0 5.36 640.0 5.29 642.0 5.23 644.0 5.16 646.0 5.09 648.0 5.03 650.0 4.96 652.0 4.90 654.0 4.83 656.0 4.76 658.0 4.70 660.0 4.63 662.0 4.57 664.0 4.50 666.0 4.49 668.0 4.48 670.0 4.47 672.0 4.46 674.0 4.45 676.0 4.44 678.0 4.43 680.0 4.42 682.0 4.41 684.0 4.40 686.0 4.39 688.0 4.38 690.0 4.37 692.0 4.36 694.0 4.35 696.0 4.34 698.0 4.33 700.0 4.32 702.0 4.31 704.0 4.30 706.0 4.29 708.0 4.28 710.0 4.27 712.0 4.26 714.0 4.25 716.0 4.25 718.0 4.25 720.0 4.25 722.0 4.25 724.0 4.25 726.0 4.25 728.0 4.25 730.0 4.25 732.0 4.25 734.0 4.25 736.0 4.25 738.0 4.25 740.0 4.25 742.0 4.25 744.0 4.25 746.0 4.25 748.0 4.25 750.0 4.25 752.0 4.25 754.0 4.25 756.0 4.25 758.0 4.25 760.0 4.25 762.0 4.25 764.0 4.25 766.0 4.25 768.0 4.26 770.0 4.26 772.0 4.27 774.0 4.28 776.0 4.28 778.0 4.29 780.0 4.30 782.0 4.31 784.0 4.31 786.0 4.32 788.0 4.33 790.0 4.33 792.0 4.34 794.0 4.35 796.0 4.35 798.0 4.36 800.0 4.37 802.0 4.38 804.0 4.38 806.0 4.39 808.0 4.40 810.0 4.44 812.0 4.52 814.0 4.60 816.0 4.68 818.0 4.76 820.0 4.94 822.0 5.23 824.0 5.51 826.0 5.80 828.0 6.40 830.0 7.00 832.0 7.60 834.0 8.50 836.0 9.40 838.0 10.66 840.0 12.08 842.0 14.00 844.0 17.50 L844.0 54.50 842.0 58.00 840.0 59.92 838.0 61.34 836.0 62.60 834.0 63.50 832.0 64.40 830.0 65.00 828.0 65.60 826.0 66.20 824.0 66.49 822.0 66.77 820.0 67.06 818.0 67.24 816.0 67.32 814.0 67.40 812.0 67.48 810.0 67.56 808.0 67.60 806.0 67.61 804.0 67.62 802.0 67.62 800.0 67.63 798.0 67.64 796.0 67.65 794.0 67.65 792.0 67.66 790.0 67.67 788.0 67.67 786.0 67.68 784.0 67.69 782.0 67.69 780.0 67.70 778.0 67.71 776.0 67.72 774.0 67.72 772.0 67.73 770.0 67.74 768.0 67.74 766.0 67.75 764.0 67.75 762.0 67.75 760.0 67.75 758.0 67.75 756.0 67.75 754.0 67.75 752.0 67.75 750.0 67.75 748.0 67.75 746.0 67.75 744.0 67.75 742.0 67.75 740.0 67.75 738.0 67.75 736.0 67.75 734.0 67.75 732.0 67.75 730.0 67.75 728.0 67.75 726.0 67.75 724.0 67.75 722.0 67.75 720.0 67.75 718.0 67.75 716.0 67.75 714.0 67.75 712.0 67.74 710.0 67.73 708.0 67.72 706.0 67.71 704.0 67.70 702.0 67.69 700.0 67.68 698.0 67.67 696.0 67.66 694.0 67.65 692.0 67.64 690.0 67.63 688.0 67.62 686.0 67.61 684.0 67.60 682.0 67.59 680.0 67.58 678.0 67.57 676.0 67.56 674.0 67.55 672.0 67.54 670.0 67.53 668.0 67.52 666.0 67.51 664.0 67.50 662.0 67.43 660.0 67.37 658.0 67.30 656.0 67.24 654.0 67.17 652.0 67.10 650.0 67.04 648.0 66.97 646.0 66.91 644.0 66.84 642.0 66.77 640.0 66.71 638.0 66.64 636.0 66.58 634.0 66.51 632.0 66.44 630.0 66.38 628.0 66.31 626.0 66.25 624.0 66.18 622.0 66.11 620.0 66.05 618.0 65.98 616.0 65.92 614.0 65.85 612.0 65.73 610.0 65.60 608.0 65.48 606.0 65.35 604.0 65.23 602.0 65.10 600.0 64.98 598.0 64.85 596.0 64.73 594.0 64.60 592.0 64.48 590.0 64.35 588.0 64.23 586.0 64.10 584.0 63.98 582.0 63.85 580.0 63.73 578.0 63.61 576.0 63.48 574.0 63.36 572.0 63.23 570.0 63.11 568.0 62.98 566.0 62.86 564.0 62.73 562.0 62.60 560.0 62.45 558.0 62.30 556.0 62.15 554.0 62.00 552.0 61.85 550.0 61.70 548.0 61.55 546.0 61.40 544.0 61.25 542.0 61.10 540.0 60.95 538.0 60.80 536.0 60.65 534.0 60.50 532.0 60.35 530.0 60.20 528.0 60.06 526.0 59.91 524.0 59.76 522.0 59.61 520.0 59.46 518.0 59.31 516.0 59.16 514.0 59.01 512.0 58.86 510.0 58.71 508.0 58.56 506.0 58.41 504.0 58.26 502.0 58.11 500.0 57.96 498.0 57.81 496.0 57.66 494.0 57.52 492.0 57.37 490.0 57.22 488.0 57.07 486.0 56.92 484.0 56.77 482.0 56.62 480.0 56.47 478.0 56.32 476.0 56.17 474.0 56.02 472.0 55.87 470.0 55.72 468.0 55.57 466.0 55.42 464.0 55.27 462.0 55.12 460.0 54.99 458.0 54.86 456.0 54.74 454.0 54.62 452.0 54.49 450.0 54.37 448.0 54.25 446.0 54.12 444.0 54.00 442.0 53.88 440.0 53.75 438.0 53.63 436.0 53.51 434.0 53.38 432.0 53.26 430.0 53.14 428.0 53.01 426.0 52.89 424.0 52.76 422.0 52.64 420.0 52.52 418.0 52.39 416.0 52.27 414.0 52.15 412.0 52.02 410.0 51.90 408.0 51.82 406.0 51.75 404.0 51.67 402.0 51.59 400.0 51.51 398.0 51.44 396.0 51.36 394.0 51.28 392.0 51.21 390.0 51.13 388.0 51.05 386.0 50.97 384.0 50.90 382.0 50.82 380.0 50.74 378.0 50.66 376.0 50.59 374.0 50.51 372.0 50.43 370.0 50.36 368.0 50.28 366.0 50.20 364.0 50.12 362.0 50.05 360.0 49.97 358.0 49.94 356.0 49.91 354.0 49.88 352.0 49.85 350.0 49.82 348.0 49.79 346.0 49.76 344.0 49.73 342.0 49.70 340.0 49.67 338.0 49.64 336.0 49.61 334.0 49.58 332.0 49.55 330.0 49.52 328.0 49.49 326.0 49.46 324.0 49.43 322.0 49.40 320.0 49.37 318.0 49.34 316.0 49.31 314.0 49.28 312.0 49.25 310.0 49.22 308.0 49.20 306.0 49.17 304.0 49.14 302.0 49.11 300.0 49.08 298.0 49.05 296.0 49.02 294.0 48.99 292.0 48.96 290.0 48.93 288.0 48.90 286.0 48.87 284.0 48.84 282.0 48.81 280.0 48.78 278.0 48.75 276.0 48.72 274.0 48.69 272.0 48.66 270.0 48.63 268.0 48.60 266.0 48.57 264.0 48.54 262.0 48.51 260.0 48.48 258.0 48.45 256.0 48.44 254.0 48.43 252.0 48.42 250.0 48.41 248.0 48.40 246.0 48.39 244.0 48.38 242.0 48.37 240.0 48.36 238.0 48.35 236.0 48.34 234.0 48.33 232.0 48.32 230.0 48.31 228.0 48.30 226.0 48.29 224.0 48.28 222.0 48.27 220.0 48.26 218.0 48.25 216.0 48.24 214.0 48.23 212.0 48.22 210.0 48.21 208.0 48.20 206.0 48.20 204.0 48.19 202.0 48.18 200.0 48.17 198.0 48.16 196.0 48.15 194.0 48.14 192.0 48.13 190.0 48.12 188.0 48.11 186.0 48.10 184.0 48.09 182.0 48.08 180.0 48.07 178.0 48.06 176.0 48.05 174.0 48.04 172.0 48.03 170.0 48.02 168.0 48.01 166.0 48.00 164.0 47.99 162.0 47.98 160.0 47.97 158.0 47.96 156.0 47.95 154.0 47.95 152.0 47.95 150.0 47.95 148.0 47.95 146.0 47.95 144.0 47.95 142.0 47.95 140.0 47.95 138.0 47.95 136.0 47.95 134.0 47.95 132.0 47.95 130.0 47.95 128.0 47.95 126.0 47.95 124.0 47.95 122.0 47.95 120.0 47.95 118.0 47.95 116.0 47.95 114.0 47.95 112.0 47.95 110.0 47.95 108.0 47.95 106.0 47.95 104.0 47.95 102.0 47.95 100.0 47.95 98.0 47.95 96.0 47.95 94.0 47.95 92.0 47.95 90.0 47.95 88.0 47.95 86.0 47.95 84.0 47.95 82.0 47.95 80.0 47.95 78.0 47.95 76.0 47.95 74.0 47.95 72.0 47.95 70.0 47.95 68.0 47.95 66.0 47.95 64.0 47.95 62.0 47.95 60.0 47.95 58.0 47.95 56.0 47.95 54.0 47.96 52.0 47.97 50.0 47.99 48.0 48.00 46.0 48.02 44.0 48.03 42.0 48.05 40.0 48.12 38.0 48.19 36.0 48.26 34.0 48.33 32.0 48.40 30.0 48.67 28.0 48.93 26.0 49.20 24.0 49.90 22.0 50.60 20.0 52.33 18.0 54.64 16.0 57.24 14.0 59.00 12.0 59.80 10.0 60.00 8.0 59.80 6.0 59.00 4.0 57.50 Z"/>
+<path class="car" d="M290 23.07V48.93M562 9.40V62.60"/>
+<path class="rodl" d="M16 36.0H802"/>
+</svg>
+          <figcaption class="cap">The bat from the side, drawn from its design profile, 840 mm. Left to right: knob and handle, taper, barrel with its cupped end. The thin lines are the two joints, the dashed line the steel rod.</figcaption>
+        </figure>
+        
+        <div class="story">
+        <p>A real adult bat is 84 cm long. My printer&#x27;s box is 30 cm on every side.</p>
+<p>I wanted it life size and realistic, so it had to come out of that box in pieces and still hold together when swung.</p>
+<h2 id="search">Desk toys</h2>
+<p>The first job was to find a bat someone else had already got right. I didn&#x27;t find one. The popular printable bats were desk toys: scale one up to 84 cm and its barrel comes out 84 mm thick, because its proportions are a cartoon&#x27;s. Another was low-poly, another a stack of cones. The closest was MIHAI_T&#x27;s full-size bat on MakerWorld: 85 cm, with an M8 threaded rod through the middle. I liked that rod, and it ended up in mine. But the bat never said what profile it used, and its licence is personal use only.</p>
+<div class="withnote"><div class="pt"><p>So I drew my own: a standard 33 inch bat, the classic shape, revolved in CadQuery, a Python library for CAD, from a table of diameters along its length. A name went across the barrel in raised graffiti letters with a drop shadow, every edge sloped at 45° so nothing needs support.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>The profile: 840 mm long, knob 48 mm, handle 23.9 mm, barrel 63.5 mm, a cupped end. Numbers from typical bat charts, not from a bat on my desk.</p></aside></div>
+<figure class="fig wide">
+  <img src="render.webp" srcset="render-800.webp 800w, render.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="622" alt="Render of the finished design: a red full-size baseball bat seen from the side, knob on the left, barrel on the right, with a pixelated patch on the barrel where the name is." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 01</b> · The design, rendered. The name on the barrel is pixelated.</figcaption>
+</figure>
+<h2 id="rod">Three pieces and a rod</h2>
+<p>The first plan was three upright pieces in PLA on a steel rod. But I wanted the bat tough on its own, without the rod, and PETG takes a hit better than PLA. A bat printed lying down is strongest, with every layer running along its length. Lying diagonally on a 30 cm bed, though, two pieces top out at 73.5 cm.</p>
+<p>Standing up, two pieces are limited by the printer&#x27;s height, so I tried upright pieces and let the size give. The tallest bat that fits in two upright pieces is 57.8 cm. That&#x27;s a tee-ball bat for a kid. No: three pieces, full size, the best result.</p>
+<figure class="fig wide">
+  <img src="two-vs-three.webp" srcset="two-vs-three-800.webp 800w, two-vs-three.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="346" alt="Two red bats drawn from the side, one above the other and to the same scale: the upper one is short, the lower one about a third longer. A patch on each barrel is pixelated." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 02</b> · To scale: the 57.8 cm bat that fits the printer&#x27;s height in two pieces, above the full-size 84 cm one that needs three. Drawn in CadQuery. The name on each barrel is pixelated.</figcaption>
+</figure>
+<p>So three upright pieces at full size. From the bottom up: the knob and handle, then the taper, where the handle swells into the barrel, with a short spigot at its lower end that plugs into the handle, then the barrel with its cupped end. They join where the bat bends least, 286 mm up from the knob, as far as the printer&#x27;s height allows, and again at 558 mm, just before the barrel, where the bending is almost nothing.</p>
+<figure class="fig wide">
+  <div class="panels"><div class="panel"><svg class="plot" viewBox="0 0 520 460" role="img" aria-labelledby="chart-t"><title id="chart-t">Printing time of each bat version, in hours: Three upright pieces, PLA, loose coupler 16 h, Two pieces lying flat, PETG, 73.5 cm 18 h, Two upright pieces, PETG, 57.8 cm 13 h, Three upright, printed spine and coupler 30 h, Three upright on a steel rod 23 h, With caps, rod rings, 30 mm washers 26 h, Reviewed: infill every 2nd layer 22 h.</title>
+<style>.c-l{font:500 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--mid)}.c-n{font:500 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--ink)}.c-b{fill:var(--mid)}.c-f{fill:var(--ink)}.c-ax{stroke:var(--line);stroke-width:1}</style>
+<line class="c-ax" x1="0.0" y1="12" x2="0.0" y2="434"/>
+<text class="c-l" x="0.0" y="452" text-anchor="middle">0 h</text>
+<line class="c-ax" x1="92.5" y1="12" x2="92.5" y2="434"/>
+<text class="c-l" x="92.5" y="452" text-anchor="middle">8 h</text>
+<line class="c-ax" x1="185.0" y1="12" x2="185.0" y2="434"/>
+<text class="c-l" x="185.0" y="452" text-anchor="middle">16 h</text>
+<line class="c-ax" x1="277.5" y1="12" x2="277.5" y2="434"/>
+<text class="c-l" x="277.5" y="452" text-anchor="middle">24 h</text>
+<line class="c-ax" x1="370.0" y1="12" x2="370.0" y2="434"/>
+<text class="c-l" x="370.0" y="452" text-anchor="middle">32 h</text>
+<text class="c-l" x="-12" y="34" text-anchor="end">Three upright pieces, PLA, loose coupler</text>
+<rect class="c-b" x="0" y="21" width="181.7" height="18" rx="1"/>
+<text class="c-n" x="189.7" y="34">15 h 43 · 490 g</text>
+<text class="c-l" x="-12" y="92" text-anchor="end">Two pieces lying flat, PETG, 73.5 cm</text>
+<rect class="c-b" x="0" y="79" width="204.1" height="18" rx="1"/>
+<text class="c-n" x="212.1" y="92">17 h 39 · 536 g</text>
+<text class="c-l" x="-12" y="150" text-anchor="end">Two upright pieces, PETG, 57.8 cm</text>
+<rect class="c-b" x="0" y="137" width="154.4" height="18" rx="1"/>
+<text class="c-n" x="162.4" y="150">13 h 21 · 323 g</text>
+<text class="c-l" x="-12" y="208" text-anchor="end">Three upright, printed spine and coupler</text>
+<rect class="c-b" x="0" y="195" width="347.1" height="18" rx="1"/>
+<text class="c-n" x="355.1" y="208">30 h 01 · 839 g</text>
+<text class="c-l" x="-12" y="266" text-anchor="end">Three upright on a steel rod</text>
+<rect class="c-b" x="0" y="253" width="262.5" height="18" rx="1"/>
+<text class="c-n" x="270.5" y="266">22 h 42 · 628 g</text>
+<text class="c-l" x="-12" y="324" text-anchor="end">With caps, rod rings, 30 mm washers</text>
+<rect class="c-b" x="0" y="311" width="295.8" height="18" rx="1"/>
+<text class="c-n" x="303.8" y="324">25 h 35 · 666 g</text>
+<text class="c-l" x="-12" y="382" text-anchor="end">Reviewed: infill every 2nd layer</text>
+<rect class="c-f" x="0" y="369" width="255.5" height="18" rx="1"/>
+<text class="c-n" x="263.5" y="382">22 h 06 · 651 g</text>
+</svg></div></div>
+  <figcaption class="cap"><b>Fig. 03</b> · What each version would have cost on the printer, as the slicer estimated it, with the plastic in grams. The printed spine was the expensive idea. The last row is the set of files that went to the printer.</figcaption>
+</figure>
+<p>But an upright print is weakest across its layers, and a bat bends across its layers every time it hits something. The plan for the first joint was a printed spine, an eight-sided bar printed lying down and glued into both pieces. The calculation gave that joint about half to nine tenths of a solid handle&#x27;s strength, calculated and never measured. That was enough for a bat on a shelf, and short of the one I wanted.</p>
+<p>So the rod came back: an M8 threaded rod from a hardware shop, 13 dirhams, running through all three pieces. One steel nut sits in a printed nut holder inside the knob and another under the cup at the far end, so tightening them clamps the pieces end to end and every joint is squeezed instead of pulled. A short printed plug, the coupler, joins the taper to the barrel. Epoxy holds the nut holder and a cap over the knob, and a press-fit cup plug closes the far end.</p>
+<p>Later the same day I had another idea: make the barrel itself the wrench, so the bat tightens when you spin it. A few minutes later I took it back. A bat that tightens by spinning loosens by spinning, every time it hits something. Both joints are keyed now, shaped so one piece can&#x27;t turn against the next.</p>
+<figure class="fig wide">
+  <img src="section.webp" srcset="section-800.webp 800w, section.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="960" alt="Cut-away render of the bat. A grey steel rod runs almost the full length inside the red shell. Yellow parts at each end are the nut holder in the knob and the cup plug, with nuts and washers clamping the rod. The lower half zooms in on the knob and the cup end." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 04</b> · Cut through the middle. The rod (grey) is clamped by a nut and washer at each end. Yellow: the coupler at the barrel joint, the nut holder in the knob and the plug that closes the cup.</figcaption>
+</figure>
+<p>The washers I had at home were 30 mm across and 2 mm thick, so their seats were redrawn to fit. Then a check of every steel part against the plastic found a thin wall of plastic, 0.8 mm, across the rod hole in the knob, right where the rod has to pass. It came out of the model before anything printed.</p>
+<figure class="fig wide">
+  <video class="wide" autoplay muted loop playsinline preload="metadata" poster="assembly-poster.webp" width="1200" height="225" aria-label="Silent looping render: the parts of the bat lie in a row pulled apart, knob cap, nut holder, nut and washer, handle, taper, coupler, barrel, washer, nut and cup plug, with the rod below. They slide together onto the rod into one bat, then spring apart again."><source src="assembly.mp4" type="video/mp4"></video><video class="narrow" autoplay muted loop playsinline preload="metadata" poster="assembly-narrow-poster.webp" width="800" height="600" aria-label="Silent looping render: the parts of the bat lie in a row pulled apart, knob cap, nut holder, nut and washer, handle, taper, coupler, barrel, washer, nut and cup plug, with the rod below. They slide together onto the rod into one bat, then spring apart again."><source src="assembly-narrow.mp4" type="video/mp4"></video>
+  <figcaption class="cap"><b>Fig. 05</b> · How it goes together, drawn from the files: knob cap, nut holder, nut and washer, handle, taper, coupler, barrel, washer, nut, cup plug, and the rod through all of it. The name on the barrel faces away.</figcaption>
+</figure>
+<div class="withnote"><div class="pt"><p>Down an 80 cm hole, a tight fit all the way would jam, and a loose one rattles. So the hole is 8.8 mm, loose, with short tight rings every 50 mm or so to hold the rod in the middle. How tight to make those rings depends on how this printer prints a small hole in this PETG, and I didn&#x27;t know. So the first plate got a test bar with four holes in it: 8.1, 8.2, 8.3 and 8.4 mm.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>M8 thread measures 7.8 to 7.95 mm across, and upright holes in PETG print 0.1 to 0.2 mm small, so 8.2 mm was the guess. 17 rings, each 8 mm long with chamfered edges.</p></aside></div>
+<h2 id="brim">Four minutes</h2>
+<div class="withnote"><div class="pt"><p>Before anything printed, every file was reviewed again, and the review caught two problems. The small-parts plate had a 0.12 mm first layer, the same mistake that tore up the first try of <a href="/prints/panamera-sculpture/">my Panamera sculpture</a>, so it went to 0.24 mm. And the roof over the washer seat in the knob had to print across 30 mm of air with the rod hole through its middle, so the strands crossing the hole would have had nothing to land on. Now the roof prints whole, with a thin skin over the hole that I punch out with a screwdriver.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>The review also saved time. Sparse infill on every second layer in the taper and barrel cut the long pieces from 21 h 22 min to 17 h 57 min. The handle keeps every layer, because it carries the most load.</p></aside></div>
+<figure class="fig wide">
+  <img src="plates.webp" srcset="plates-800.webp 800w, plates.webp 1200w" sizes="(min-width: 60rem) 56rem, 100vw" width="1200" height="1200" alt="Four renders of red parts standing on a printer bed: the barrel with a pixelated patch on it, the long thin taper, the handle with its knob at the bottom, and the small parts plate with the coupler, the hexagonal nut holder, the knob cap, the cup plug and the test bar." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 06</b> · The four files as they stand on the bed, drawn in CadQuery: barrel, taper, handle, and the small-parts plate. The name on the barrel is pixelated.</figcaption>
+</figure>
+<p>The first plate started at 04:10 on Monday morning, 12 October. The bed and nozzle took their time heating. Four minutes of printing later, at 04:21, Obico, the add-on that watches the printer&#x27;s camera for failed prints and had once stopped the Panamera, stopped this one too. I looked, and cancelled it. The outer loop of the brim had run straight over the purge line at the front of the bed. Where the two crossed it was a smeared, crushed mess.</p>
+<figure class="fig col tall">
+  <img src="brim-fail.webp" srcset="brim-fail-800.webp 800w, brim-fail.webp 1080w" sizes="(min-width: 44rem) 42rem, 100vw" width="1080" height="1200" alt="Phone photo of the printer bed: a red brim loop around the outline of the small parts, crushed and smeared where it crosses the purge line at the front." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 07</b> · The first plate, stopped. The red loop is the brim, and the smear at the front is where it ran over the purge line.</figcaption>
+</figure>
+<p>The file said the brim was 5 mm. The slicer&#x27;s automatic brim had quietly grown it to about 18 mm. And the printer draws its purge line 10 mm in front of the part without looking at the brim at all. The handle and taper files had the same clash waiting.</p>
+<p>The fix was to stop letting the slicer choose: a fixed 7 mm brim, outer edge only, on all three files. The check I run before every print now measures the gap between brim and purge line. At 04:36 the first plate started again.</p>
+<h2 id="gap">97 %</h2>
+<p>The plate got to 97 %. Then the coupler came off its brim, and the last layers went into the air as strings. At 08:29 Obico saw the strings and paused the print.</p>
+<figure class="fig wide">
+  <div class="panels"><div class="panel"><p class="plabel">08:06 · 87 %</p><img src="plate1-before.webp" width="750" height="440" alt="Printer camera frame: five red parts on the black bed, a tall cylinder at the left, a hexagonal holder, a flat disc, a flat bar and a wider cylinder at the right." loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">08:56 · stopped</p><img src="plate1-after.webp" width="750" height="440" alt="The same view fifty minutes later: the tall cylinder at the left is gone, only its brim ring remains, with a loose strand beside it." loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 08</b> · The small-parts plate through the printer&#x27;s camera, fifty minutes apart. The coupler is the tall cylinder at the left. Afterwards only its brim ring is there.</figcaption>
+</figure>
+<figure class="fig col tall">
+  <img src="coupler.webp" width="760" height="1020" alt="A hand holding a short red printed cylinder with a hole through it. Its top edge is rough, with blobs and broken strands." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 09</b> · The coupler, found on the bed. Intact apart from its top skin. It stayed: the top sanded flat, and a reprint file kept as the backup.</figcaption>
+</figure>
+<div class="withnote"><div class="pt"><p>My new check measured the brim against the purge line, and nothing measured the brim against the part. The files left a gap of 0.25 mm between the two, so they never bonded. The handle and taper files were sliced again with the brim attached to the part.</p>
+<p>The one good result of the morning had come at 07:45, with the plate still printing. On the test bar, the 8.1 mm hole was the snuggest, with the least movement. That&#x27;s tighter than my 8.2 mm guess. The long pieces were redrawn with 8.1 mm rings before any of them printed.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>The setting is <code>brim_object_gap</code>. At 0.25 mm the brim prints as a separate ring around the part. At 0 it is joined to the part&#x27;s first layer and holds it down.</p></aside></div>
+<figure class="fig col">
+  <img src="testbar-render.webp" srcset="testbar-render-800.webp 800w, testbar-render.webp 1400w" sizes="(min-width: 44rem) 42rem, 100vw" width="1400" height="800" alt="Render of a flat red bar with four round holes in a row, labelled 8.1, 8.2, 8.3 and 8.4, with the grey steel rod standing in the 8.1 hole." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 10</b> · The test bar, drawn from the design file with the rod in the hole that won. On the printed bar the labels are engraved beside each hole.</figcaption>
+</figure>
+<h2 id="ring">One ring</h2>
+<p>The handle printed clean, from 09:24 to 13:51 on Monday, with its brim joined to the part this time. The rod went all the way through its rings. The taper started at 21:58 the same evening.</p>
+<figure class="fig col tall">
+  <img src="handle-rod.webp" srcset="handle-rod-800.webp 800w, handle-rod.webp 1550w" sizes="(min-width: 44rem) 42rem, 100vw" width="1550" height="2400" alt="A hand holding the printed red handle by its knob against a grey wall, the long steel threaded rod pushed all the way through it and reaching far out of the top end." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 11</b> · The handle off the bed, with the rod pushed all the way through. The 8.1 mm rings let it pass.</figcaption>
+</figure>
+<figure class="fig native">
+  <video class="" autoplay muted loop playsinline preload="metadata" poster="handle-poster.webp" width="600" height="540" aria-label="Silent looping clip from the printer&#x27;s camera: the red handle grows upright from the knob to its full height."><source src="handle.mp4" type="video/mp4"></video>
+  <figcaption class="cap"><b>Fig. 12</b> · Four and a half hours in seven seconds: 09:24 to 13:51 on Monday, from the printer&#x27;s camera.</figcaption>
+</figure>
+<div class="withnote"><div class="pt"><p>At about 02:55, at 96 %, the taper paused: the filament had stopped feeding. On the spool, the turns on one side had stuck to each other, and the extruder couldn&#x27;t pull them free. The spool had spent the whole day in the filament dryer on its PETG setting, and that&#x27;s what I blamed first. I cut off the stuck turns, reloaded, pressed resume, and the taper finished at 03:22.</p>
+<p>It came off the bed with one flaw: a ring just below the spigot, where the last layers before the pause had been starved of plastic. A reprint would have cost 4 h 48 min and 152 g. Instead the ring gets covered. A bat has a grip, and the grip will run over that joint.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>The ring is a few layers of under-extrusion. As the spool dragged, less and less plastic came through, until the runout sensor finally saw the strand stop.</p></aside></div>
+<figure class="fig col tall">
+  <img src="taper-ring.webp" srcset="taper-ring-800.webp 800w, taper-ring.webp 1080w" sizes="(min-width: 44rem) 42rem, 100vw" width="1080" height="1920" alt="The red taper lying on a dark granite counter, spigot end to the right with the steel rod sticking out of it. A fine line runs round the piece a little below the spigot." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 13</b> · The taper the morning it came off, rod in the spigot. The line below the spigot is the ring from the pause.</figcaption>
+</figure>
+<h2 id="air">In the air</h2>
+<p>The barrel started at 03:37 on Tuesday morning, 8 h 33 min of printing as sliced. By 06:26 the first letter was rising out of the surface, crisp. At 08:29, the same minute as the day before, Obico paused the print.</p>
+<p>The file was at 164.6 mm. A ruler along the barrel said about 144 mm, so it looked as if 20 mm of layers, about 100 of them, had gone nowhere: the same spool had jammed again and nothing had come out of the nozzle. The printer had carried on above the barrel, laying strings in the air.</p>
+<figure class="fig native">
+  <video class="" autoplay muted loop playsinline preload="metadata" poster="barrel-poster.webp" width="640" height="360" aria-label="Silent looping clip from the printer&#x27;s camera: the red barrel grows on the bed, the raised letters come up its face under a pixelated band, and in the last second its top turns into loose strands."><source src="barrel.mp4" type="video/mp4"></video>
+  <figcaption class="cap"><b>Fig. 14</b> · Four and three-quarter hours in eight seconds, 03:37 to the pause at 08:29, from the printer&#x27;s timelapse. The name is pixelated through the whole clip. Watch the top at the end.</figcaption>
+</figure>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">08:48 · the strings</p><img src="barrel-on-bed.webp" srcset="barrel-on-bed-800.webp 800w, barrel-on-bed.webp 1080w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="1080" height="1920" alt="The red barrel standing on its brim on the printer bed, raised letters up its face pixelated, with a ragged fringe of loose strands at its top edge." loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">08:53 · the top</p><img src="barrel-top.webp" srcset="barrel-top-800.webp 800w, barrel-top.webp 1080w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="1080" height="1920" alt="Looking down into the top of the barrel: a flat surface of wavy gyroid infill with the round rod hole in the middle, and a few hairs of plastic at the rim." loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 15</b> · The barrel after the pause. Left: the strands the nozzle laid in the air. Right: under them, the real top, flat and clean, gyroid infill and the rod hole. The name is pixelated.</figcaption>
+</figure>
+<p>The top was flat and clean, so the print could continue from the real height. The plan was to let the printer measure it: bring the nozzle down over the wall in small steps with a sheet of paper on top, and stop at the first drag. I sent the nozzle to 146 mm, two above the ruler&#x27;s 144, as the first step.</p>
+<p>The barrel was 155 mm tall, not 144. The gap was 10 mm of strings, not 20, and the nozzle pressed into the top of it.</p>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">09:02 · the nozzle</p><img src="head-on-barrel.webp" srcset="head-on-barrel-800.webp 800w, head-on-barrel.webp 1080w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="1080" height="1920" alt="The printer&#x27;s toolhead sitting right on top of the red barrel, its nozzle buried in the barrel&#x27;s top. The raised letters down the face are pixelated." loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">09:05 · the tape</p><img src="bottom-piece-tape.webp" width="310" height="550" alt="A hand holding the red barrel piece with a soft tape measure down it, the scale reading about 20 where the piece ends. A pixelated patch on the piece." loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 16</b> · Left: where the paper test ended, the toolhead on the barrel. Right: the tape afterwards, 4.6 at the brim and 20.2 at the top, so about 155 mm. The ruler had said 144. The name is pixelated in both.</figcaption>
+</figure>
+<div class="withnote"><div class="pt"><p>The barrel was still standing on its brim, but the print was over. A ruler reads to a millimetre on a good day, and I had used it to aim a hot nozzle. I cancelled the job at 09:05 and took the piece off.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>The rule since: when the height of a part is uncertain, the head starts far above it and comes down in small steps, or it doesn&#x27;t move at all.</p></aside></div>
+<h2 id="pieces">A barrel in three</h2>
+<p>The barrel wasn&#x27;t lost. Its bottom 155 mm were good, letters included. So the barrel model was cut at 154 mm and the top 128 mm became its own print, standing on its cut face. The bottom piece had to be sanded down to 154 mm so the letters would line up across the joint. The top started at 09:18.</p>
+<p>At 11:14, 61 mm up, the runout sensor stopped it. The spool again. The reload wouldn&#x27;t feed, and at 14:22 I cancelled that one too. The barrel was now going to be three pieces, and a joint would cross the name twice.</p>
+<figure class="fig col tall">
+  <img src="middle-piece-tape.webp" width="600" height="1050" alt="A hand holding a short red printed cylinder with a soft tape measure running up it, reading about 6 cm. A pixelated patch at the left edge." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 17</b> · The middle piece: 61 mm, where the spool stopped it. The letter that crosses it is pixelated.</figcaption>
+</figure>
+<div class="withnote"><div class="pt"><p>The model was cut again, at 60.6 mm, and a 67 mm top piece went to the printer. It started at 14:34 and stopped after 16 minutes. The spool. This time I pulled about 30 m off it by hand, in big loose loops on the floor, so the printer only had to pull from the pile. The piece started again at 15:13 and finished at 17:38, and the spool went in the bin with about 300 g still on it.</p></div><aside class="sn" aria-label="Side note"><p class="label">Side note</p><p>My first verdict was the dryer. But a black spool from the same maker had stuck turns too, milder, and it had never been in a dryer. A badly wound roll is the likelier cause, with the dryer making the outside turns worse. I didn&#x27;t settle it.</p></aside></div>
+<figure class="fig col tall">
+  <img src="three-joints.webp" srcset="three-joints-800.webp 800w, three-joints.webp 1080w" sizes="(min-width: 44rem) 42rem, 100vw" width="1080" height="1920" alt="Looking along the red barrel from the cup end, held in one hand: two fine lines run round it where the pieces meet, and a third further down where the barrel meets the taper." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 18</b> · The dry fit on Tuesday evening, all pieces on the rod, seen from the cup end: the two barrel joints, and further down the taper joint. The name lines up across both.</figcaption>
+</figure>
+<h2 id="glue">Glued</h2>
+<p>The plan had been to glue only the nut holder and the knob cap and let the two nuts clamp the rest. That evening I glued every joint with 5-minute clear epoxy, nuts and washers on, and called it a day. One thing looked wrong: the top seemed a bit high. The rod stood proud of the cup, and the plug, which should sit flush over the nut, had been glued in on top of it. Either the rod was cut a little long or it wasn&#x27;t all the way down into the knob nut. I didn&#x27;t find out which. By the time I noticed, the glue was hard.</p>
+<figure class="fig col">
+  <img src="stub.webp" width="490" height="400" alt="The cup end of the red bat held up beside a dark counter edge, with a short red stub standing out of the end, circled in red on the photo." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 19</b> · The stub: the cup plug, pushed up by the rod underneath it. Circled on the phone that evening.</figcaption>
+</figure>
+<p>The next day I cut the stub off.</p>
+<h2 id="paint">White</h2>
+<p>The letters were always going to be a second colour. Red on red reads only when the light catches the edges. So on Wednesday night the barrel got masking tape around the name, with a window cut out so the letters stood up out of it, and the letters got satin white from a can of paint-and-primer.</p>
+<p>Tape masks a flat edge. It doesn&#x27;t seal against the foot of a raised letter, so the white went under the tape and onto the red around every letter. Two specks landed on the back of the barrel, and a lighter rectangle marks where a strip of tape had sat.</p>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">One letter, close up</p><img src="white-letters.webp" width="300" height="300" alt="Close up on the foot of one white letter, circled in red: the white runs past the edge of the raised stroke onto the red, with specks of white further out on the barrel." loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">The back</p><img src="back-lines.webp" width="500" height="1600" alt="The back of the red barrel held over a tiled floor: a straight seam line down its length, two fine joint rings, two small white specks and a paler rectangle where tape had been." loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 20</b> · Wednesday, 40 minutes after spraying. Left, circled: the foot of one letter, white where it belongs and white where it doesn&#x27;t, with the rest of the name out of frame. Right: the back, with the seam, the two joint lines, two specks of overspray and the tape&#x27;s shadow.</figcaption>
+</figure>
+<p>The paint needs a day to cure before it can be scraped, so the cleanup waits: a knife tip along the foot of each letter, then a flat blade across the red around it, pushing away from the letter. Cured paint flakes off smooth plastic.</p>
+<h2>What I check now</h2>
+<p>Before a long print, I spin the spool by hand. The runout sensor only notices when the strand stops moving. A spool that drags starves the print quietly, layer by layer, and that is how 10 mm of a barrel ended up printed in the air.</p>
+<p>It stands in one piece, 84 cm, with a name down the barrel. Nobody has swung it yet.</p>
+<figure class="fig wide">
+  <img src="standing.webp" srcset="standing-800.webp 800w, standing.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="251" alt="The whole red bat lying along the picture, knob at the left, barrel at the right, on a tiled floor, with the name on the barrel pixelated." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 21</b> · In one piece, 84 cm, the morning it was glued. Photographed standing and turned on its side here, knob to the left, like the drawing at the top. The name is pixelated.</figcaption>
+</figure>
+        </div>
+        <section class="recap" aria-labelledby="recap-h"><h2 id="recap-h">The short version</h2><p class="cap">What went wrong, and what fixed it.</p><ol role="list"><li><a href="#search"><span class="pb">No model online was a realistic life-size bat.</span><span class="fx">Drew my own from a standard 33 inch profile.</span></a></li><li><a href="#rod"><span class="pb">84 cm doesn&#x27;t fit a 30 cm printer, and two upright pieces made a kid&#x27;s bat.</span><span class="fx">Three upright pieces at full size.</span></a></li><li><a href="#rod"><span class="pb">Upright layers are the weak direction for a bat.</span><span class="fx">A steel M8 rod through the middle, clamped with a nut at each end.</span></a></li><li><a href="#rod"><span class="pb">A bat that tightens by spinning would also loosen by spinning.</span><span class="fx">Both joints keyed so nothing can turn.</span></a></li><li><a href="#brim"><span class="pb">The brim grew onto the printer&#x27;s purge line.</span><span class="fx">A fixed 7 mm outer brim, and the print check now measures brim against purge.</span></a></li><li><a href="#gap"><span class="pb">The brim sat 0.25 mm away from the parts, and at 97 % the coupler came loose.</span><span class="fx">Handle and taper sliced again with the brim attached to the part. Both held to the bed.</span></a></li><li><a href="#gap"><span class="pb">Nobody knew how tight an 8 mm rod hole prints in this PETG.</span><span class="fx">A test bar with four holes. 8.1 mm won.</span></a></li><li><a href="#ring"><span class="pb">The red spool&#x27;s turns had stuck together. It starved the taper at 96 % and left a ring.</span><span class="fx">Cut off the stuck turns, reloaded, resumed. The ring stays, under the grip.</span></a></li><li><a href="#air"><span class="pb">The same spool starved the barrel at about 155 mm, and the printer laid 10 mm of strings in the air.</span><span class="fx">The missing top became its own piece.</span></a></li><li><a href="#air"><span class="pb">I sent the nozzle down to 146 mm over a barrel that was 155 mm tall.</span><span class="fx">Measure from far above in small steps, or don&#x27;t move the head at all.</span></a></li><li><a href="#pieces"><span class="pb">The spool stopped two more prints, at 61 mm and at 16 minutes.</span><span class="fx">Pulled 30 m off by hand into loose loops. The barrel is three pieces on the rod.</span></a></li><li><a href="#glue"><span class="pb">The rod stood proud of the cup, and the plug was glued over it.</span><span class="fx">Cut the stub flush the next day.</span></a></li><li><a href="#paint"><span class="pb">Masking tape doesn&#x27;t seal against raised letters, so white landed on the red around them.</span><span class="fx">Still to do: score each letter&#x27;s edge and scrape the red clean.</span></a></li></ol></section>
+        <section class="credits" aria-labelledby="credits-h"><h2 id="credits-h">Built on</h2><p class="cap">Designs and ideas this one owes something to. Their files stay on their pages.</p><ul role="list"><li><a class="ct" href="https://makerworld.com/en/models/2687911">Full size baseball bat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><span class="cm">MIHAI_T · MakerWorld · Standard Digital File License</span><span class="cw">85 cm with an M8 rod inside. The closest bat I found, and the rod idea I built on.</span></li><li><a class="ct" href="https://fonts.google.com/specimen/Sedgwick+Ave+Display">Sedgwick Ave Display<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><span class="cm">Pedro Vergani, Kevin Burke · Google Fonts · SIL Open Font License 1.1</span><span class="cw">The graffiti letters on the barrel.</span></li></ul></section>
+        <section class="facts-block" aria-labelledby="facts-h">
+          <h2 id="facts-h">How it was printed</h2>
+          
+          <dl class="rows spec"><div><dt>Printer</dt><dd>Creality K1 Max, rooted, Klipper</dd></div><div><dt>Slicer</dt><dd>OrcaSlicer 2.4.2, profiles K1M 0.20 Standard for the long pieces and 0.12 Fine for the small parts</dd></div><div><dt>Material</dt><dd>PETG, red, 240 °C, bed 75 °C for the first layer then 72 °C</dd></div><div><dt>Walls, infill</dt><dd>5 walls, gyroid: handle 40 %, taper 25 %, barrel 20 %</dd></div><div><dt>Pieces</dt><dd>Handle 286 mm, taper 272 mm plus an 18 mm spigot into the handle, barrel 282 mm, which ended up printed as three pieces of about 154, 61 and 67 mm, plus a coupler, a nut holder, a knob cap and a cup plug</dd></div><div><dt>Rod rings</dt><dd>8.2 mm in the first files, 8.1 mm after the test bar</dd></div><div><dt>Hardware</dt><dd>M8 threaded rod, two M8 nuts, two 30 × 2 mm washers, 5-minute clear epoxy</dd></div><div><dt>Paint</dt><dd>Satin white paint-and-primer from a can, on the letters only, over masking tape</dd></div><div><dt>Plan versus printer</dt><dd>About 22 h and 651 g planned. The printer&#x27;s history says 22 h 20 min and about 680 g over 8 jobs, 5 of them cancelled</dd></div></dl>
+          <h3 class="sub-h" id="settings-h">Settings that mattered</h3>
+<p class="cap">The profile’s value, then what this print used.</p>
+<ul role="list" class="sets" aria-labelledby="settings-h"><li><span class="k">Brim</span> <span class="was">auto</span><span class="to" aria-hidden="true"> → </span><span class="sr"> changed to </span><span class="now">outer only, 7 mm</span></li><li><span class="k">First layer, small parts</span> <span class="was">0.12</span><span class="to" aria-hidden="true"> → </span><span class="sr"> changed to </span><span class="now">0.24 mm</span></li><li><span class="k">Sparse infill, taper and barrel</span> <span class="was">every layer</span><span class="to" aria-hidden="true"> → </span><span class="sr"> changed to </span><span class="now">every 2nd layer</span></li><li><span class="k">Brim gap (brim_object_gap)</span> <span class="was">0.25</span><span class="to" aria-hidden="true"> → </span><span class="sr"> changed to </span><span class="now">0 mm</span></li></ul>
+          <p class="cap facts-note">All strength figures in this post are calculated, not tested. The bat&#x27;s outline follows typical 33 inch bat charts, not a measured bat. Grams are what the printer&#x27;s job history says it fed, cancelled jobs included.</p>
+        </section>
+        
+        <nav class="pager" aria-label="More prints"><a class="ol" href="/prints/blaster/" rel="next"><span class="label">Older</span><span class="t">Three gel blaster parts from phone photos</span></a></nav><p class="back"><a class="more" href="/prints/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>Off the bed</a></p>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
+    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <span class="sr" id="copy-status" role="status"></span>
+    </div>
+    <ul role="list" class="links">
+      <li><a class="more" href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+    </ul>
+    <div class="foot">
+      <p>© 2026 Abdallah El Belkasy</p>
+      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
+    </div>
+  </div>
+</footer>
+
+<script>if(matchMedia("(prefers-reduced-motion: reduce)").matches)for(const v of document.querySelectorAll("video[autoplay]")){v.removeAttribute("autoplay");v.pause();v.controls=true}</script>
+<script type="module" src="/site.js"></script>
+<script type="module">
+import { counters } from '/measure.js';
+counters();
+</script>
+</body>
+</html>
