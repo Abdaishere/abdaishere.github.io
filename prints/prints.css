@@ -121,6 +121,8 @@
 .files li { display: grid; column-gap: var(--gap); grid-template-columns: var(--lab) minmax(0, 1fr) auto auto; align-items: baseline; row-gap: 0.25rem; padding-block: 0.6rem; border-bottom: 1px solid var(--line); }
 .files .what { font: 500 0.75rem/1.7 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); }
 .files a, .files .name { font: 450 0.875rem/1.5 var(--mono); overflow-wrap: anywhere; }
+/* tap targets: the hit box reaches 44 px without moving the text */
+.files a, .credits .ct, .inspo .ct { display: inline-block; padding-block: 0.7rem; margin-block: -0.7rem; }
 .files .name { color: var(--mid); }
 .files .size { font: 400 0.75rem/1.5 var(--mono); color: var(--mut); white-space: nowrap; }
 @media (max-width: 40rem) {
