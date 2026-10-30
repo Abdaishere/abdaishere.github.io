@@ -216,6 +216,17 @@ h1 .line { display: block; }
 .btn.primary { background: var(--signal-fill); border-color: var(--signal-fill); color: var(--on-signal); }
 .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .btn svg { width: 20px; height: 20px; flex: none; }
+/* The entry to the full-screen Ring (/ring/). One button, highlighted: the ring's six colours as its
+   icon, an amber edge, and on hover or focus the colours run once round the border. */
+.ring-entry { position: relative; isolation: isolate; border-color: var(--signal-fill); color: var(--ink); background: color-mix(in srgb, var(--signal-fill) 9%, transparent); }
+.ring-entry svg { width: 20px; height: 20px; fill: none; stroke-width: 2.4; stroke-linecap: round; }
+.ring-entry::before { content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: 2px; padding: 1px; background: conic-gradient(from var(--spin, 0deg), #fb3f4a, #ff891d, #f8da23, #9bff97, #3fd0e0, #4a8cff, #fb3f4a); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 200ms; }
+.ring-entry:focus-visible { outline-offset: 5px; }
+.ring-entry:hover, .ring-entry:focus-visible { background: color-mix(in srgb, var(--signal-fill) 16%, transparent); color: var(--ink); }
+.ring-entry:hover::before, .ring-entry:focus-visible::before { opacity: 1; animation: ring-spin 1.6s linear 1; }
+@property --spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes ring-spin { to { --spin: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .ring-entry:hover::before, .ring-entry:focus-visible::before { animation: none; } }
 .more { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 44px; font-size: 0.9375rem; color: var(--mid); }
 .more:hover { color: var(--ink); }
 .more svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }

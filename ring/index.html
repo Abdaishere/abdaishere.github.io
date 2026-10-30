@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Full-screen view · Abdallah El Belkasy</title>
+<meta name="description" content="Abdallah El Belkasy, full-screen view: a six-sided PolyBall ring, seen from inside and turned by scroll. E-Jam, PolyBall, contact, prints and the path, one side each.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A0B0F">
+<link rel="canonical" href="https://abdaishere.com/ring/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdaishere.com/ring/">
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="Full-screen view · Abdallah El Belkasy">
+<meta property="og:description" content="Abdallah El Belkasy, full-screen view: a six-sided PolyBall ring, seen from inside and turned by scroll. E-Jam, PolyBall, contact, prints and the path, one side each.">
+<meta property="og:image" content="https://abdaishere.com/img/og/home.png?v=3">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Abdallah El Belkasy. I make slow systems fast. Systems and backend engineer in Dubai: Rust, C++, Python, PostgreSQL, Kafka. Packets streaming through a switch line on a dark instrument panel.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/home.png?v=3">
+<meta name="twitter:image:alt" content="Abdallah El Belkasy. I make slow systems fast. Systems and backend engineer in Dubai.">
+<link rel="icon" href="../img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="preload" href="../fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+// Before first paint: the turning ring, or the plain stacked page, and data saver. The plain page is for
+// reduced motion and for screens too short to hold a face (a landscape phone, a page zoomed past 200 %),
+// where it reflows instead of clipping. Choosing here, not in the module, keeps the first paint still.
+(function (d) {
+  var calm = matchMedia("(prefers-reduced-motion: reduce), (max-height: 29.99rem)").matches;
+  var c = navigator.connection, save = (c && c.saveData) || matchMedia("(prefers-reduced-data: reduce)").matches;
+  d.classList.add(calm ? "rm" : "ringing");
+  if (save) d.classList.add("save-data");
+  if (matchMedia("(max-width: 47.99rem)").matches) d.classList.add("phone");
+  // if ring.js never arrives or fails to parse, the page falls back to the plain stacked page
+  addEventListener("error", function (e) {
+    if (d.dataset.ready) return;
+    var t = e.target, src = (t && t.src) || e.filename || "";
+    if (/\/js\/ring\.js/.test(src)) d.classList.remove("ringing");
+  }, true);
+})(document.documentElement);
+</script>
+<link rel="stylesheet" href="css/ring.css">
+<script type="module" src="js/ring.js"></script>
+</head>
+<body>
+<a class="skip" href="#hello">Skip to the content</a>
+<svg class="still-ring" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <g fill="none" stroke-width="1.5" stroke-linecap="round">
+    <path d="M45 -77.9 90 0" stroke="#fb3f4a" vector-effect="non-scaling-stroke"/>
+    <path d="M90 0 45 77.9" stroke="#ff891d" vector-effect="non-scaling-stroke"/>
+    <path d="M45 77.9H-45" stroke="#f8da23" vector-effect="non-scaling-stroke"/>
+    <path d="M-45 77.9-90 0" stroke="#9bff97" vector-effect="non-scaling-stroke"/>
+    <path d="M-90 0-45 -77.9" stroke="#3fd0e0" vector-effect="non-scaling-stroke"/>
+    <path d="M-45 -77.9H45" stroke="#4a8cff" vector-effect="non-scaling-stroke"/>
+  </g>
+</svg>
+<header class="chrome">
+  <p class="where"><span class="beat" aria-hidden="true"><canvas class="beat-ring" width="48" height="48"></canvas><span class="beat-dot"></span></span><span><b class="where-no">01</b> / 06</span> <span class="where-name">Hello</span></p>
+  <div class="ctl">
+    <button class="btn-plain sound" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg><span class="say">Sound</span></button>
+    <button class="btn-plain pause" type="button" aria-pressed="false"><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6v12M15 6v12"/></svg><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 6v12l10-6z"/></svg><span class="say">Pause</span><span class="sr"> motion</span></button>
+    <a class="btn-plain normal" href="../"><span class="say">Normal view</span></a>
+  </div>
+</header>
+<nav class="dots" aria-label="Sides of the ring">
+  <button class="dot" type="button" style="--c:#fb3f4a" aria-label="Side 1 of 6: Hello" aria-current="step"></button>
+  <button class="dot" type="button" style="--c:#ff891d" aria-label="Side 2 of 6: E-Jam"></button>
+  <button class="dot" type="button" style="--c:#f8da23" aria-label="Side 3 of 6: PolyBall"></button>
+  <button class="dot" type="button" style="--c:#9bff97" aria-label="Side 4 of 6: Contact"></button>
+  <button class="dot" type="button" style="--c:#3fd0e0" aria-label="Side 5 of 6: Off the bed"></button>
+  <button class="dot" type="button" style="--c:#4a8cff" aria-label="Side 6 of 6: AbdA"></button>
+</nav>
+<p class="sr" id="ring-live" aria-live="polite" data-live></p>
+<div class="stage">
+<main class="drum" id="main">
+
+<section class="side" id="hello" data-side="0" data-name="Hello" data-normal="../" aria-labelledby="hello-h" tabindex="-1" style="--c:#fb3f4a">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <p class="kicker"><span class="no">01</span> Hello</p>
+    <h1 class="name" id="hello-h"><span data-fact>Abdallah El Belkasy</span></h1>
+    <div class="hello-copy">
+      <p class="claim" data-fact>I make slow systems fast.</p>
+      <p class="otw" data-fact>Open to Rust, systems, backend. Remote, or relocation with a visa.</p>
+      <p class="now" data-fact>Now: Odoo PSAE.</p>
+      <div class="cta">
+        <a class="btn primary seework" href="#ejam" data-go="1">See the work</a>
+        <a class="btn" href="mailto:abdallahemohmad2002@gmail.com">Email me</a>
+        <a class="btn" href="../cv/Abdallah-El-Belkasy-CV.pdf" target="_blank" rel="noopener">CV (one page)</a>
+        <span class="addr">abdallahemohmad2002@gmail.com</span>
+      </div>
+    </div>
+    <ul class="stats" role="list" aria-label="Three measurements">
+      <li class="stat"><span class="stat-k">E-Jam</span><span class="stat-v" data-fact><span class="from">2 h+</span> <span class="to">to about</span> <span class="val"><b>10</b> <span class="u">min</span></span></span><span class="stat-l" data-fact>manual test cycle to automated</span></li>
+      <li class="stat"><span class="stat-k">PolyBall</span><span class="stat-v" data-fact><span class="from">40 MB</span> <span class="to">to</span> <span class="val"><b>1.5</b> <span class="u">MB</span></span></span><span class="stat-l" data-fact>font payload</span></li>
+      <li class="stat"><span class="stat-k">PolyBall</span><span class="stat-v" data-fact><span class="val"><b>178</b> <span class="u">countries</span></span></span><span class="stat-l" data-fact>reached (Play closed test)</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="side" id="ejam" data-side="1" data-name="E-Jam" data-normal="../#work" aria-labelledby="ejam-h" tabindex="-1" style="--c:#ff891d">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <div class="ej-grid">
+      <figure class="net">
+        <div class="net-box"><canvas class="net-c" aria-hidden="true"></canvas><span class="cp" data-fact>Center Point</span></div>
+        <figcaption class="cap" data-fact>illustration, not live data.</figcaption>
+      </figure>
+      <div class="ej-main">
+      <p class="kicker"><span class="no">02</span> <span data-fact>E-Jam, the test bench</span></p>
+        <h2 class="head" id="ejam-h" data-fact>A network-switch test bench. 2 h+ of manual testing to about 10 minutes.</h2>
+        <div class="bars">
+          <span class="k">Manual</span><span class="track"><i class="bar"></i></span><span class="v" data-fact>2 h+</span>
+          <span class="k">Automated</span><span class="track"><i class="bar now"></i></span><span class="v" data-fact>about 10 min</span>
+        </div>
+        <div class="method">
+          <p class="label" data-fact>Stack and method</p>
+          <ul role="list">
+            <li data-fact>Rust control plane, Kafka, Flutter client, C++ generator and verifier.</li>
+            <li data-fact>Throughput by binary search on rate, latency and frame loss over repeated trials, methodology from RFC 2544 and 2889.</li>
+            <li data-fact>Team of five developers. Top contributor by commits.</li>
+          </ul>
+        </div>
+        <p class="links">
+          <a class="more" href="../e-jam/" target="_blank" rel="noopener">Case study<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="more" href="https://github.com/Abdaishere/E-Jam" target="_blank" rel="noopener">Source<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="more" href="https://youtu.be/oPZLR4RM150" target="_blank" rel="noopener">Walkthrough video<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="side" id="polyball" data-side="2" data-name="PolyBall" data-normal="../#work" aria-labelledby="polyball-h" tabindex="-1" style="--c:#f8da23">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <div class="pb-grid">
+      <div class="pb-copy">
+      <p class="kicker"><span class="no">03</span> <span data-fact>PolyBall, the game</span></p>
+        <h2 class="head" id="polyball-h" data-fact>PolyBall. A rhythm game I built alone in Godot 4, published on itch.io, in closed testing on Google Play.</h2>
+        <ul class="nums" role="list">
+          <li><span class="n" data-fact><b>178</b> <span class="u">countries</span></span><span class="l" data-fact>reached (Play closed test)</span></li>
+          <li><span class="n" data-fact><span class="from">40 MB</span> <span class="to">to</span> <b>1.5</b> <span class="u">MB</span></span><span class="l" data-fact>font payload</span></li>
+        </ul>
+        <p class="links">
+          <a class="more" href="https://abdaishere.itch.io/polyball" target="_blank" rel="noopener">Play on itch<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="more" href="../polyball/leaderboard/" target="_blank" rel="noopener">Leaderboard and cup champions<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="more" href="https://youtu.be/dyrDli1sBtU" target="_blank" rel="noopener">Trailer<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+          <a class="more" href="../notes/godot-web-silent-audio/" target="_blank" rel="noopener"><span data-fact>The silent web build</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        </p>
+        <p class="kit"><a href="https://abdaishere.itch.io/rhythm-starter-kit" target="_blank" rel="noopener"><span data-fact>Its audio became a $5 Godot starter kit</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></p>
+      </div>
+      <div class="shots">
+        <figure class="shot s-home"><img data-src="assets/polyball-home.webp" width="540" height="960" decoding="async" alt="PolyBall home screen: the ring in five colours, Tap to play in the middle."></figure>
+        <figure class="shot s-main"><img data-src="assets/polyball-run-combo.webp" width="540" height="960" decoding="async" alt="Mid-run: a ball falls toward the ring, the combo under the score.">
+          <a class="play" href="https://youtu.be/dyrDli1sBtU" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg><span>Play the trailer</span></a></figure>
+        <figure class="shot s-fever"><img data-src="assets/polyball-run-fever.webp" width="540" height="960" decoding="async" alt="Mega Fever: the ring glowing, the score at triple."></figure>
+      </div>
+    </div>
+    <div class="tapzone">
+      <button class="hint" type="button" aria-describedby="tap-say"><span class="hint-pulse" aria-hidden="true"><canvas width="48" height="48"></canvas><i></i></span><span data-fact>tap the ring on the beat.</span></button>
+      <span class="hits" id="tap-say" data-live>0 on the beat</span>
+      <span class="sr" role="status" data-live></span>
+    </div>
+  </div>
+</section>
+
+<section class="side" id="contact" data-side="3" data-name="Contact" data-normal="../#contact" aria-labelledby="contact-h" tabindex="-1" style="--c:#9bff97">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <p class="kicker"><span class="no">04</span> Contact</p>
+    <h2 class="head xl" id="contact-h" data-fact>Hiring for Rust, systems or backend?</h2>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="cta">
+      <a class="btn primary" href="../cv/Abdallah-El-Belkasy-CV.pdf" download target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg><span data-fact>Download CV (PDF)</span></a>
+    </div>
+    <p class="otw" data-fact>Open to Rust, systems, backend. Remote, or relocation with a visa.</p>
+    <div class="foot">
+      <p class="small" data-fact>Hand-written HTML and CSS. No framework, no trackers.</p>
+      <ul class="social" role="list">
+        <li><a class="more" href="https://github.com/Abdaishere" target="_blank" rel="noopener">GitHub<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy" target="_blank" rel="noopener">LinkedIn<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li><a class="more" href="https://www.youtube.com/@abdaizhere" target="_blank" rel="noopener">YouTube<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li><a class="more" href="https://abdaishere.itch.io" target="_blank" rel="noopener">itch.io<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      </ul>
+      <p class="small receipt" data-live></p>
+    </div>
+  </div>
+</section>
+
+<section class="side" id="prints" data-side="4" data-name="Off the bed" data-normal="../prints/" aria-labelledby="prints-h" tabindex="-1" style="--c:#3fd0e0">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <div class="pr-grid">
+      <div class="pr-copy">
+      <p class="kicker"><span class="no">05</span> <span data-fact>Off the bed</span></p>
+        <h2 class="head" id="prints-h" data-fact>Off the bed. Two builds, failures written down.</h2>
+        <ul class="lines" role="list">
+          <li data-fact>The Panamera was a gift.</li>
+          <li data-fact>The AKR is a life-size toy prop printed part by part, its sling clip redesigned after a failed test.</li>
+        </ul>
+        <p class="links"><a class="more" href="../prints/" target="_blank" rel="noopener">Prints<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></p>
+        <p class="small" data-fact>Files released CC BY-NC-SA 4.0, base meshes credited to their designers.</p>
+      </div>
+      <figure class="plate">
+        <div class="plate-box"><canvas class="plate-bed" aria-hidden="true"></canvas><canvas class="plate-glow" aria-hidden="true"></canvas><canvas class="plate-ink" aria-hidden="true"></canvas><canvas class="plate-hot" aria-hidden="true"></canvas><img class="plate-still" data-src="assets/plate-still.webp" width="1200" height="750" decoding="async" alt="The Panamera's G-code, every layer drawn: the red base plate with its lettering and the pale car standing on it."></div>
+        <figcaption class="cap"><span data-fact>The layers are drawn from the Panamera's real G-code.</span> <span class="plate-read" data-live></span></figcaption>
+        <div class="pieces">
+          <figure class="piece"><img data-src="assets/panamera-granite.webp" width="800" height="500" decoding="async" alt="The Panamera sculpture: a ribbed black car on an orange plate that reads Panamera GTS."><figcaption><span class="tag">Photo</span> <span data-fact>Panamera sculpture</span></figcaption></figure>
+          <figure class="piece"><img data-src="assets/akr-render.webp" width="800" height="500" decoding="async" alt="A render, not a photo: the AKR toy prop in pink, white and gray."><figcaption><span class="tag">Render</span> <span data-fact>AKR toy prop</span><br><span data-fact>parts in print</span></figcaption></figure>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="side" id="abda" data-side="5" data-name="AbdA" data-normal="../#about" aria-labelledby="abda-h" tabindex="-1" style="--c:#4a8cff">
+  <i class="edge base" aria-hidden="true"></i><i class="edge wash" aria-hidden="true"></i><i class="edge col top" aria-hidden="true"></i><i class="edge col bot" aria-hidden="true"></i>
+  <div class="side-in">
+    <p class="kicker"><span class="no">06</span> <span data-fact>AbdA</span></p>
+    <div class="ab-grid">
+      <div class="ab-me">
+        <h2 class="head xl" id="abda-h" data-fact>AbdA for short.</h2>
+        <dl class="facts">
+          <div><dt>Based in</dt><dd data-fact>Dubai, UTC+4</dd></div>
+          <div><dt>Time there</dt><dd><span class="clock" data-live>--:--</span></dd></div>
+          <div><dt>Engineering</dt><dd data-fact>Rust, systems, backend</dd></div>
+          <div><dt>After hours</dt><dd data-fact>Music production</dd></div>
+        </dl>
+      </div>
+      <div class="ab-path">
+        <p class="label">Path, newest first</p>
+        <ol class="path" role="list">
+          <li data-fact>Odoo PSAE (now)</li>
+          <li data-fact>National service</li>
+          <li data-fact>E-Jam</li>
+          <li data-fact>Cairo University</li>
+          <li data-fact>Banque Misr internship</li>
+          <li data-fact>ICPC</li>
+        </ol>
+      </div>
+    </div>
+    <p class="close" data-fact>The beat under this ring is the same 120 BPM as the home page's traffic figure and status bar.</p>
+    <p class="again" aria-hidden="true">Scroll on and Hello comes round again</p>
+  </div>
+</section>
+
+</main>
+</div>
+<div class="vignette top" aria-hidden="true"></div><div class="vignette bot" aria-hidden="true"></div>
+<div class="spacer" aria-hidden="true"></div>
+<div class="vh-probe" aria-hidden="true"></div>
+</body>
+</html>
