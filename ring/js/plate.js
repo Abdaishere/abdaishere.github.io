@@ -19,10 +19,12 @@ export function plate(side, { calm, isPaused, tick, onFail }) {
   let doc = null, w = 0, h = 0, P = null, laid = 0, t = null, done = false, failed = false, gi, gh, gg, lastTick = 0, lastGlow = 0, lastLay = 0;
   const G = 6;   // the glow: the ink drawn at a sixth of the size and stretched back, which is its blur
   const load = fetch(new URL('../assets/plate.json', import.meta.url)).then((r) => r.json()).then((d) => {
-    // unpack: absolute first point, then deltas, in units of d.u
-    d.L = d.L.map((paths) => paths.map((p) => { const a = p.slice(); for (let i = 2; i < a.length; i++) a[i] += a[i - 2]; return a; }));
+    d.U = new Array(d.L.length);   // unpacked layers, filled as each is first drawn (see paths)
     doc = d; layout();
   }).catch(() => { failed = true; onFail?.(); });   // no G-code: the page shows the still instead
+  // unpack one layer on first use: absolute first point, then deltas, in units of d.u. Unpacking all
+  // 381 at once took one long frame as side 5 came near; spread over the rise it is noise.
+  const paths = (i) => doc.U[i] || (doc.U[i] = doc.L[i].map((p) => { const a = p.slice(); for (let j = 2; j < a.length; j++) a[j] += a[j - 2]; return a; }));
 
   function layout() {
     w = box.clientWidth; h = box.clientHeight;
@@ -50,7 +52,7 @@ export function plate(side, { calm, isPaused, tick, onFail }) {
   }
   function layer(i, g, col, lw) {
     const u = doc.u, z = doc.z[i]; g.strokeStyle = col; g.lineWidth = lw; g.beginPath();
-    for (const p of doc.L[i]) for (let j = 0; j < p.length; j += 2) { const [x, y] = P(p[j] * u, p[j + 1] * u, z); j ? g.lineTo(x, y) : g.moveTo(x, y); }
+    for (const p of paths(i)) for (let j = 0; j < p.length; j += 2) { const [x, y] = P(p[j] * u, p[j + 1] * u, z); j ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.stroke();
   }
   function lay(to) {

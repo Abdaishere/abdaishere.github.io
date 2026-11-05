@@ -80,13 +80,17 @@ pauseBtn.addEventListener('click', () => {
 /* ---------------------------------------------------------------- lazy images: a side's pictures
    load when the side comes near, so the first screen fetches only the page and its fonts. */
 const imagesIn = new Set();
+let onImages = null;   // the drum re-measures a side's overflow once its pictures have arrived
 const loadImages = (k) => {
   if (imagesIn.has(k)) return;
   imagesIn.add(k);
+  const got = [];
   for (const img of $$('img[data-src]', sides[k])) {
     if (img.classList.contains('plate-still') && !root.classList.contains('save-data')) continue;
     img.src = img.dataset.src; img.removeAttribute('data-src');
+    got.push(img.decode().catch(() => {}));
   }
+  if (got.length && onImages) Promise.all(got).then(() => onImages(k));
 };
 
 /* ---------------------------------------------------------------- Dubai clock, as in the status bar */
@@ -485,6 +489,8 @@ function ringing() {
       shownSide = near; root.dataset.side = near;
       whereNo.textContent = String(near + 1).padStart(2, '0'); whereName.textContent = sides[near].dataset.name;
       normal.href = sides[near].dataset.normal;
+      // the dot changes with the readout, at the half-way point of a turn, so the two never disagree
+      dots.forEach((d, i) => i === near ? d.setAttribute('aria-current', 'step') : d.removeAttribute('aria-current'));
     }
     // pictures for the sides within one turn
     for (let i = 0; i < N; i++) if (Math.abs(wrap((i - st.f) * STEP)) <= STEP * 1.05) loadImages(i);
@@ -503,7 +509,10 @@ function ringing() {
     tap.show(st.aligned === 2 && now - alignedAt > 2000);
     tap.frame(now, ph);
     const d5 = Math.abs(wrap((4 - st.f) * STEP)) / STEP;
-    if (d5 < 1.2) plateNear();
+    // the G-code is fetched once side 4 is square (after its receipt is written, so Contact's counter
+    // never shows bytes for a side the viewer has not reached) or when side 5 is close from the other
+    // way; side 4's own dwell covers the download, and the rise waits for the file
+    if (st.aligned === 3 || d5 < 0.6) plateNear();
     plate?.frame(now, d5 < 1.2, st.aligned === 4);
     render(now);
   }
@@ -513,7 +522,7 @@ function ringing() {
   let cc = null, cg = null, aim = null;
   function catches(now, c) {
     const on = c?.show && c.outAt == null && c.drops;
-    if (!on) { if (cg) { cc.hidden = true; cg = null; aim = null; } return; }   // a hand on the page ends it
+    if (!on) { if (cg && !(st.f > 2.35 && st.f < 3)) { cc.hidden = true; cg = null; aim = null; } return; }   // a hand on the page ends it (the warm canvas stays up until the show or the turn away)
     if (now < c.drops[0].at - FALL) return;
     if (!cc) { cc = document.body.appendChild(document.createElement('canvas')); cc.className = 'burst'; cc.setAttribute('aria-hidden', 'true'); }
     if (!cg) { cc.hidden = false; cg = fitCanvas(cc, innerWidth, innerHeight); }
@@ -575,20 +584,25 @@ function ringing() {
       if (k <= 0 && (c.outAt != null || t > HOLD)) c.show = false;
     }
     catches(now, c);
+    // On the way from side 3 to side 4 the show's layers are put up early, at zero opacity: the three
+    // faces round the back, every face's wash and the catches canvas. Their first paint then falls in
+    // the turn, a few milliseconds a frame, not all in the show's first frame.
+    const warm = st.f > 2.35 && st.f < 3 && !c?.show;
+    if (warm && !cg) { cc ||= Object.assign(document.body.appendChild(document.createElement('canvas')), { className: 'burst' }); cc.setAttribute('aria-hidden', 'true'); cc.hidden = false; cg = fitCanvas(cc, innerWidth, innerHeight); }
     const tf = `translateZ(${zc.toFixed(1)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${(-st.angle).toFixed(3)}deg)`;
     if (tf !== drumLast) { drumLast = tf; drum.style.transform = tf; }
     const game = Math.max(0, 1 - Math.abs(st.f - 2) * 1.6);   // side 3 brings the game's colours to the faces near it
     const breath = 0.78 + 0.22 * st.pulse;
     for (const f of faces) {
       const near = Math.abs(wrap(f.i * 60 - st.angle));
-      set(f, 'vis', f.s, 'visibility', near > 100 && !glowAll ? 'hidden' : 'visible');
+      set(f, 'vis', f.s, 'visibility', near > 100 && !glowAll && !warm ? 'hidden' : 'visible');
       const lit = Math.max(0, 1 - near / 18);
       const shown = c?.sides.includes(f.i) ? glowAll : 0;
       const col = Math.max(lit * breath, game * 0.85 * (near < 70 ? 1 : 0), shown, near < 70 ? 0.32 : 0);
       const c2 = col.toFixed(2);
       if (f.last.col !== c2) { f.last.col = c2; for (const e of f.col) e.style.opacity = c2; }
       set(f, 'wash', f.wash, 'opacity', (shown * (st.phone ? 1 : 0.9)).toFixed(2));
-      set(f, 'washv', f.wash, 'visibility', shown > 0 ? 'visible' : 'hidden');   // off the compositor when unlit
+      set(f, 'washv', f.wash, 'visibility', shown > 0 || warm ? 'visible' : 'hidden');   // off the compositor when unlit
       set(f, 'in', f.inner, 'opacity', (Math.max(0.12, 1 - near / 52) * (1 - glowAll * 0.85)).toFixed(2));
     }
   }
@@ -604,6 +618,8 @@ function ringing() {
   addEventListener('resize', remeasure);
   phoneQ.addEventListener('change', () => { lastW = -1; remeasure(); });
   measure(); lastVh = st.vh;
+  onImages = (k) => { over[k] = Math.max(0, ins[k].scrollHeight - sides[k].clientHeight); };
+  dots.forEach((d) => { d.title = d.getAttribute('aria-label').replace(/^Side \d of \d: /, ''); });   // the name on hover
   scrollTo(0, 0);
   lineup(0, performance.now()); lastAligned = 0;
   root.dataset.side = 0;

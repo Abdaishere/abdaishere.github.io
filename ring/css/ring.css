@@ -188,7 +188,9 @@ html.plate-fallback .plate-still, html.rm.plate-fallback .plate-still { display:
 .piece { display: grid; gap: 0.35rem; opacity: 0; translate: 0 14px; transition: opacity 700ms var(--ease-out), translate 700ms var(--ease-out); }
 .piece:nth-child(2) { transition-delay: 160ms; }
 .built .piece, html:not(.ringing) .piece { opacity: 1; translate: 0 0; }
-.piece img { aspect-ratio: 16 / 10; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); background: var(--ground); }
+/* width: 100%, not the 800 px width attribute: before its lazy src arrives the image laid out at 800 x 500,
+   so side 5 measured 403 px taller than it is and the phone dwell scrolled it off the top */
+.piece img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); background: var(--ground); }
 .piece figcaption { font: 400 0.8125rem/1.4 var(--mono); color: var(--mid); }
 .tag { display: inline-block; padding: 0.05rem 0.4rem; border: 1px solid var(--mut); border-radius: 2px; font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
 
@@ -210,7 +212,7 @@ html.plate-fallback .plate-still, html.rm.plate-fallback .plate-still { display:
    .side-in centres its content, "safe" so a side taller than its box (a phone's stacked extras)
    overflows downward only. */
 .side { overflow: clip; }
-.side-in { width: min(100% - 2 * var(--pad) - 3rem, 80rem); margin-inline: auto; display: flex; flex-direction: column; justify-content: safe center; gap: clamp(0.75rem, 2.4vh, 1.75rem); }
+.side-in { width: min(100% - 2 * var(--pad) - 6rem, 80rem); margin-inline: auto;   /* 6rem: the dot rail keeps a 45 px gutter from the content's right edge at 1440 */ display: flex; flex-direction: column; justify-content: safe center; gap: clamp(0.75rem, 2.4vh, 1.75rem); }
 #hello .side-in { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); grid-template-areas: "k k" "n n" "c s"; align-content: safe center; column-gap: clamp(2rem, 5vw, 5rem); row-gap: clamp(0.5rem, 1.6vh, 1.1rem); }
 .hello-copy { grid-area: c; display: flex; flex-direction: column; gap: clamp(0.75rem, 2.2vh, 1.4rem); align-self: start; }
 #hello .kicker { grid-area: k; } #hello .name { grid-area: n; margin-bottom: clamp(0.25rem, 1.5vh, 1rem); } #hello .cta { padding-top: 0.25rem; } #hello .stats { grid-area: s; align-self: start; }
@@ -238,7 +240,9 @@ html.plate-fallback .plate-still, html.rm.plate-fallback .plate-still { display:
 /* the drum is a 3D group, not a surface: it must not catch taps meant for the faces inside it */
 .ringing .drum { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; pointer-events: none; }
 .ringing .side { pointer-events: auto; }
-.ringing .side { position: absolute; left: 0; top: calc(50% - var(--face) / 2); width: 100%; height: var(--face); transform-style: flat; backface-visibility: visible; background: linear-gradient(180deg, #0D0F14 0%, #0A0B0F 14%, #0A0B0F 86%, #0D0F14 100%); }
+/* will-change: transform keeps each face's raster through the side 4 camera swing (the faces shrink to
+   show the hexagon; without it Chrome re-rasters six face-sized layers as their scale changes) */
+.ringing .side { position: absolute; left: 0; top: calc(50% - var(--face) / 2); width: 100%; height: var(--face); transform-style: flat; backface-visibility: visible; will-change: transform; background: linear-gradient(180deg, #0D0F14 0%, #0A0B0F 14%, #0A0B0F 86%, #0D0F14 100%); }
 /* the drum at rest on Hello, as the script will first draw it, so the first paint is the first frame:
    face i turned i * 60 degrees round the axis at radius face * cos 30, the drum pushed out by the same */
 .ringing .drum { transform: translateZ(calc(var(--face) * 0.8660254)); }
@@ -336,6 +340,10 @@ html.rm:not(.save-data) .plate-still { display: none; }
   .ej-grid { grid-template-columns: 1fr; gap: 0.85rem; }
   .ej-main { order: -1; gap: 0.85rem; }
   .net-box { aspect-ratio: 16 / 6.5; }
+  /* the caption rides on the drawing, bottom centre (clear of the nodes), so it is on screen whenever
+     the drawing is, not a line below the face that only the dwell brings up */
+  .net { position: relative; }
+  .net .cap { position: absolute; left: 50%; bottom: 0.15rem; translate: -50% 0; white-space: nowrap; }
   .method li { font-size: 1.0625rem; }
   .pb-grid, .pb-copy, .shots { display: contents; }
   #polyball .side-in { display: grid; grid-template-columns: minmax(0, 43%) minmax(0, 1fr); grid-template-areas: "k k" "h h" "n n" "m l" "m t" "z z" "x y"; align-content: safe center; gap: 0.75rem 1rem; }
