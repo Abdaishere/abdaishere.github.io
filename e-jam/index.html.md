@@ -17,7 +17,7 @@ A switch has to prove it can carry full traffic without dropping or delaying pac
 
 ## Abdallah's part
 
-- Center Point, the control plane: a Rust service on Actix Web whose REST API drives streams, devices and processes through explicit state machines and publishes to Apache Kafka with Avro schemas from a schema registry.
+- Center Point, the control plane: a Rust service on Actix Web whose REST API drives streams, devices and processes through explicit state machines and reads the test statistics from Apache Kafka, decoding them with Avro schemas from a schema registry.
 - The Flutter admin client that configures tests and charts results live.
 - Top contributor to the repository, with 256 commits.
 
