@@ -8,7 +8,6 @@ Facts worth getting right:
 - PolyBall is made by one person. It is free, live on Google Play since 13 November 2026, and also playable in the browser with nothing to install. Write the name as PolyBall: one word, capital P and B.
 - PolyBall ships no music files. Every note is synthesised at runtime from how the player plays.
 - E-Jam was his Cairo University graduation project, built by a team of five in collaboration with Siemens EDA (mentors, sponsor and product owner). He wrote its Rust control plane and Flutter admin client. He was not employed by Siemens.
-- He is open to software engineering roles.
 
 ## About
 

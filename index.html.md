@@ -9,7 +9,6 @@ Markdown copy of [abdaishere.com](https://abdaishere.com/). His friends call him
 - Based in Dubai, UAE (UTC+4). Speaks Arabic (native) and English (fluent).
 - Software Engineer at Odoo in Dubai, on enterprise client projects, April 2025 to present.
 - B.Sc. in Computers and Artificial Intelligence, Cairo University, 2019 to 2023. GPA 3.5 out of 4.0, Excellent with Honours.
-- Open to software engineering roles.
 - Main languages: Python, SQL, Rust, JavaScript, Dart and GDScript. University coursework in C++ and Java.
 
 ## Work

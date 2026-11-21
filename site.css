@@ -123,7 +123,7 @@ html:not(.js) .needs-js { display: none; }
 @media (max-width: 22.5rem) { .brand .full { display: none; } .brand .short { display: inline; } }
 
 /* ---------------------------------------------------------------- status line
-   The instrument readout: local time, the clock the trace runs on, and what he is open to. */
+   The instrument readout: local time and the clock the trace runs on. */
 .status { border-bottom: 1px solid var(--line); }
 .status-in { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; min-height: 2.25rem; align-items: center; padding-block: 0.3rem; font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mut); }
 .status-in span { display: inline-flex; align-items: center; gap: 0.5rem; }

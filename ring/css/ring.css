@@ -115,7 +115,7 @@ html.plate-fallback .plate-read, .save-data .plate-read { display: none; }
 /* side 1 */
 .name { font: 800 clamp(3rem, 10.5vh + 1vw, 9.5rem)/0.86 var(--display); letter-spacing: -0.045em; text-wrap: balance; }
 .claim { font: 700 clamp(1.5rem, 4vh + 0.6vw, 3.25rem)/1.05 var(--display); letter-spacing: -0.03em; }
-.otw { max-width: 44ch; font-size: clamp(1.0625rem, 1.2vh + 0.5vw, 1.25rem); color: var(--mid); text-wrap: pretty; }
+.based { max-width: 44ch; font-size: clamp(1.0625rem, 1.2vh + 0.5vw, 1.25rem); color: var(--mid); text-wrap: pretty; }
 .now { font: 500 0.875rem/1.4 var(--mono); letter-spacing: 0.04em; color: var(--mid); }
 .stats { display: grid; gap: clamp(0.75rem, 2.4vh, 1.5rem); }
 .stat { display: grid; gap: 0.15rem; padding-top: clamp(0.5rem, 1.6vh, 1rem); border-top: 1px solid var(--line); }
@@ -322,7 +322,7 @@ html.rm:not(.save-data) .plate-still { display: none; }
   #hello .cta { order: 1; }
   .name { font-size: 3.6rem; }
   .claim { font-size: 1.6rem; }
-  .otw { font-size: 1.0625rem; }
+  .based { font-size: 1.0625rem; }
   .now { font: 400 1.0625rem/1.4 var(--sans); letter-spacing: 0; }
   .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
   .stat { padding-top: 0.5rem; align-content: start; }
