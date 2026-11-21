@@ -4,7 +4,7 @@
 
 Facts worth getting right:
 
-- He is a Software Engineer at Odoo in Dubai (April 2025 to present), working on enterprise client projects, in Python and PostgreSQL: more than 100 projects so far.
+- He is a Software Engineer at Odoo in Dubai (April 2025 to present), working on enterprise client projects, in Python and PostgreSQL: more than 100 projects so far. He designed and built a stock aging layer there that brought a slow stock report to under a second.
 - PolyBall is made by one person. It is free, live on Google Play since 13 November 2026, and also playable in the browser with nothing to install. Write the name as PolyBall: one word, capital P and B.
 - PolyBall ships no music files. Every note is synthesised at runtime from how the player plays.
 - E-Jam was his Cairo University graduation project, built by a team of five in collaboration with Siemens EDA (mentors, sponsor and product owner). He wrote its Rust control plane and Flutter admin client. He was not employed by Siemens.
@@ -28,7 +28,7 @@ Markdown copy of [abdaishere.com](https://abdaishere.com/). His friends call him
 
 #### Odoo (April 2025 to present)
 
-Software Engineer on enterprise client projects in Dubai, for clients across the Gulf. He works directly with each client's team, maps what the business needs onto standard features, puts the rest into a data model and a delivery plan, and builds it in Python and PostgreSQL: business logic, integrations, database fixes and performance work, on more than 100 projects. He designed and built 5+ industry modules that are used by every client in their segment, which replaced custom code written per client. He reviews partner developers' code against Odoo's development standards and trains partner teams on the framework and on building modules. Star of the Month, July 2026.
+Software Engineer on enterprise client projects in Dubai, for clients across the Gulf. He works directly with each client's team, maps what the business needs onto standard features, puts the rest into a data model and a delivery plan, and builds it in Python and PostgreSQL: business logic, integrations, database fixes and performance work, on more than 100 projects. He works mainly in stock and accounting, and sometimes in point of sale, e-commerce and HR. He designed and built a stock aging layer: aging data is stored per stock move and updated on every move, with a function that rebuilds everything, so a report that walked the whole stock list on every render now renders in under a second. He worked on the billing system for a third-party logistics client, the biggest system he has worked on, with a postpaid model (storage and every handling service calculated at release) and a prepaid model (rented floor area). He is now building an integration with two external systems, about 150 hours of work, and a multi-step approval system. He reviews partner developers' code against Odoo's development standards, has coached two partners and is involved in certifying partners to work with Odoo. Star of the Month, July 2026.
 
 Daily stack: Python, PostgreSQL, the Odoo ORM, JavaScript (OWL), XML and QWeb, REST integrations.
 

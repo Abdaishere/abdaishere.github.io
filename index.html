@@ -99,7 +99,7 @@
 
       <dl class="ledger in-hero knock" aria-label="Three measurements">
         <div class="m">
-          <dt>Enterprise client projects at Odoo, from the data model to delivery.</dt>
+          <dt>Enterprise client projects at Odoo: builds, integrations, fixes and performance work.</dt>
           <dd><b class="num">100+</b><span class="unit">projects</span><cite><a href="#odoo">Odoo · Python and PostgreSQL</a></cite></dd>
         </div>
         <div class="m">
@@ -148,11 +148,11 @@
             </section>
             <section class="block">
               <h4>How I work it</h4>
-              <p class="prose">I work directly with the client's team. First I map what they need onto standard features, then I put the rest into a data model and a delivery plan, and then I build it in Python and PostgreSQL: business logic, integrations, database fixes and performance work. More than a hundred enterprise client projects so far.</p>
+              <p class="prose">I work directly with the client's team. First I map what they need onto standard features, then I put the rest into a data model and a delivery plan, and then I build it in Python and PostgreSQL, mainly in stock and accounting. When a request is vague I break it into small pieces and align each one before building. On the integration I am building now, I aligned the process on both sides first, built demos, and validated them with the client and the external system's team. More than a hundred enterprise client projects so far.</p>
             </section>
             <section class="block">
-              <h4>What lasted</h4>
-              <p class="prose">When several clients in one industry asked for the same thing, I designed it once as a module. Five of those industry modules are now used by every client in their segment, which replaced custom code written one client at a time. I also review partner developers' code against Odoo's development standards, and train partner teams on the framework and on building modules.</p>
+              <h4>What I built</h4>
+              <p class="prose">A stock aging report was slow because it walked the whole stock list on every render. I designed and built a stock aging layer for it, modelled on the stock valuation layer: aging data is stored per stock move and updated on every move in or out, with a function that rebuilds everything. The report now renders in under a second. The biggest system I have worked on is the billing for a third-party logistics client, with two models: postpaid, where storage and every handling service are calculated at release, and prepaid, for rented floor area. Right now I am building an integration with two external systems, about 150 hours of work, and a multi-step approval system. I also review partner developers' code against Odoo's development standards, have coached two partners, and am involved in certifying partners to work with Odoo.</p>
             </section>
             <ul role="list" class="tags" aria-label="Technologies"><li>Python</li><li>PostgreSQL</li><li>Odoo ORM</li><li>JavaScript (OWL)</li><li>XML and QWeb</li><li>REST integrations</li></ul>
           </div>
@@ -163,8 +163,8 @@
                 <dd><b class="num">100+</b><span class="unit">projects</span><cite>CV · Odoo</cite></dd>
               </div>
               <div class="m">
-                <dt>Industry modules used by every client in their segment.</dt>
-                <dd><b class="num">5+</b><span class="unit">modules</span><cite>CV · Odoo</cite></dd>
+                <dt>A stock aging report, after the aging layer I designed and built.</dt>
+                <dd><b class="num">&lt;1</b><span class="unit">second</span><cite>CV · Odoo</cite></dd>
               </div>
             </dl>
           </div>
