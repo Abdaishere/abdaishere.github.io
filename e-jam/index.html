@@ -4,11 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>E‑Jam · A test bench for network switches · Abdallah El Belkasy</title>
-<meta name="description" content="E-Jam is a distributed test bench for network switches: C++ generators and verifiers in containers, statistics over Kafka, and a Rust control plane. One full test pass went from over two hours to about ten minutes. I worked on the control plane, the Kafka layer and the Flutter client.">
+<meta name="description" content="E-Jam is an open-source test bench for network switches: a Rust control plane, C++ generators and Kafka. A Cairo University graduation project with Siemens EDA.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://abdaishere.com/e-jam/">
+<link rel="alternate" type="text/markdown" href="https://abdaishere.com/e-jam/index.html.md" title="This page as Markdown">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","@id":"https://abdaishere.com/e-jam/#project","name":"E-Jam","url":"https://abdaishere.com/e-jam/","description":"A distributed test bench that runs the RFC 2544 and RFC 2889 benchmarks on network switches. A Cairo University graduation project built by five developers in collaboration with Siemens EDA.","codeRepository":"https://github.com/Abdaishere/E-Jam","license":"https://opensource.org/licenses/MIT","programmingLanguage":["Rust","C++","Dart"],"contributor":{"@type":"Person","@id":"https://abdaishere.com/#person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/"}}
+</script>
 <link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
@@ -16,17 +20,17 @@
 <meta property="og:url" content="https://abdaishere.com/e-jam/">
 <meta property="og:site_name" content="Abdallah El Belkasy">
 <meta property="og:title" content="E‑Jam · A test bench for network switches">
-<meta property="og:description" content="E-Jam runs the RFC 2544 and RFC 2889 switch tests unattended and grades the result. One cycle went from 2 h+ to about 10 min. I worked on the Rust control plane, Kafka and the Flutter client.">
+<meta property="og:description" content="E-Jam runs the RFC 2544 and RFC 2889 benchmarks on network switches. I worked on the Rust control plane, Kafka and the Flutter client. Open source, MIT.">
 <!-- Share card: rendered by tools/make_og.py from tools/og/cards.html (card "ejam"). Absolute URL,
      PNG. New file name on a copy change: Telegram and WhatsApp cache the old bytes. -->
-<meta property="og:image" content="https://abdaishere.com/img/og/ejam.png">
+<meta property="og:image" content="https://abdaishere.com/img/og/ejam.png?v=2">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="E-Jam: a test bench for network switches. One full test pass, from over two hours to about ten minutes. Rust control plane, C++ generators and verifiers, statistics over Kafka. Packet dots converge on a hexagonal switch ring.">
+<meta property="og:image:alt" content="E-Jam: a test bench for network switches. A graduation project with Siemens EDA. Rust control plane, C++ generators and verifiers, statistics over Kafka. Packet dots converge on a hexagonal switch ring.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://abdaishere.com/img/og/ejam.png">
-<meta name="twitter:image:alt" content="E-Jam: a test bench for network switches. One full test cycle, from over two hours to about ten minutes.">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/ejam.png?v=2">
+<meta name="twitter:image:alt" content="E-Jam: a test bench for network switches. A graduation project with Siemens EDA, with a Rust control plane.">
 <link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -64,7 +68,7 @@
       <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
     </span>
     <span>Case study · 2023</span>
-    <span>Open to Rust · systems · backend</span>
+    <span>Open to software engineering roles</span>
   </div>
 </div>
 
@@ -78,8 +82,8 @@
         <p class="claim">A test bench for network switches, spread across many machines.</p>
         <dl class="meta">
           <div><dt>My part</dt><dd>The Admin Client: Center Point, the Rust control plane, the Flutter client, and the Kafka layer between them</dd></div>
-          <div><dt>When</dt><dd>Jan – Aug 2023</dd></div>
-          <div><dt>Context</dt><dd>Cairo University graduation project, five developers, with Siemens EDA as product owner</dd></div>
+          <div><dt>When</dt><dd>January to August 2023</dd></div>
+          <div><dt>Context</dt><dd>Cairo University graduation project, five developers, with Siemens EDA engineers as mentors, sponsor and product owner</dd></div>
           <div><dt>Licence</dt><dd>MIT, <a href="https://github.com/Abdaishere/E-Jam">public on GitHub</a></dd></div>
         </dl>
       </div>
@@ -94,20 +98,25 @@
     <div class="wrap">
       <div class="sec-head">
         <p class="label">01 · The problem</p>
-        <h2 id="problem-h">Proving a switch is sound took an afternoon and a person</h2>
+        <h2 id="problem-h">Proving a switch is sound takes patience, and a person</h2>
       </div>
       <div class="split">
         <div class="story">
-          <p class="prose">A network switch is the box every packet in an office passes through, and a new one has to prove it can carry full traffic without dropping or delaying anything. The proof is a standard set of measurements (throughput, latency, frame loss) at several frame sizes, each repeated many times. Done by hand, one full pass took an engineer more than two hours, and the hand was the slow part.</p>
-          <p class="prose">Two RFCs define what those measurements mean. <strong>RFC 2544</strong> finds throughput by binary search on the send rate: every trial runs at least 30 seconds and the final one at least 60, and a trial passes only if nothing is dropped. Latency comes from a single tagged frame dropped into a 60-second stream, timestamped on the way in and the way out, over at least 20 trials. Frame loss is at least 10 trials per frame size, starting at the full rate and stepping down. <strong>RFC 2889</strong> covers the switching cases on top of that, and RFC 1242 and RFC 2285 supply the vocabulary both of them use.</p>
+          <p class="prose">A network switch is the box every packet in an office passes through, and a new one has to prove it can carry full traffic without dropping or delaying anything. The proof is a standard set of measurements (throughput, latency, frame loss) at several frame sizes, each repeated many times. Done by hand it is slow, and the hand is the slow part.</p>
+          <p class="prose">Two RFCs define what those measurements mean. <strong>RFC 2544</strong> finds throughput by binary search on the send rate: every trial runs at least 30 seconds and the final one at least 60, and a trial passes only if nothing is dropped. Latency comes from a single tagged frame sent 60 seconds into a stream, timestamped on the way in and the way out, over at least 20 trials. Frame loss is at least 10 trials per frame size, starting at the full rate and stepping down. <strong>RFC 2889</strong> covers the switching cases on top of that, and RFC 1242 and RFC 2285 supply the vocabulary both of them use.</p>
           <p class="prose">None of that is difficult. All of it is long, repetitive and exactly the kind of work a person does slightly differently the fourth time.</p>
         </div>
         <div class="aside">
-          <figure class="panel reveal" aria-labelledby="cycle-cap">
-            <figcaption class="cap" id="cycle-cap"><b>Fig. 02</b> · One switch test cycle, drawn to scale<span class="sr">: over 120 minutes by hand, about 10 minutes with E-Jam.</span></figcaption>
+          <figure class="panel reveal" aria-labelledby="sizes-cap">
+            <figcaption class="cap" id="sizes-cap"><b>Fig. 02</b> · The seven Ethernet frame sizes RFC 2544 asks for, drawn to scale<span class="sr">: 64, 128, 256, 512, 1024, 1280 and 1518 bytes</span>. Every measurement is repeated at each one.</figcaption>
             <div class="bars" aria-hidden="true">
-              <span class="k">By hand</span><span class="track"><i class="bar" style="--w:100%"></i></span><span class="v">120+ min</span>
-              <span class="k">E‑Jam</span><span class="track"><i class="bar now" style="--w:8.33%"></i></span><span class="v">~10 min</span>
+              <span class="k">64 B</span><span class="track"><i class="bar now" style="--w:4.2%"></i></span><span class="v">smallest</span>
+              <span class="k">128 B</span><span class="track"><i class="bar" style="--w:8.4%"></i></span><span class="v"></span>
+              <span class="k">256 B</span><span class="track"><i class="bar" style="--w:16.9%"></i></span><span class="v"></span>
+              <span class="k">512 B</span><span class="track"><i class="bar" style="--w:33.7%"></i></span><span class="v"></span>
+              <span class="k">1024 B</span><span class="track"><i class="bar" style="--w:67.5%"></i></span><span class="v"></span>
+              <span class="k">1280 B</span><span class="track"><i class="bar" style="--w:84.3%"></i></span><span class="v"></span>
+              <span class="k">1518 B</span><span class="track"><i class="bar now" style="--w:100.0%"></i></span><span class="v">largest</span>
             </div>
           </figure>
         </div>
@@ -252,22 +261,22 @@
   <section class="sec" id="outcome" aria-labelledby="outcome-h">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label">04 · What changed</p>
+        <p class="label">04 · In numbers</p>
         <h2 id="outcome-h">The measurements</h2>
-        <p class="lede">Each figure below names where it comes from. The project documentation records no packets-per-second, node-count or Kafka throughput numbers, so this page does not carry any.</p>
+        <p class="lede">Each figure below names where it comes from. The project documentation records no packets-per-second, node-count, Kafka throughput or time-saved numbers, so this page does not carry any.</p>
       </div>
-      <dl class="ledger" aria-label="E-Jam outcome">
-        <div class="m">
-          <dt>One full test pass, from an afternoon to a coffee break.</dt>
-          <dd><span class="from">2 h+</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="120" data-to="10" data-dec="0" data-prefix="~">~10</b><span class="unit">min</span><cite>CV · E‑Jam</cite></dd>
-        </div>
-        <div class="m">
-          <dt>Tests that were run by hand now run themselves and grade the result.</dt>
-          <dd><b class="num">5+</b><span class="unit">cases</span><cite>CV · E‑Jam</cite></dd>
-        </div>
+      <dl class="ledger" aria-label="E-Jam in numbers">
         <div class="m">
           <dt>Commits, the largest share in a team of five developers.</dt>
           <dd><b class="num" data-from="0" data-to="256" data-dec="0">256</b><span class="unit">/ 548</span><cite><a href="https://github.com/Abdaishere/E-Jam/graphs/contributors">GitHub · contributors API</a></cite></dd>
+        </div>
+        <div class="m">
+          <dt>State machines in Center Point: one each for streams, devices and processes.</dt>
+          <dd><b class="num">3</b><span class="unit">machines</span><cite><a href="https://github.com/Abdaishere/E-Jam/tree/master/Documentation/FSMs">GitHub · Documentation/FSMs</a></cite></dd>
+        </div>
+        <div class="m">
+          <dt>Lines of Rust in Center Point, in twelve files.</dt>
+          <dd><b class="num">4,113</b><span class="unit">lines</span><cite><a href="https://github.com/Abdaishere/E-Jam">Repository · counted 20 Nov 2026</a></cite></dd>
         </div>
       </dl>
       <figure class="spaced" aria-labelledby="lang-cap">
@@ -277,7 +286,7 @@
           <div class="m"><dt>Java · the per-node system API</dt><dd><b class="num">16</b><span class="unit">%</span></dd></div>
           <div class="m"><dt>Rust · Center Point</dt><dd><b class="num">12</b><span class="unit">%</span></dd></div>
         </dl>
-        <figcaption class="cap" id="lang-cap"><b>Fig. 08</b> · What the repository is made of, by bytes, from the <a href="https://github.com/Abdaishere/E-Jam">GitHub languages API</a>, read on 2026-09-28. The remaining tenth is filed as C. The stack above says why that is not a fifth language.</figcaption>
+        <figcaption class="cap" id="lang-cap"><b>Fig. 08</b> · What the repository is made of, by bytes, from the <a href="https://github.com/Abdaishere/E-Jam">GitHub languages API</a>, read on 28 September 2026. About a tenth more is filed as C. The stack above says why that is not a fifth language.</figcaption>
       </figure>
     </div>
   </section>
@@ -290,7 +299,7 @@
       </div>
       <div class="split">
         <div class="story">
-          <p class="prose">A five-developer graduation project, run in two-week sprints with a product owner and a scrum master alongside us, supervised at Cairo University by Dr Mohammad El-Ramly. I worked on the control plane, the streaming layer and the client. The repository is public under MIT, and the documentation, the diagrams and the screenshots on this page all come out of it.</p>
+          <p class="prose">A five-developer graduation project, run in two-week sprints. Engineers from Siemens EDA were our mentors, our sponsor and the product owner, and Dr Mohammad El-Ramly supervised the project at Cairo University. It was a university project, not a job at Siemens. I worked on the control plane, the streaming layer and the client. The repository is public under MIT, and the documentation, the diagrams and the screenshots on this page all come out of it.</p>
           <p class="links">
             <a class="more" href="https://github.com/Abdaishere/E-Jam">Source on GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
             <a class="more" href="https://youtu.be/oPZLR4RM150">Watch the walkthrough <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
@@ -306,8 +315,8 @@
 <footer class="contact" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
     <p class="label">Contact</p>
-    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
-    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <h2 id="contact-h">Hiring a software engineer?</h2>
+    <p class="lede">Tell me what you need built. I'll tell you how I'd design it, plan it and ship it.</p>
     <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
     <div class="row">
       <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
@@ -323,7 +332,7 @@
     </div>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
-      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
+      <p>Plain HTML, CSS and JavaScript. No framework, no trackers.<span id="weight"></span></p>
     </div>
   </div>
 </footer>

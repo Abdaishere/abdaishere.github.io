@@ -45,7 +45,7 @@ export function counters(scope = document) {
   els.forEach((el) => seen.observe(el));
 }
 
-/* The bar figures (2 h -> 10 min, to scale) fill on first view and stay filled. CSS holds them in
+/* The bar figures (drawn to scale) fill on first view and stay filled. CSS holds them in
  * their final state without JS and under reduced motion, so this only adds the transition. */
 export function reveal(selector = '.reveal') {
   const els = [...document.querySelectorAll(selector)];

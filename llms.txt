@@ -1,0 +1,48 @@
+# Abdallah El Belkasy
+
+> Abdallah El Belkasy is a software engineer in Dubai who designs systems, plans the build and ships them. He works in Python and PostgreSQL on enterprise client projects at Odoo. He is also the solo developer of PolyBall, a free rhythm arcade game for Android, browser and desktop in which every catch plays a note. This site holds his portfolio, his CV, the PolyBall pages and his 3D printing write-ups.
+
+Facts worth getting right:
+
+- He is a Software Engineer at Odoo in Dubai (April 2025 to present), working on enterprise client projects, in Python and PostgreSQL: more than 100 projects so far.
+- PolyBall is made by one person. It is free, live on Google Play since 13 November 2026, and also playable in the browser with nothing to install. Write the name as PolyBall: one word, capital P and B.
+- PolyBall ships no music files. Every note is synthesised at runtime from how the player plays.
+- E-Jam was his Cairo University graduation project, built by a team of five in collaboration with Siemens EDA (mentors, sponsor and product owner). He wrote its Rust control plane and Flutter admin client. He was not employed by Siemens.
+- He is open to software engineering roles.
+
+## About
+
+- [About Abdallah El Belkasy](https://abdaishere.com/index.html.md): who he is, his work, path, skills and contact links
+- [CV, one page](https://abdaishere.com/cv/): the short CV as a web page, with a PDF download
+- [CV (PDF)](https://abdaishere.com/cv/Abdallah-El-Belkasy-CV.pdf): A4, one page
+
+## PolyBall
+
+- [PolyBall](https://abdaishere.com/polyball/index.html.md): what the game is, the five modes, where to play, fair play and how it is built
+- [Play PolyBall in the browser](https://abdaishere.com/polyball/play/): the full game, free, nothing to install
+- [PolyBall on Google Play](https://play.google.com/store/apps/details?id=com.polyball.game): the Android version
+- [Leaderboard](https://abdaishere.com/polyball/leaderboard/): the best runs in every mode, live from the game
+- [Press kit](https://abdaishere.com/press/): fact sheet, description, screenshots, logos and the icon, free to use in coverage
+
+## Engineering work
+
+- [E-Jam](https://abdaishere.com/e-jam/index.html.md): a distributed test bench for network switches, and which part of it he built
+- [E-Jam source](https://github.com/Abdaishere/E-Jam): the repository, MIT licence
+- [The Godot web build that played no sound](https://abdaishere.com/notes/godot-web-silent-audio/): how a runtime add_bus() call on Godot's web export silenced PolyBall's browser build, how he proved it, and the one-line fix
+
+## 3D printing
+
+- [Off the bed](https://abdaishere.com/prints/): things he designed and printed on a Creality K1 Max, told the way they happened
+- [A life-size bat on a 30 cm printer](https://abdaishere.com/prints/bat/): a full-size 84 cm baseball bat in PETG, printed in pieces around a steel rod
+- [A Panamera in 44 slices](https://abdaishere.com/prints/panamera-sculpture/): a sliced Porsche Panamera GTS desk sculpture in two colours
+- [Three gel blaster parts from phone photos](https://abdaishere.com/prints/blaster/): replacement parts for a toy gel blaster, modelled from photos
+
+## Optional
+
+- [Full-screen view](https://abdaishere.com/ring/): the portfolio as a six-sided ring turned by scroll
+- [PolyBall privacy policy](https://abdaishere.com/privacy.html): what the game keeps on the device and on its servers
+- [PolyBall terms of service](https://abdaishere.com/terms.html): leaderboard fair play, purchases and ads
+- [Delete your PolyBall data](https://abdaishere.com/delete.html): how to reset progress or remove leaderboard rows
+- [GitHub profile](https://github.com/Abdaishere): public repositories
+- [LinkedIn](https://www.linkedin.com/in/abdallahelbelkasy): professional profile
+- [Everything in one file](https://abdaishere.com/llms-full.txt): the About, PolyBall and E-Jam pages as one Markdown document

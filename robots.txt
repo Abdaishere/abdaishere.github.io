@@ -11,4 +11,20 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
+# AI assistants and AI search are welcome: this site is meant to be read and quoted.
+# A crawler that has its own group ignores the * group, so /play/ is repeated here.
+# /llms.txt is the short guide for them, /llms-full.txt the long one.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /play/
+
 Sitemap: https://abdaishere.com/sitemap.xml

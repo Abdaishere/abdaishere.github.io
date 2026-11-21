@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PolyBall: every note you hear, you played</title>
-<meta name="description" content="Drop the ball on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run. Free, in the browser or on Android.">
+<meta name="description" content="Drop the ball on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run. Free on Google Play, or play it right now in your browser.">
 <!-- Canonical host: abdaishere.com (GitHub Pages custom domain, web/CNAME). abdaishere.github.io
      301s here. Change canonical, og:url, og:image and the JSON-LD url together. -->
 <link rel="canonical" href="https://abdaishere.com/polyball/">
+<link rel="alternate" type="text/markdown" href="https://abdaishere.com/polyball/index.html.md" title="This page as Markdown">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
@@ -38,13 +39,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src https://osnwwrpkyvcflfcixwmw.supabase.co; frame-src 'self' https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'">
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"VideoGame","name":"PolyBall","url":"https://abdaishere.com/polyball/",
-"description":"A colour-matching arcade game. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run.",
-"image":"https://abdaishere.com/img/og/polyball.png?v=4","genre":["Arcade","Casual","Music"],
-"gamePlatform":["Android","Web browser","Windows","macOS","Linux"],"applicationCategory":"GameApplication",
-"playMode":"SinglePlayer","inLanguage":"en",
-"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-"author":{"@type":"Person","name":"Abdallah El Belkasy"}}
+{"@context":"https://schema.org","@type":["VideoGame","MobileApplication"],"@id":"https://abdaishere.com/polyball/#game","name":"PolyBall","alternateName":"PolyBall: Color Spin Arcade","url":"https://abdaishere.com/polyball/","description":"A free colour-matching arcade game. Rotate the ring so the ball lands on its own colour. Every catch plays a note, so each run composes its own soundtrack. One miss ends the run. No music files ship with the game: every note is synthesised from how you play.","image":"https://abdaishere.com/img/og/polyball.png?v=4","genre":["Arcade","Casual","Music"],"gamePlatform":["Android","Web browser","Windows","macOS","Linux"],"operatingSystem":"Android, Windows, macOS, Linux, Web","applicationCategory":"GameApplication","softwareVersion":"0.10.11","playMode":"SinglePlayer","numberOfPlayers":{"@type":"QuantitativeValue","value":1},"isAccessibleForFree":true,"inLanguage":["en","es","pt-BR","fr","de","it","ru","tr","ja","ko","zh-Hans","ar","ar-EG","hi","id"],"installUrl":"https://play.google.com/store/apps/details?id=com.polyball.game","sameAs":["https://play.google.com/store/apps/details?id=com.polyball.game","https://abdaishere.itch.io"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","@id":"https://abdaishere.com/#person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/"},"publisher":{"@id":"https://abdaishere.com/#person"}}
 </script>
 <link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -181,7 +176,7 @@
         <div class="cta">
           <a class="btn primary" id="play" href="/polyball/play/">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Play in your browser</a>
-          <a class="btn" href="https://play.google.com/apps/testing/com.polyball.game">Get it on Android</a>
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.polyball.game">Get it on Google Play</a>
         </div>
         <p class="cap">Also on <a href="#get">Windows, Mac and Linux</a>, and on <a href="https://abdaishere.itch.io">itch.io</a>. Nothing to install to try it.</p>
         <p class="engineer">Made by one person. Every note synthesised at runtime, 15 languages, six build targets from one CI run. <a href="#built">How it's built →</a></p>
@@ -311,27 +306,27 @@
       <div class="sec-head">
         <p class="label">Get it</p>
         <h2 id="get-h">Play anywhere. It's free.</h2>
-        <p class="lede">Android is the best way to play, and the browser build needs nothing at all. Desktop builds are version 0.10.11.</p>
+        <p class="lede">PolyBall is on Google Play, which is the best way to play. The browser build needs nothing at all, and the desktop builds are version 0.10.11.</p>
       </div>
       <div class="dl-grid">
-        <a class="dl-card" href="https://play.google.com/apps/testing/com.polyball.game">
+        <a class="dl-card" href="https://play.google.com/store/apps/details?id=com.polyball.game">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.2 9.4h11.6v7.2a1.2 1.2 0 0 1-1.2 1.2h-1v2.9a1.3 1.3 0 0 1-2.6 0v-2.9h-2v2.9a1.3 1.3 0 0 1-2.6 0v-2.9h-1a1.2 1.2 0 0 1-1.2-1.2V9.4Zm-3 0a1.3 1.3 0 0 1 1.3 1.3v4.2a1.3 1.3 0 0 1-2.6 0v-4.2A1.3 1.3 0 0 1 3.2 9.4Zm17.6 0a1.3 1.3 0 0 1 1.3 1.3v4.2a1.3 1.3 0 0 1-2.6 0v-4.2a1.3 1.3 0 0 1 1.3-1.3ZM6.3 8.4c.2-1.9 1.3-3.5 3-4.5l-1.1-1.6a.4.4 0 0 1 .7-.5l1.2 1.7a6.9 6.9 0 0 1 3.8 0l1.2-1.7a.4.4 0 0 1 .7.5l-1.1 1.6c1.7 1 2.8 2.6 3 4.5H6.3Zm3.1-2.6a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4Zm5.2 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4Z"/></svg>
-          <div><b>Android</b><span>Join the closed test on Google Play</span></div></a>
+          <div><b>Android</b><span>Free on Google Play</span></div></a>
         <a class="dl-card" href="/polyball/play/">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
           <div><b>Browser</b><span>Nothing to install · 40 MB</span></div></a>
         <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.10.11/PolyBall-Windows-x86_64.exe" download>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.6-1.3L21 3v8.5h-9.4V4.2ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.6 0H21V21l-9.4-1.3v-7.2Z"/></svg>
-          <div><b>Windows</b><span>Just run it · 113.6 MB</span></div></a>
+          <div><b>Windows</b><span>Just run it · 113.9 MB</span></div></a>
         <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.10.11/PolyBall-macOS-universal.zip" download>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.2 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.9-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6ZM14 5.9c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.7-1.3Z"/></svg>
-          <div><b>Mac</b><span>Apple and Intel · 64.5 MB</span></div></a>
+          <div><b>Mac</b><span>Apple and Intel · 64.7 MB</span></div></a>
         <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.10.11/PolyBall-Linux-x86_64.x86_64" download>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c-2.1 0-3.5 1.6-3.5 3.8v2.2c0 1-.5 1.8-1.2 2.7-1.2 1.6-2.3 3.2-2.3 5.3 0 1.1.4 2 1 2.7l-.7 1.4c-.3.6 0 1.2.6 1.3l2.2.4c.4.5 1 .8 1.7.8h4.4c.7 0 1.3-.3 1.7-.8l2.2-.4c.6-.1.9-.7.6-1.3l-.7-1.4c.6-.7 1-1.6 1-2.7 0-2.1-1.1-3.7-2.3-5.3-.7-.9-1.2-1.7-1.2-2.7V6c0-2.2-1.4-3.8-3.5-3.8Zm-1.7 3.3c.5 0 .9.5.9 1.2s-.4 1.2-.9 1.2-.9-.5-.9-1.2.4-1.2.9-1.2Zm3.4 0c.5 0 .9.5.9 1.2s-.4 1.2-.9 1.2-.9-.5-.9-1.2.4-1.2.9-1.2ZM12 8.6c.9 0 1.7.5 1.7 1s-.8 1.1-1.7 1.1-1.7-.6-1.7-1.1.8-1 1.7-1Z"/></svg>
-          <div><b>Linux</b><span>64-bit · 79.5 MB</span></div></a>
+          <div><b>Linux</b><span>64-bit · 79.8 MB</span></div></a>
         <a class="dl-card" href="https://github.com/Abdaishere/abdaishere.github.io/releases/download/v0.10.11/PolyBall-Android-arm64-debug.apk" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
-          <div><b>Android APK</b><span>The test build, sideloaded · 92.3 MB</span></div></a>
+          <div><b>Android APK</b><span>For phones without Google Play · 92.5 MB</span></div></a>
       </div>
       <p class="cap spaced">iPhone and iPad are coming later. The browser version works there today.</p>
     </div>
@@ -348,7 +343,7 @@
         <div class="story">
           <section class="block">
             <h3>The game plays every note itself</h3>
-            <p class="prose">No audio files ship with PolyBall. There is a synthesiser instead: sixteen additive voices with physically modelled partials, colour mapped to chord degree across an eight-bar progression, and bass, arpeggio and lead performed note by note on a swung grid. That is why the soundtrack can only be the run you just played.</p>
+            <p class="prose">No audio files ship with PolyBall. There is a synthesiser instead: sixteen instruments built from additive recipes, up to twelve notes at once, colour mapped to chord degree across an eight-bar progression, and bass, arpeggio and lead performed note by note on a swung grid. That is why the soundtrack can only be the run you just played.</p>
           </section>
           <section class="block">
             <h3>One person cannot test six platforms by hand</h3>
@@ -363,7 +358,11 @@
             <p class="prose">Fifteen locales, including Modern Standard and Egyptian Arabic, with right-to-left layout and bidirectional share text both covered by automated tests rather than a spot check before release.</p>
           </section>
           <section class="block">
-            <h3>The browser build was silent on every phone</h3>
+            <h3>The leaderboard checks every score</h3>
+            <p class="prose">The board runs on Supabase, which is PostgreSQL underneath. Before each run the game asks the server for a run code, and a score only counts if it comes back with one. The server also holds a ceiling for what a run of that length can score, filters names, and lets you block or report a player. A cup starts fresh every month. All of it is eleven SQL migrations with automated tests.</p>
+          </section>
+          <section class="block">
+            <h3>The browser build was silent</h3>
             <p class="prose">And nobody had noticed. Creating an audio bus at runtime disconnects the master bus from the speakers on the web export, which is an engine bug, not a game one. The fix was to stop creating buses after boot. On top of that, iOS mutes web audio when the physical ringer switch is off, so the shell now nudges the context back awake. Both were found by a check that measures the real signal reaching the output, because counting buffers had said everything was fine.</p>
           </section>
           <ul role="list" class="tags" aria-label="Technologies"><li>Godot 4</li><li>GDScript</li><li>GitHub Actions</li><li>Supabase</li></ul>
@@ -371,16 +370,16 @@
         <div class="aside">
           <dl class="ledger flat" aria-label="PolyBall measurements">
             <div class="m">
-              <dt>Where the closed test is open to players today.</dt>
-              <dd><b class="num" data-from="0" data-to="178" data-dec="0">178</b><span class="unit">countries</span><cite><a href="https://play.google.com/apps/testing/com.polyball.game">Google Play</a></cite></dd>
+              <dt>Where you can get PolyBall on Google Play today.</dt>
+              <dd><b class="num" data-from="0" data-to="178" data-dec="0">178</b><span class="unit">countries</span><cite><a href="https://play.google.com/store/apps/details?id=com.polyball.game">Google Play</a></cite></dd>
             </div>
             <div class="m">
               <dt>Dead payload cut out of every export.</dt>
-              <dd><b class="num">−32</b><span class="unit">MB</span><cite>CV · PolyBall</cite></dd>
+              <dd><b class="num">−32</b><span class="unit">MB</span><cite>PolyBall · export sizes</cite></dd>
             </div>
             <div class="m">
               <dt>Fonts in every export, after static subsetting.</dt>
-              <dd><span class="from">40 MB</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="40" data-to="1.5" data-dec="1">1.5</b><span class="unit">MB</span><cite>CV · PolyBall</cite></dd>
+              <dd><span class="from">40 MB</span><span class="arr" aria-hidden="true">→</span><span class="sr">down to</span><b class="num" data-from="40" data-to="1.5" data-dec="1">1.5</b><span class="unit">MB</span><cite>PolyBall · export sizes</cite></dd>
             </div>
           </dl>
         </div>
@@ -408,7 +407,7 @@
   <div class="wrap">
     <span>PolyBall · made by <a href="/">Abdallah El Belkasy</a></span>
     <nav aria-label="Site"><a href="leaderboard/">Leaderboard</a><a href="/press/">Press kit</a><a href="/privacy.html">Privacy</a><a href="/delete.html">Delete my data</a></nav>
-    <p class="built">Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
+    <p class="built">Plain HTML, CSS and JavaScript. No framework, no trackers.<span id="weight"></span></p>
   </div>
 </footer>
 

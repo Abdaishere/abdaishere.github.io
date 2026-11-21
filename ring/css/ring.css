@@ -133,8 +133,8 @@ html.plate-fallback .plate-read, .save-data .plate-read { display: none; }
 .bars .v { color: var(--ink); text-transform: none; letter-spacing: 0.02em; font-size: 0.875rem; }
 .bars .track { height: 14px; background: var(--line); border-radius: 1px; overflow: hidden; }
 .bars .bar { display: block; height: 100%; width: 100%; background: var(--mid); }
-/* to scale: about 10 min of 2 h+ is one twelfth */
-.bars .bar.now { width: 8.33%; background: var(--signal); transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease-out) 150ms; }
+/* to scale: 256 of 548 commits */
+.bars .bar.now { width: 46.7%; background: var(--signal); transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease-out) 150ms; }
 .is-lit .bars .bar.now, html:not(.ringing) .bars .bar.now { transform: none; }
 .method ul { display: grid; gap: 0.45rem; margin-top: 0.5rem; }
 .method li { max-width: 68ch; padding-left: 1rem; border-left: 1px solid var(--line); font-size: clamp(1.0625rem, 1.1vh + 0.4vw, 1.125rem); color: var(--mid); text-wrap: pretty; }
@@ -353,7 +353,8 @@ html.rm:not(.save-data) .plate-still { display: none; }
   .nums .n { font-size: 2.1rem; }
   .play { width: 56px; height: 56px; padding: 0; justify-content: center; }
   .play span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .pr-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .pr-grid { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; }
+  .plate-read { white-space: normal; min-height: 3em; }
   .plate .pieces { width: 100%; margin: 0.25rem 0 0; }
   .plate-box { max-height: none; aspect-ratio: 16 / 8.5; }
   .lines li { font-size: 1.0625rem; }

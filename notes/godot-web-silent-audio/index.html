@@ -89,7 +89,7 @@
       </span>
       <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
     </span>
-    <span>Open to Rust · systems · backend</span>
+    <span>Open to software engineering roles</span>
   </div>
 </div>
 
@@ -132,7 +132,7 @@ AudioServer.set_bus_send(i, "Master")</code></pre>
 <pre tabindex="0" role="region" aria-label="Code: the fix"><code><span class="c"># was: AudioServer.add_bus(i)</span>
 AudioServer.bus_count = i + 1</code></pre>
         <p>Setting <code>bus_count</code> appends in place. On the web it goes through <code>set_sample_bus_count</code>, which adds the new bus to the end of the JavaScript list, in order. A <code>default_bus_layout.tres</code> takes that path too, which is probably why most projects never hit this. Only buses added at runtime with <code>add_bus()</code> are affected. PolyBall commit <code>c0cbe65</code>, 22 September.</p>
-        <p>The same code is still in Godot 4.7 (<a href="https://github.com/godotengine/godot/blob/4.7-stable/servers/audio/audio_server.cpp#L873-L884"><code>add_bus()</code></a>, <a href="https://github.com/godotengine/godot/blob/4.7-stable/platform/web/js/libs/library_godot_audio.js#L871-L892"><code>addAt()</code> and <code>move()</code></a>) and in master as I write this. It is reported upstream as <a href="https://github.com/godotengine/godot/issues/119026">godotengine/godot#119026</a>, with a one-line fix open in <a href="https://github.com/godotengine/godot/pull/119027">#119027</a>.</p>
+        <p>The same code is still in Godot 4.7 (<a href="https://github.com/godotengine/godot/blob/4.7-stable/servers/audio/audio_server.cpp#L873-L884"><code>add_bus()</code></a>, <a href="https://github.com/godotengine/godot/blob/4.7-stable/platform/web/js/libs/library_godot_audio.js#L871-L892"><code>addAt()</code> and <code>move()</code></a>) and was in master when I wrote this. It was reported upstream as <a href="https://github.com/godotengine/godot/issues/119026">godotengine/godot#119026</a> and fixed on 29 October 2026 by <a href="https://github.com/godotengine/godot/pull/123996">#123996</a>, for Godot 4.8.</p>
 
         <h2>The check that would have caught it</h2>
         <p>Counting buffers tells you what you sent. It says nothing about what arrived. So the check now watches the last hop itself, from before Godot loads:</p>
@@ -167,8 +167,8 @@ AudioNode.prototype.disconnect = function (...a) {
 <footer class="contact" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
     <p class="label">Contact</p>
-    <h2 id="contact-h">Hiring for Rust, systems or backend?</h2>
-    <p class="lede">Tell me what's slow. I'll tell you how I'd make it fast.</p>
+    <h2 id="contact-h">Hiring a software engineer?</h2>
+    <p class="lede">Tell me what you need built. I'll tell you how I'd design it, plan it and ship it.</p>
     <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
     <div class="row">
       <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
@@ -183,7 +183,7 @@ AudioNode.prototype.disconnect = function (...a) {
     </ul>
     <div class="foot">
       <p>© 2026 Abdallah El Belkasy</p>
-      <p>Hand-written HTML and CSS. No framework, no trackers.<span id="weight"></span></p>
+      <p>Plain HTML, CSS and JavaScript. No framework, no trackers.<span id="weight"></span></p>
     </div>
   </div>
 </footer>
