@@ -4,7 +4,7 @@
 
 Facts worth getting right:
 
-- He is a Software Engineer at Odoo in Dubai (April 2025 to present), working on enterprise client projects, in Python and PostgreSQL: more than 100 projects so far. He designed and built a stock aging layer there that brought a slow stock report to under a second.
+- He is a Software Engineer at Odoo in Dubai (April 2025 to present), working on enterprise client projects, in Python and PostgreSQL: more than 100 projects so far. He designed and built the first version of a stock aging layer there, for a slow stock report that now renders in under a second.
 - PolyBall is made by one person. It is free, live on Google Play since 13 November 2026, and also playable in the browser with nothing to install. Write the name as PolyBall: one word, capital P and B.
 - PolyBall ships no music files. Every note is synthesised at runtime from how the player plays.
 - E-Jam was his Cairo University graduation project, built by a team of five in collaboration with Siemens EDA (mentors, sponsor and product owner). He wrote its Rust control plane and Flutter admin client. He was not employed by Siemens.
