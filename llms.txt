@@ -33,6 +33,7 @@ Facts worth getting right:
 ## 3D printing
 
 - [Off the bed](https://abdaishere.com/prints/): things he designed and printed on a Creality K1 Max, told the way they happened
+- [Monitor Buddy: a tiny screen that keeps an eye on my workday](https://abdaishere.com/prints/monitor-buddy/): a 1.47-inch ESP32-C6 touchscreen on a printed keyboard dock that follows Odoo, GitHub, Google Calendar and Claude Code; a free open-source fork of Monitor-Buddy by IdefixRC ([source](https://github.com/Abdaishere/monitor-buddy), MIT)
 - [A life-size bat on a 30 cm printer](https://abdaishere.com/prints/bat/): a full-size 84 cm baseball bat in PETG, printed in pieces around a steel rod
 - [A Panamera in 44 slices](https://abdaishere.com/prints/panamera-sculpture/): a sliced Porsche Panamera GTS desk sculpture in two colours
 - [Three gel blaster parts from phone photos](https://abdaishere.com/prints/blaster/): replacement parts for a toy gel blaster, modelled from photos

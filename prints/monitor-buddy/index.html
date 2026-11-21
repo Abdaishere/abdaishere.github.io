@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitor Buddy: a tiny screen that keeps an eye on my workday · Off the bed</title>
+<meta name="description" content="How a 1.47-inch ESP32-C6 touchscreen became a desk companion that follows my workday, with knock detection, signed updates over Wi-Fi and a 3D printed keyboard dock.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0B0F" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://abdaishere.com/prints/monitor-buddy/">
+<link rel="icon" href="/img/me/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/me/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/me/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://abdaishere.com/prints/monitor-buddy/">
+<meta property="og:site_name" content="Abdallah El Belkasy">
+<meta property="og:title" content="Monitor Buddy: a tiny screen that keeps an eye on my workday">
+<meta property="og:description" content="How a 1.47-inch ESP32-C6 touchscreen became a desk companion that follows my workday, with knock detection, signed updates over Wi-Fi and a 3D printed keyboard dock.">
+<meta property="og:image" content="https://abdaishere.com/img/og/print-monitor-buddy.png?v=1">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Monitor Buddy on its printed keyboard dock. No. 04 of Off the bed, 3D prints by Abdallah El Belkasy.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abdaishere.com/img/og/print-monitor-buddy.png?v=1">
+<meta name="twitter:image:alt" content="Monitor Buddy on its printed keyboard dock. No. 04 of Off the bed, 3D prints by Abdallah El Belkasy.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Monitor Buddy: a tiny screen that keeps an eye on my workday","datePublished":"2026-11-21","author":{"@type":"Person","name":"Abdallah El Belkasy","url":"https://abdaishere.com/"},"url":"https://abdaishere.com/prints/monitor-buddy/"}
+</script>
+<meta property="article:published_time" content="2026-11-21">
+<link rel="preload" href="/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/prints/prints.css">
+<script src="/boot.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/"><span class="full">Abdallah El Belkasy</span><span class="short">A. El Belkasy</span></a>
+    <button class="btn-plain menu-btn" type="button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/#path">Path</a>
+      <a href="/#about">About</a>
+      <a href="/prints/" aria-current="true">Prints</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <button class="btn-plain" type="button" id="theme"><span class="sr">Switch to </span><span class="t-light">Light</span><span class="t-dark">Dark</span><span class="sr"> theme</span></button>
+  </div>
+</header>
+
+<main id="main">
+<div class="status">
+  <div class="wrap status-in">
+    <span class="sb-lead">
+      <span>Dubai <span class="clock needs-js">--:--</span></span>
+      <span class="sb-beat needs-js tapctl" id="beatitem">
+        <button class="sb-tap" type="button" id="tap" aria-label="120 BPM, tap on the beat"><span class="sb-pulse" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><circle class="sb-dot" cx="10" cy="10" r="3.25"/><circle class="sb-fill" cx="10" cy="10" r="4"/></svg><canvas class="sb-ring"></canvas></span><span class="sb-say" id="streak" aria-hidden="true">120 BPM · Tap</span></button>
+        <button class="sb-sound" type="button" id="sound" aria-pressed="false" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="s-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="s-off" d="M3 3l18 18"/></svg></button>
+        <span class="sr" id="tap-status" role="status"></span>
+      </span>
+      <span class="sb-still"><i aria-hidden="true"></i>120 BPM</span>
+    </span>
+    <span>Open to software engineering roles</span>
+  </div>
+</div>
+
+  <article class="sec post" aria-labelledby="post-h">
+    <div class="wrap">
+      <p class="crumb"><a class="more" href="/prints/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>Off the bed</a></p>
+      <div class="col">
+        
+        <p class="label">3D prints · No. 04</p>
+        <h1 id="post-h">Monitor Buddy: a tiny screen that keeps an eye on my workday</h1>
+        <p class="dek">A 1.47-inch ESP32 touchscreen on a printed keyboard dock. It follows Odoo, GitHub, Google Calendar and Claude Code, and it took eight docks before one stopped resetting the board.</p>
+        <p class="cap byline"><time datetime="2026-11-21">21 November 2026</time> · Firmware in C++, dock designed in CadQuery, printed on a Creality K1 Max</p>
+        <ul role="list" class="fl strip" aria-label="Facts"><li>Black silk PLA</li><li>4 h 24 min printing</li><li>5 prints</li><li>2 parts</li><li>ESP32-C6</li></ul>
+        <figure class="hero-fig">
+          <img src="cover-4x3.webp" srcset="cover-4x3-800.webp 800w, cover-4x3.webp 1600w" sizes="(min-width: 44rem) 40rem, 100vw" width="1600" height="1200" alt="Monitor Buddy on its black printed dock in front of a keyboard, showing THURSDAY NOV 19 2026 with a row of page dots underneath, a white USB-C cable plugged into its right side." fetchpriority="high">
+          <figcaption class="cap">The Buddy on dock version 8, 19 November 2026.</figcaption>
+        </figure>
+        
+        <div class="story">
+        <p>A 1.47-inch screen sits on my keyboard, and it has opinions. When I lock the laptop at lunch, it starts chewing. When one of my pull requests goes red, its eyes turn red and shake. When Claude Code stops to ask me something, it looks up, surprised, and says so. Knock twice on its head and it asks &quot;WHAT&#x27;S UP?&quot;.</p>
+<figure class="fig native">
+  <img src="face-locked-in.webp" srcset="face-locked-in-800.webp 800w, face-locked-in.webp 960w" sizes="(min-width: 44rem) 42rem, 100vw" width="960" height="516" alt="The Buddy&#x27;s face: two white eyes on black, half-closed and focused, with teal pupils and the caption LOCKED IN" loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 01</b> · LOCKED IN, read from the Buddy&#x27;s own frame buffer like every screenshot here. The screen is 320 by 172 pixels.</figcaption>
+</figure>
+<p>This is the story of how a cheap ESP32 touchscreen became a desk companion that follows my working day: Odoo, GitHub, Google Calendar and Claude Code, on a screen smaller than a matchbox.</p>
+<h2>Where it started</h2>
+<p><a href="https://github.com/IdefixRC/Monitor-Buddy">Monitor-Buddy by IdefixRC</a> is a lovely open-source project under the MIT licence: a Waveshare ESP32-C6-Touch-LCD-1.47 board in a 3D-printed holder, with an animated face that follows the motion sensor, a clock, weather, moon phase, stocks, coins, a GitHub page, a browser-based flasher and a captive-portal Wi-Fi setup. I flashed it, put it next to my monitor, and it made me smile. Then I started wondering what it would take to make it care about my actual day.</p>
+<p>If you only want to build one, skip to Build one at the end.</p>
+<p>Three days later the firmware had grown to about 6,000 lines, and the laptop had a helper service, a Chrome extension and a handful of small Python tools. Most of that came out of pair-programming sessions with Claude Code, which is also why the Buddy keeps an eye on Claude.</p>
+<figure class="fig wide">
+  <img src="architecture.webp" srcset="architecture-800.webp 800w, architecture.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1500" alt="Diagram: on the laptop, a Chrome extension reads www.odoo.com, gh reads GitHub, and GNOME&#x27;s calendar cache holds Google Calendar; with Claude Code hooks, the screen lock and the microphone they feed buddy-link, a small Python service, every 5 seconds. buddy-link talks to the Buddy over Wi-Fi with every packet sealed with AES-256-GCM, and over USB as a fallback. The Buddy itself fetches weather from Open-Meteo, its GitHub profile and the time." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 02</b> · Who talks to whom. The laptop does the private reading and the Buddy only answers.</figcaption>
+</figure>
+<h2>What it follows</h2>
+<p>The Buddy only fetches the public bits itself: weather from Open-Meteo, my GitHub streak and stars, and the time. Everything about my work comes from the laptop, where a small Python service called <code>buddy-link</code> wakes up every five seconds and reads:</p>
+<p><strong>the screen lock</strong>, from logind. GNOME&#x27;s own <code>ScreenSaver.GetActive</code> stays false when you lock with Super+Escape, which is why my first lock detection passed every test and failed every real lock.</p>
+<p><strong>the microphone</strong>, from PipeWire. If something records on two polls in a row, I&#x27;m ON AIR.</p>
+<p><strong>pull requests, reviews and CI</strong>, through the <code>gh</code> CLI.</p>
+<p><strong>Claude Code</strong>: hooks write &quot;needs&quot; or &quot;done&quot; and the project name to a small file, and my status line leaves the 5-hour and 7-day usage in another.</p>
+<p><strong>Google Calendar</strong>, read-only from the cache GNOME keeps for its online accounts. No Google credentials involved.</p>
+<p><strong>Odoo</strong>, through the browser.</p>
+<p>It sends all of that to the Buddy over Wi-Fi, and over the USB cable when the Buddy is plugged in and the Wi-Fi isn&#x27;t answering.</p>
+<h2>The API key that died every day</h2>
+<p>My first Odoo integration was the obvious one: an API key compiled into the firmware, and the Buddy calling odoo.com itself. The key stopped working the next afternoon. My odoo.com keys expire after a day, so every renewal meant a new build, a new flash, and a fresh secret on a board that anyone with a USB cable can read.</p>
+<p>So the Buddy stopped holding a key at all. A tiny Chrome extension (Manifest V3, allowed to talk to www.odoo.com and nothing else) wakes up every minute and asks Odoo for my numbers with the session the browser already has: today&#x27;s hours, the previous working day&#x27;s hours, open tasks, what&#x27;s in development or code review, activities due, and the next meetings. It hands the JSON to a native messaging host, a 30-line Python script that writes it to a private file, and <code>buddy-link</code> forwards it. If Chrome is closed or I&#x27;m signed out, the data ages out after 30 minutes and the Odoo page drops out of the rotation. It only ever reads. Nothing writes back to Odoo.</p>
+<figure class="fig native">
+  <img src="page-odoo.webp" srcset="page-odoo-800.webp 800w, page-odoo.webp 960w" sizes="(min-width: 44rem) 42rem, 100vw" width="960" height="516" alt="The Odoo page: my trigram (ODOO in these pictures) and the time, a ring showing 2:30 of 8 hours logged, 49 open tasks, 4 in review, and a sample task card, Add CSV export to the weekly report, in the Development stage." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 03</b> · The Odoo page, filled with sample data for this post.</figcaption>
+</figure>
+<h2>Faces with personality</h2>
+<p>The face is still the heart of it: nine moods you can tap through, plus the status faces the Buddy picks by itself. On every frame it walks down a ladder and shows the first status that applies:</p>
+<figure class="fig wide">
+  <img src="face-priority.webp" srcset="face-priority-800.webp 800w, face-priority.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1340" alt="The face priority ladder, highest first: knock greeting, shake, night, on air, meeting soon, focus timer, timer done, laptop locked, Claude needs you, log your hours, CI red, Claude done, locked in. When nothing applies, the plain face." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 04</b> · The ladder the Buddy walks down on every frame. The first status that applies wins.</figcaption>
+</figure>
+<p>A few favourites:</p>
+<p><strong>LOG TUESDAY&#x27;S HOURS.</strong> If the previous working day has under four hours on my timesheet, the eyes droop and a blue tear runs down. It names the day, so there&#x27;s no arguing.</p>
+<p><strong>CI RED.</strong> Red eyes shaking from side to side, with a &quot;!&quot; flashing between them.</p>
+<p><strong>LOCKED IN.</strong> While one of my tasks is in development, the pupils sweep left to right like they&#x27;re reading code, and a cursor blinks after the caption.</p>
+<p><strong>LUNCH BREAK.</strong> I rejected three lunch faces drawn from lines and circles. What worked was a picture generated with Gemini, cropped and warped by a script into two 320 by 172 frames that swap every 260 ms. It chews.</p>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">Log your hours</p><img src="face-log-hours.webp" srcset="face-log-hours-800.webp 800w, face-log-hours.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="Log your hours: droopy eyes, a blue tear, and the caption LOG TUESDAY&#x27;S HOURS" loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">Lunch break</p><img src="face-lunch-break.webp" srcset="face-lunch-break-800.webp 800w, face-lunch-break.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="Lunch break: closed happy eyes, a chewing mouth and falling crumbs, with the caption LUNCH BREAK" loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 05</b> · Two of the fourteen status faces. The lunch face is the only one that started as a generated picture.</figcaption>
+</figure>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">Claude needs you</p><img src="face-claude-needs-you.webp" srcset="face-claude-needs-you-800.webp 800w, face-claude-needs-you.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="Claude needs you: tall surprised eyes with the caption CLAUDE NEEDS YOU" loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">On air</p><img src="face-on-air.webp" srcset="face-on-air-800.webp 800w, face-on-air.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="On air: a red ON AIR sign with the caption IN A MEETING 12:34" loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 06</b> · Claude Code waiting for an answer, and the microphone in use.</figcaption>
+</figure>
+<p>Put together, a day looks like this:</p>
+<figure class="fig wide tall">
+  <img src="day-timeline.webp" srcset="day-timeline-800.webp 800w, day-timeline.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1671" alt="An example working day as a timeline: night until 07:00; at the first unlock a YESTERDAY card, then GOOD MORNING; LOG MONDAY&#x27;S HOURS until they are logged; LOCKED IN; MEETING IN 5 MIN, then ON AIR; LUNCH BREAK while locked between 12:00 and 14:00; a focus timer laid flat, then FOCUSED with the dancing banana; DAY DONE when locked after 17:00; the bouncing Buddy logo after 30 minutes away; night from 23:00." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 07</b> · An example day, from the first unlock to the screensaver.</figcaption>
+</figure>
+<p>The first unlock of the day brings a YESTERDAY card (hours, tasks I touched, pull requests merged and reviewed), then the Today page. Meetings from Odoo and Google Calendar get a five-minute countdown. Laying the Buddy flat starts a focus timer that counts up. While it runs, the laptop turns notification banners off and keeps the screen awake with the Caffeine extension, which lets go after 30 idle minutes so an unattended laptop still locks. Locking up after 17:00 shows a DAY DONE recap.</p>
+<figure class="fig native">
+  <img src="page-today.webp" srcset="page-today-800.webp 800w, page-today.webp 960w" sizes="(min-width: 44rem) 42rem, 100vw" width="960" height="516" alt="The Today page: the next meeting, Weekly sync at 19:17, 5:15 logged and 0:00 focus, 2 to review, 1 with changes, 3 open, 2 activities due and 12 tasks" loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 08</b> · The Today page, with sample data for this post.</figcaption>
+</figure>
+<h2>Knock knock</h2>
+<p>The Buddy also reacts to being handled. Shake it and it goes dizzy, spiral eyes and circling stars, then gives you a flat &quot;REALLY?&quot; before showing the Today page. Spin it and it looks surprised. Knock twice on its head and it greets you.</p>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">While shaken</p><img src="face-dizzy.webp" srcset="face-dizzy-800.webp 800w, face-dizzy.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="Dizzy: spiral eyes with stars and the caption WHOAAA" loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">Right after</p><img src="face-really.webp" srcset="face-really-800.webp 800w, face-really.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="516" alt="Unimpressed: flat half-shut eyes with the caption REALLY?" loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 09</b> · What a shake gets you, in order.</figcaption>
+</figure>
+<p>The knock was the hardest feature to get right, and the one that taught me the most. My first detector looked at the change in the total pull, the length of the acceleration vector. A knock from the side barely changes that length, so desk knocks read 0.08 to 0.19 g, right on top of ordinary desk bumps. I then spent far too long nudging thresholds by feel: too strict and it missed knocks, too loose and typing set it off.</p>
+<p>What fixed it was measuring. The Buddy&#x27;s health answer now carries its last eight knock strengths, and its serial status line prints the largest jolt every 1.2 seconds. With real numbers in front of me, the cause was obvious, and so was the fix: measure the change in every direction, against a slow running average. Knocks on the Buddy itself now read 0.27 to 3.2 g, comfortably above anything the desk does.</p>
+<figure class="fig wide">
+  <img src="knock-strengths.webp" srcset="knock-strengths-800.webp 800w, knock-strengths.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1209" alt="Chart of measured jolts on a log scale: at rest 0.01 to 0.05 g, desk bumps 0.10 to 0.17 g, desk knocks with the first method 0.08 to 0.19 g, knocks on the Buddy with the final method 0.27 to 3.2 g, screen taps and handling 1.1 to 2.5 g. A knock starts at 0.25 g; still means under 0.08 g." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 10</b> · Measured jolts on a log scale. The first method put desk knocks right on top of desk bumps.</figcaption>
+</figure>
+<p>A dedicated FreeRTOS task reads the QMI8658 motion sensor every 3 ms. A knock is a jolt of at least 0.25 g after the Buddy was still, and the first one needs 150 ms of stillness before it, which typing never provides. The second must come 80 to 700 ms later. Anything under a quarter of the first knock is the Buddy rocking on its stand, and a third strong jolt cancels the pair. Screen taps arrive with a touch, and picking the Buddy up never lets it get still.</p>
+<figure class="fig wide">
+  <img src="knock-detector.webp" srcset="knock-detector-800.webp 800w, knock-detector.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1380" alt="Diagram of a double knock: still for 150 ms, knock 1 at 1.1 g, a small rocking echo ignored, knock 2 at 0.78 g within 80 to 700 ms, then 250 ms with no third knock gives the greeting. Not knocks: a tap on the screen, picking it up, a third strong jolt." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 11</b> · What counts as a double knock, and what does not.</figcaption>
+</figure>
+<p>In the last test it caught two double knocks out of three, ignored a single knock, and fired on nothing else.</p>
+<h2>Memes on a 1.47-inch screen</h2>
+<p>One page plays animations from the microSD card, and three of them play by themselves as reactions: a ring that fills up and bursts into confetti when my Odoo hours pass eight for the day, a green tick that draws itself when the last failing pull request goes green, and fireworks after a focus session of 25 minutes or more. After 30 minutes away, your name (you give it in the installer) bounces around the screen like the logo of an idle DVD player, and yes, it lands exactly in a corner twice per loop.</p>
+<p>My own card also holds a few classics of the old internet, and those belong to their creators, so they stay on my card. Everything that ships with the project I drew with a script: the three reactions, the bouncing Buddy logo, a starfield, code rain, demo-scene fire, a game of Pong where nobody ever misses, and an install bar that crawls to 99% and fails.</p>
+<figure class="fig native">
+  <img src="anim-downloading-coffee.webp" srcset="anim-downloading-coffee-800.webp 800w, anim-downloading-coffee.webp 960w" sizes="(min-width: 44rem) 42rem, 100vw" width="960" height="516" alt="An animation drawn for the Buddy: a progress bar at 33% under the words DOWNLOADING COFFEE..." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 12</b> · One frame of the install bar. It never finishes.</figcaption>
+</figure>
+<p>A helper script fits any GIF to the screen (three canvas sizes drawn at 4×, 2× or 1×, one shared 64-colour palette), and another sends it to the Buddy over the same link everything else uses.</p>
+<h2>Locking it down</h2>
+<p>The Buddy sits on an office desk, shows my tasks and talks over Wi-Fi, so it got the same attention as the faces.</p>
+<p><strong>A sealed link.</strong> Every UDP packet is encrypted and authenticated with AES-256-GCM. The nonce starts with the laptop&#x27;s clock in milliseconds, and the Buddy only accepts stamps that keep increasing and sit within a minute of its own clock, so a recorded packet is useless a minute later. The Buddy never opens a connection. It only answers.</p>
+<p><strong>Signed updates.</strong> Firmware sent over Wi-Fi carries an ECDSA P-256 signature, and the private key never leaves the laptop. The Buddy only has the public half, so someone who somehow got the link key still couldn&#x27;t install firmware.</p>
+<p><strong>Rollback.</strong> There are two firmware slots. A new firmware boots on trial and is kept only once it hears from the laptop again. If it crashes before that, the bootloader goes back to the old one. That found a real bug: a start-up crash when a network fetch looked up a host name while the time sync had its own DNS query open. The Buddy rolled itself back, the crash dump kept on flash pointed at the cause, and the time sync now gets IP addresses instead of names.</p>
+<p><strong>A privacy lock.</strong> While the laptop is locked, swipes, taps, the game, the Wi-Fi setup hotspot and the Today pages after a knock or a shake are all blocked. Anyone walking past sees a face, not my task list.</p>
+<p><strong>No borrowed secrets.</strong> Odoo comes through the browser, I deleted the stock-price API key, and I erased the spare firmware slot that still held old images with the expired Odoo key. What remains on the board is the link key and the Wi-Fi passwords.</p>
+<p><strong>The honest part.</strong> USB is still the master key. There&#x27;s no flash encryption and no secure boot, so anyone with a cable can read the board or flash it. It lives on my desk, not in a hallway.</p>
+<figure class="fig wide tall">
+  <img src="update-flow.webp" srcset="update-flow-800.webp 800w, update-flow.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="2261" alt="Sequence diagram of a signed update: the laptop signs the image with ECDSA P-256; it sends B with the size and signature and gets back the offset to start from; it sends 1 KB D pieces; the Buddy writes the spare slot, checks the signature against the public key in its firmware, and refuses a mismatch; it restarts into the new slot on trial; the next packet from buddy-link keeps it, and a crash before that rolls it back. A broken-off update goes on where it stopped." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 13</b> · A signed update, step by step.</figcaption>
+</figure>
+<p>Signed updates worked perfectly on my desk and fell apart in a weak spot on a charger. There, 8 of 40 sealed pings got lost, the median round trip was 187 ms, and three installs broke off between 67 and 135 KB of a 1.9 MB image.</p>
+<figure class="fig wide">
+  <img src="link-quality.webp" srcset="link-quality-800.webp 800w, link-quality.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1244" alt="Chart of the Wi-Fi link: pings lost 0 of 40 on the desk, 8 of 40 in the weak spot and 13 of 20 in its worst run; round trip median 4 to 60 ms on the desk, 187 ms in the weak spot, slowest 762 ms; updates in the weak spot broke off at 67 to 135 KB of 1.9 MB." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 14</b> · The same link on my desk and in a weak spot on a charger.</figcaption>
+</figure>
+<p>So updates became resumable. The Buddy keeps a broken-off update for ten minutes, and because the signature is deterministic (RFC 6979), running the same command again sends exactly the same header. The Buddy recognises it and answers with the offset where it stopped. I tested it by cutting the Wi-Fi at 63%: the second run went on from 65% and finished. Over USB an install takes 23 to 25 seconds. Over Wi-Fi, in 1 KB pieces, about 90.</p>
+<figure class="fig wide">
+  <img src="update-time.webp" srcset="update-time-800.webp 800w, update-time.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="860" alt="Chart of install times: 23 to 25 seconds over USB, about 90 seconds over Wi-Fi; a first run cut at 63% and a second run that went on at 65%" loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 15</b> · Install times, and the update I cut at 63 %.</figcaption>
+</figure>
+<h2>From 12 to 30 frames a second</h2>
+<p>The firmware I started from sent the whole 320 by 172 frame to the display on every pass, which takes about 30 ms on its own. Add Wi-Fi upkeep, the motion sensor, touch and a fixed delay, and the face ran at 11 to 12 frames a second.</p>
+<figure class="fig wide">
+  <img src="frame-rate.webp" srcset="frame-rate-800.webp 800w, frame-rate.webp 1600w" sizes="(min-width: 60rem) 56rem, 100vw" width="1600" height="1159" alt="Chart of frames per second: the start 11 to 12; Wi-Fi upkeep every 500 ms, 14; only changed rows sent with frames paced, 29 to 30; knock watch on a 100 kHz sensor bus, 26 to 28; sensor bus at 400 kHz, 29; animation page with GIFs from the SD card, 21 to 23. The game went from 13 to 16 up to 29 to 40 with its own partial flush." loading="lazy" decoding="async">
+  <figcaption class="cap"><b>Fig. 16</b> · Frames per second after each change.</figcaption>
+</figure>
+<p>Doing Wi-Fi upkeep every 500 ms instead of every pass bought a little. The big win was hashing every row of the frame buffer and sending only the rows that changed, with frames paced at 33 ms: the normal pages went to 30. The eyes still move on springs that step every 70 ms, with the frames in between blended, so the face kept the feel it had at 12. The Bug Hop game, a one-tap runner hidden one swipe past the animations, has its own partial flush and no pacing, so it runs at 29 to 40. Adding the knock watch cost a few frames while the sensor bus ran at 100 kHz, and moving it to 400 kHz brought them back. GIFs from the SD card land at 21 to 23, probably because the card shares its SPI bus with the display.</p>
+<h2>A dock for the keyboard</h2>
+<p>The original holder sticks to the side of a monitor. Mine wanted to live on the keyboard, where a knock is one finger away and laying it flat for a focus timer is a single move. So the holder became the head of a two-part dock: a 7 mm slab that sits on the keyboard&#x27;s top strip, and a head that leans the screen back toward me. The head drops into a dovetail groove, slides 8 mm and clicks. Slide it back and it lifts off with its cable.</p>
+<figure class="fig wide">
+  <div class="panels row"><div class="panel"><p class="plabel">Docked</p><img src="demo-1-on-stand.webp" srcset="demo-1-on-stand-800.webp 800w, demo-1-on-stand.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="1280" alt="The Buddy on its dock, showing the weather page" loading="lazy" decoding="async"></div><div class="panel"><p class="plabel">Lifted off</p><img src="demo-2-lift-off.webp" srcset="demo-2-lift-off-800.webp 800w, demo-2-lift-off.webp 960w" sizes="(min-width: 60rem) 28rem, (min-width: 40rem) 50vw, 100vw" width="960" height="1280" alt="The head slid out of the base and lifted, still running" loading="lazy" decoding="async"></div></div>
+  <figcaption class="cap"><b>Fig. 17</b> · Two frames from a phone video on 19 November. The head slides 8 mm and lifts off with its cable.</figcaption>
+</figure>
+<p>It took eight versions. Version 7 looked finished and reset the board every time I seated it: a ledge inside the holder stood exactly where the BOOT and RST buttons stick out of the board&#x27;s edge. Version 8 clears both buttons by 1.5 mm and leaves two small pin slots to reach them.</p>
+<h2>Small bugs, big lessons</h2>
+<p><strong><code>millis() | 1</code>.</strong> Time stamps were stored as <code>millis() | 1</code>, so that zero could mean &quot;unset&quot;. That can put a stamp one millisecond in the future, and then <code>millis() - stamp</code> underflows to about four billion. &quot;Lie flat for two seconds&quot; fired instantly: a surprise focus timer that also muted my notifications. Every such comparison now goes through a helper that handles it.</p>
+<p><strong>A button with a mind of its own.</strong> The BOOT button read as pressed during a restart, and the upstream rule &quot;hold BOOT for five seconds to forget the Wi-Fi&quot; wiped the saved Wi-Fi three times in one day. BOOT lost that job. Today a press locks the laptop, which travels over the same sealed link as everything else.</p>
+<p>Add the knock and the API key, and two rules stick: measure before you tune, and don&#x27;t store a secret you can borrow from somewhere safer.</p>
+<h2>What&#x27;s next</h2>
+<p>A battery: the board has a charger chip, and a small LiPo with a protection board would let the Buddy leave the cable behind. And the Buddy could use a few more faces, which, if the lunch face taught me anything, will start as generated pictures rather than circles.</p>
+<h2>Build one</h2>
+<p>This is a free, open-source hobby project; nothing is for sale. You need a Waveshare ESP32-C6-Touch-LCD-1.47 (the touch version, ~US$15, e.g. from <a href="https://www.waveshare.com/esp32-c6-touch-lcd-1.47.htm?sku=31203">Waveshare</a>), a small microSD card, a USB-C data cable and about 23 g of PLA.</p>
+<p>1. <strong>Print</strong> the dock (two parts, about 1 h 24 min at 0.16 mm) or the original holder. The original holder, with its print settings, is on <a href="https://makerworld.com/en/models/3241960-monitor-buddy">MakerWorld</a>. My dock goes up there as a remix of it; the link lands here and in the README when it is listed.</p>
+<p>2. <strong>Install from the browser.</strong> Plug the board in, open the <a href="https://abdaishere.github.io/monitor-buddy/">installer</a> in Chrome or Edge, click <strong>Connect your Buddy</strong>, then <strong>Install</strong>. One form asks for your Wi-Fi and your city. Nothing has to be built or installed on the computer.</p>
+<p>3. <strong>Copy the animations</strong> from the release&#x27;s <code>monitor-buddy-v1.0.0-sdcard.zip</code> onto the card and put it in while the Buddy is unplugged (the card is read at start-up).</p>
+<p>4. <strong>Connect your laptop</strong> (Linux, optional): install <code>monitor-buddy_1.0.0_all.deb</code> from the <a href="https://github.com/Abdaishere/monitor-buddy/releases/latest">latest release</a> (Ubuntu and Debian), or download the project from <a href="https://github.com/Abdaishere/monitor-buddy">github.com/Abdaishere/monitor-buddy</a> and run <code>open-app.sh</code> (or <code>./setup.sh</code> in a terminal). With the Buddy on USB, click <strong>Set up</strong>. It makes the keys, hands them to the Buddy over the cable, starts the helper for the lock, microphone, pull request, calendar and Claude Code features, and offers the Odoo extension. It can be run again at any time and only does what is left.</p>
+<p>5. <strong>Make it yours.</strong> The same app is the Buddy&#x27;s editor: it shows the Buddy&#x27;s screen live next to its settings (the real firmware, built to run in the page), lets you drag the pages into your own order, and writes the changes over the cable, with undo. The editor also runs on Windows.</p>
+<p>Updates come from the same installer page, or over Wi-Fi with <code>python3 tools/buddy_flash.py</code>. The <a href="https://github.com/Abdaishere/monitor-buddy#set-up">README</a> has the steps with screenshots, and the <a href="https://github.com/Abdaishere/monitor-buddy/blob/main/docs/HANDOVER.md">handover document</a> has every detail.</p>
+<h2>Credits</h2>
+<p>Monitor Buddy stands on <a href="https://github.com/IdefixRC/Monitor-Buddy">Monitor-Buddy by IdefixRC</a> (MIT), whose face builds on <a href="https://github.com/EDISON-SCIENCE-CORNER/DESKBUDDY-1.0">DESKBUDDY-1.0 by Edison Science Corner</a> and the Tiny ESP DeskBuddy idea from <a href="https://schematik.io/">schematik.io</a>. The firmware uses Arduino_GFX, ArduinoJson, U8g2, AnimatedGIF and AyresWiFiManager, and the weather comes from <a href="https://open-meteo.com/">Open-Meteo</a>. The dock&#x27;s head is built on IdefixRC&#x27;s <a href="https://makerworld.com/en/models/3241960-monitor-buddy">printed holder</a>, so the dock is published on MakerWorld only, as a remix of it. Thanks to IdefixRC and to the original&#x27;s contributors, AmyJoT and Killo1988. The browser installer uses esptool-js by Espressif and posix_tz_db by Nayar Systems. The full list is in <a href="https://github.com/Abdaishere/monitor-buddy/blob/main/docs/blog/CREDITS.md">CREDITS.md</a>.</p>
+        </div>
+        
+        <section class="credits" aria-labelledby="credits-h"><h2 id="credits-h">Built on</h2><p class="cap">Where the ideas came from. Their files stay on their pages.</p><ul role="list"><li><a class="ct" href="https://makerworld.com/en/models/3241960-monitor-buddy">Monitor-Buddy<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><span class="cm">IdefixRC · MakerWorld · MakerWorld Exclusive License</span><span class="cw">The holder my dock&#x27;s head is built on, and the idea of a face beside the monitor.</span></li><li><a class="ct" href="https://github.com/IdefixRC/Monitor-Buddy">Monitor-Buddy firmware<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><span class="cm">IdefixRC and contributors · GitHub · MIT</span><span class="cw">The firmware mine grew from: the face, the settings engine, the Wi-Fi setup.</span></li></ul></section>
+        <section class="facts-block" aria-labelledby="facts-h">
+          <h2 id="facts-h">How it was printed</h2>
+          
+          <dl class="rows spec"><div><dt>Printer</dt><dd>Creality K1 Max, rooted, Klipper</dd></div><div><dt>Slicer</dt><dd>OrcaSlicer 2.5.1, K1M 0.20 Standard, Black Silk PLA (K1M)</dd></div><div><dt>Board</dt><dd>Waveshare ESP32-C6-Touch-LCD-1.47, 8 MB flash</dd></div><div><dt>Dock v8</dt><dd>Head and base on one plate, 0.16 mm layers, first layer 0.24 mm, 1 h 23 min 39 s and 22.91 g in the slicer</dd></div><div><dt>Head</dt><dd>Standing on its end, 6 walls, 25 % infill</dd></div><div><dt>Base</dt><dd>Flat, 100 % infill, 60 by 31.4 by 7 mm</dd></div><div><dt>Supports</dt><dd>Normal (auto), build plate only</dd></div></dl>
+          
+          <p class="cap facts-note">5 prints: the original holder, a wider holder I cancelled after 4 minutes, and dock versions 6, 7 and 8. Versions 1 to 5 never left the slicer. Times are from the printer&#x27;s history.</p>
+        </section>
+        <section class="getfile" aria-labelledby="files-h">
+  <h2 id="files-h">The model</h2>
+  <p>The original holder is IdefixRC&#x27;s. Its licence keeps remixes on MakerWorld, so my dock goes up there as a remix and not here. The firmware and the laptop tools are on <a href="https://github.com/Abdaishere/monitor-buddy">GitHub</a> under MIT.</p>
+  <dl class="rows">
+    <div><dt>Designer</dt><dd>IdefixRC</dd></div>
+    <div><dt>Source</dt><dd><a href="https://makerworld.com/en/models/3241960-monitor-buddy">MakerWorld: Monitor-Buddy</a></dd></div>
+    <div><dt>License</dt><dd><a href="https://makerworld.com/en/models/3241960-monitor-buddy">MakerWorld Exclusive License</a></dd></div>
+  </dl>
+  <p class="cap">Not hosted here. Get it from the designer’s page, where the license travels with it.</p>
+  <p><a class="btn-get" href="https://makerworld.com/en/models/3241960-monitor-buddy">Open the model page <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></p>
+</section>
+        <nav class="pager" aria-label="More prints"><a class="ol" href="/prints/bat/" rel="next"><span class="label">Older</span><span class="t">A life-size bat on a 30 cm printer</span></a></nav><p class="back"><a class="more" href="/prints/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>Off the bed</a></p>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <p class="label">Contact</p>
+    <h2 id="contact-h">Hiring a software engineer?</h2>
+    <p class="lede">Tell me what you need built. I'll tell you how I'd design it, plan it and ship it.</p>
+    <a class="big" href="mailto:abdallahemohmad2002@gmail.com">abdallahemohmad2002<wbr>@gmail.com</a>
+    <div class="row">
+      <button class="btn-plain" type="button" id="copy" data-email="abdallahemohmad2002@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <span class="copy-label">Copy address</span>
+      </button>
+      <span class="sr" id="copy-status" role="status"></span>
+    </div>
+    <ul role="list" class="links">
+      <li><a class="more" href="https://github.com/Abdaishere">GitHub <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      <li><a class="more" href="https://www.linkedin.com/in/abdallahelbelkasy">LinkedIn <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+    </ul>
+    <div class="foot">
+      <p>© 2026 Abdallah El Belkasy</p>
+      <p>Plain HTML, CSS and JavaScript. No framework, no trackers.<span id="weight"></span></p>
+    </div>
+  </div>
+</footer>
+
+<script>if(matchMedia("(prefers-reduced-motion: reduce)").matches)for(const v of document.querySelectorAll("video[autoplay]")){v.removeAttribute("autoplay");v.pause();v.controls=true}</script>
+<script type="module" src="/site.js"></script>
+<script type="module">
+import { counters } from '/measure.js';
+counters();
+</script>
+</body>
+</html>
